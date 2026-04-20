@@ -71,7 +71,7 @@ class Signin extends StatelessWidget {
                   text: 'Đăng ký bằng email',
                   width: double.infinity,
                   height: 48,
-                  color: CupertinoColors.systemPurple,
+                  color: AppColors.buttonColor,
                   textColor: CupertinoColors.white,
                   borderWidth: 0,
                   borderRadius: 8,

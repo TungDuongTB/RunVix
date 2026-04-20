@@ -23,78 +23,76 @@ class _LoginscreenState extends State<Loginscreen> {
     super.dispose();
   }
 
-  void _submit() {
-    final email = _emailController.text.trim();
-    // replace with real validation / auth flow as needed
-    print('Đăng nhập pressed with email: $email');
-  }
-
   @override
   Widget build(BuildContext context) {
-    const borderColor = Color(0xFFBDBDBD);
-    const focusedBorderColor = Color(0xFF888888);
-
     final minHeight =
         MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
 
-    return SafeArea(
-      child: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: minHeight),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Đăng nhập vào Runvix',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Email',
-                    style: TextStyle(color: AppColors.disabled, fontSize: 14),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF33FFFF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: EdgeInsets.zero,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: minHeight),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Đăng nhập vào Runvix',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Đăng nhập',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'EMAIL',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                        letterSpacing: 1.2,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Inputcomponent(
+                    hintText: 'Nhập email của bạn',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 16),
+                  ButtonComponent(
+                    text: 'Đăng nhập'.toUpperCase(),
+                    width: double.infinity,
+                    height: 52,
+                    color: AppColors.buttonColor,
+                    textColor: Colors.black,
+                    borderWidth: 0,
+                    borderRadius: 12,
+                    textWeight: FontWeight.w700,
+                    onPressed: () {
+                      debugPrint('Login with email: ${_emailController.text}');
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  const DividerWithCenter(centerText: 'Hoặc'),
+                  const SizedBox(height: 16),
+                  const AuthSocialButtons(),
+                  const SizedBox(height: 12),
+                  const AuthTermsAgreement(),
+                ],
+              ),
             ),
           ),
         ),
