@@ -44,24 +44,6 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "firebase_core",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-4.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
-      "name": "firebase_core_platform_interface",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_platform_interface-6.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
-      "name": "firebase_core_web",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-3.5.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
-    },
-    {
       "name": "flutter",
       "rootUri": "file:///C:/Users/LENOVO/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -78,18 +60,6 @@
       "rootUri": "file:///C:/Users/LENOVO/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.9"
-    },
-    {
-      "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/Users/LENOVO/flutter/packages/flutter_web_plugins",
-      "packageUri": "lib/",
-      "languageVersion": "3.9"
-    },
-    {
-      "name": "get",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/get-4.7.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
     },
     {
       "name": "leak_tracker",
@@ -138,12 +108,6 @@
       "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
-    },
-    {
-      "name": "plugin_platform_interface",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
     },
     {
       "name": "sky_engine",
@@ -198,12 +162,6 @@
       "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-15.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.5"
-    },
-    {
-      "name": "web",
-      "rootUri": "file:///C:/Users/LENOVO/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
     },
     {
       "name": "runvix",
