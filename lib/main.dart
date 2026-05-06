@@ -3,9 +3,6 @@ import 'export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) => Get.put(AuthenticationRepository()));
   
   runApp(const MyApp());
 }
