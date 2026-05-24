@@ -27,3 +27,28 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+# Flutter/Dart
+.dart_tool/
+build/
+
+# Firebase binaries
+*.lib
+*.dll
+*.zip
+*.dill
+
+# Visual Studio
+.vs/
+
+# Windows generated
+windows/flutter/ephemeral/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# IDE specific paths that you also had tracking issues with
+.idea/workspace.xml
+.idea/libraries/
+.idea/easycode/

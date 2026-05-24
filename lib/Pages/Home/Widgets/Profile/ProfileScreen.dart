@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:runvix/Data/Controller/user_controller.dart';
 import 'package:runvix/export.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final userController = UserController.instance;
 
   @override
   void initState() {
@@ -37,9 +39,14 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               context,
               MaterialPageRoute(builder: (context) => const ProfileDetailScreen()),
             ),
-            child: const CircleAvatar(
-              backgroundImage: NetworkImage('https://picsum.photos/200'),
-            ),
+            child: Obx(() {
+              final networkImage = userController.user.value.profilePicture;
+              return CircleAvatar(
+                backgroundImage: NetworkImage(networkImage.isNotEmpty 
+                    ? networkImage 
+                    : 'https://picsum.photos/200'),
+              );
+            }),
           ),
         ),
         title: const Text(
@@ -85,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         children: [
           const ProfileProgressTab(),
           const Center(child: Text('Buổi tập')),
-          const Center(child: Text('Hoạt động')),
+          const ProfileActivitiesTab(),
         ],
       ),
     );

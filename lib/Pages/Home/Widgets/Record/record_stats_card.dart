@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:runvix/export.dart';
 
 class RecordStatsCard extends StatelessWidget {
   const RecordStatsCard({super.key});
 
+  String _formatDuration(int seconds) {
+    final h = seconds ~/ 3600;
+    final m = (seconds % 3600) ~/ 60;
+    final s = seconds % 60;
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(RecordController());
+
     return Positioned(
       left: 16,
       right: 16,
@@ -16,7 +26,7 @@ class RecordStatsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 20)],
         ),
-        child: Column(
+        child: Obx(() => Column(
           children: [
             // GPS Status Pill
             Container(
@@ -43,13 +53,15 @@ class RecordStatsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatItem('00:00:00', 'Thời gian', null),
-                _buildStatItem('-:--', 'Nhịp độ tb', Icons.speed),
-                _buildStatItem('0.00', 'Quãng đường (km)', null),
+                _buildStatItem(_formatDuration(controller.duration.value), 'Thời gian', null),
+                _buildStatItem(controller.pace.value.isInfinite || controller.pace.value.isNaN 
+                  ? "-:--" 
+                  : controller.pace.value.toStringAsFixed(2), 'Nhịp độ', Icons.speed),
+                _buildStatItem((controller.distance.value / 1000).toStringAsFixed(2), 'Quãng đường (km)', null),
               ],
             ),
           ],
-        ),
+        )),
       ),
     );
   }
@@ -77,3 +89,26 @@ class RecordStatsCard extends StatelessWidget {
     );
   }
 }
+
+  Widget _buildStatItem(String value, String label, IconData? icon) {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 18, color: Colors.black87),
+              const SizedBox(width: 4)
+            ],
+            Text(value,
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }

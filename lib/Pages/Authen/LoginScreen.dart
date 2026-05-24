@@ -9,19 +9,19 @@ class Loginscreen extends StatefulWidget {
 }
 
 class _LoginscreenState extends State<Loginscreen> {
-  late final TextEditingController _emailController;
+  late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
+    _usernameController = TextEditingController();
     _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -57,13 +57,12 @@ class _LoginscreenState extends State<Loginscreen> {
                   ),
                   const SizedBox(height: 32),
                   
-                  // EMAIL FIELD
-                  _buildLabel('EMAIL'),
+                  // USERNAME FIELD
+                  _buildLabel('USERNAME HOẶC EMAIL'),
                   const SizedBox(height: 8),
                   Inputcomponent(
-                    hintText: 'Nhập email của bạn',
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
+                    hintText: 'Nhập username hoặc email',
+                    controller: _usernameController,
                   ),
                   const SizedBox(height: 20),
 
@@ -73,6 +72,7 @@ class _LoginscreenState extends State<Loginscreen> {
                   Inputcomponent(
                     hintText: 'Nhập mật khẩu',
                     controller: _passwordController,
+                    obscureText: true,
                   ),
                   
                   const SizedBox(height: 24),
@@ -87,12 +87,19 @@ class _LoginscreenState extends State<Loginscreen> {
                     borderWidth: 0,
                     borderRadius: 12,
                     textWeight: FontWeight.w700,
-                    onPressed: () {
-                      final email = _emailController.text.trim();
+                    onPressed: () async {
+                      final identifier = _usernameController.text.trim();
                       final password = _passwordController.text.trim();
-                      if (email.isNotEmpty && password.isNotEmpty) {
+                      if (identifier.isNotEmpty && password.isNotEmpty) {
+                        // Nếu là email (chứa @), dùng loginWithEmail
+                        if (identifier.contains('@')) {
+                          await AuthenticationRepository.instance.loginWithEmailAndPassword(identifier, password);
+                        } else {
+                          // Nếu là username, dùng loginWithUsername
+                          await AuthenticationRepository.instance.loginWithUsernameAndPassword(identifier, password);
+                        }
                       } else {
-                        Get.snackbar("Thông báo", "Vui lòng nhập đầy đủ email và mật khẩu", 
+                        Get.snackbar("Thông báo", "Vui lòng nhập đầy đủ thông tin",
                           snackPosition: SnackPosition.BOTTOM);
                       }
                     },

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeSuggestedFollows extends StatelessWidget {
   const HomeSuggestedFollows({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userController = UserController.instance;
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24.0),
       child: Column(
@@ -21,7 +25,7 @@ class HomeSuggestedFollows extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => userController.fetchAllUsers(),
                   child: const Text('Xem tất cả', style: TextStyle(color: AppColors.buttonColor)),
                 ),
               ],
@@ -29,25 +33,45 @@ class HomeSuggestedFollows extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 300,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildFollowCard('Caledonian Concepts', 'Gương mặt được yêu thích trên Strava'),
-                const SizedBox(width: 12),
-                _buildFollowCard('Hilde Dosdog', 'Gương mặt được yêu thích trên Strava'),
-              ],
-            ),
+            height: 280,
+            child: Obx(() {
+              if (userController.isLoading.value) {
+                return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
+              }
+
+              // Lọc bỏ user hiện tại khỏi danh sách gợi ý
+              final displayUsers = userController.allUsers
+                  .where((u) => u.id != currentUserId)
+                  .toList();
+
+              if (displayUsers.isEmpty) {
+                return const Center(
+                  child: Text("Không có người dùng gợi ý", style: TextStyle(color: Colors.grey)),
+                );
+              }
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: displayUsers.length,
+                itemBuilder: (context, index) {
+                  final userItem = displayUsers[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: _buildFollowCard(userItem),
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFollowCard(String name, String description) {
+  Widget _buildFollowCard(UserModel user) {
     return Container(
-      width: 240,
+      width: 180,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -61,60 +85,65 @@ class HomeSuggestedFollows extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network('https://picsum.photos/100', width: 80, height: 80, fit: BoxFit.cover),
+                borderRadius: BorderRadius.circular(40),
+                child: Image.network(
+                  user.profilePicture.isNotEmpty ? user.profilePicture : 'https://picsum.photos/100',
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => 
+                    const Icon(Icons.account_circle, size: 70, color: Colors.grey),
+                ),
               ),
               Positioned(
-                top: -5,
-                right: -5,
+                bottom: 0,
+                right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(3),
                   decoration: const BoxDecoration(color: AppColors.buttonColor, shape: BoxShape.circle),
-                  child: const Icon(Icons.check, size: 12, color: Colors.white),
+                  child: const Icon(Icons.add, size: 12, color: Colors.white),
                 ),
               )
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Text(
-            name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            user.fullName.isNotEmpty ? user.fullName : 'Người dùng RunVix',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
-            description,
-            style: const TextStyle(color: Colors.grey, fontSize: 13),
+            user.username.isNotEmpty ? "@${user.username}" : user.email,
+            style: const TextStyle(color: Colors.grey, fontSize: 11),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.buttonColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  ),
-                  child: const Text('Theo dõi', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.grey.shade300),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  ),
-                  child: const Text('Xóa', style: TextStyle(color: Colors.grey)),
-                ),
-              ),
-            ],
-          )
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.buttonColor,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              minimumSize: const Size(double.infinity, 32),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            child: const Text('Theo dõi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+          const SizedBox(height: 4),
+          OutlinedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey.shade300),
+              minimumSize: const Size(double.infinity, 32),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            child: const Text('Xóa', style: TextStyle(color: Colors.grey, fontSize: 11)),
+          ),
         ],
       ),
     );

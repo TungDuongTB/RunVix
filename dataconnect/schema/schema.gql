@@ -1,0 +1,53 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+  bio: String
+  height: Float
+  weight: Float
+  preferredUnits: String
+}
+
+type Activity @table {
+  user: User
+  activityType: String!
+  startTime: Timestamp!
+  endTime: Timestamp!
+  distance: Float!
+  duration: Int!
+  title: String
+  description: String
+  caloriesBurned: Int
+  isPublic: Boolean
+}
+
+type ActivitySegment @table {
+  activity: Activity
+  latitude: Float!
+  longitude: Float!
+  timestamp: Timestamp!
+  altitude: Float
+  speed: Float
+}
+
+type SocialPost @table {
+  user: User
+  activity: Activity
+  createdAt: Timestamp!
+  isPublic: Boolean!
+  caption: String
+}
+
+type Comment @table {
+  user: User
+  socialPost: SocialPost
+  createdAt: Timestamp!
+  text: String!
+}
+
+type Like @table {
+  user: User
+  socialPost: SocialPost
+  createdAt: Timestamp!
+}

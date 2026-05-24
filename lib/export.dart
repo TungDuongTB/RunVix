@@ -3,14 +3,25 @@ export 'package:get/get.dart';
 export 'package:flutter/cupertino.dart';
 export 'package:flutter/gestures.dart';
 
-//firebase
+// Data - Model
+export './Data/Model/user_model.dart';
+export './Data/Model/workout_model.dart';
 
-//folder
+// Data - Repository
+export './Data/Repository/authentication_repository.dart';
+export './Data/Repository/user_repository.dart';
+export './Data/Repository/workout_repository.dart';
+
+// Data - Controller
+export './Data/Controller/user_controller.dart';
+export './Data/Controller/record_controller.dart';
+export './Data/Controller/profile_controller.dart';
 
 //pages
 export './Pages/LoadingScreen.dart';
 export './Pages/Authen/LoginScreen.dart';
 export './Pages/Authen/SignIn.dart';
+export './Pages/Authen/RegisterScreen.dart';
 export './reponsive.dart';
 export './Pages/Authen/AuthTermsPage.dart';
 export 'Pages/Home/Widgets/home/HomeScreen.dart';
@@ -41,6 +52,7 @@ export './Pages/Home/Widgets/Record/record_advanced_settings.dart';
 // Profile Widgets
 export './Pages/Home/Widgets/Profile/ProfileScreen.dart';
 export './Pages/Home/Widgets/Profile/profile_progress_tab.dart';
+export './Pages/Home/Widgets/Profile/profile_activities_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_detail_screen.dart';
 export './Pages/Home/Widgets/Profile/SettingsScreen.dart';
 
@@ -52,6 +64,3 @@ export './Component/TextFieldComponent.dart';
 export './Component/InputComponent.dart';
 export './Component/auth_social_buttons.dart';
 export './Component/auth_terms_agreement.dart';
-
-
-

@@ -6,6 +6,8 @@ class ProfileDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserController());
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -13,38 +15,51 @@ class ProfileDetailScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
         ),
         actions: [
           IconButton(icon: const Icon(Icons.ios_share, color: Colors.black), onPressed: () {}),
           IconButton(icon: const Icon(Icons.search, color: Colors.black), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.settings_outlined, color: Colors.black), onPressed: () {}),
+          IconButton(
+              icon: const Icon(Icons.settings_outlined, color: Colors.black),
+              onPressed: () => Get.to(() => const SettingsScreen())),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header: Profile Info
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage('https://picsum.photos/200'),
-                  ),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Dương Đoàn', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text('Hanoi, Vietnam', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    ],
-                  ),
-                ],
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
+        }
+
+        final user = controller.user.value;
+
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header: Profile Info
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(user.profilePicture.isNotEmpty 
+                          ? user.profilePicture 
+                          : 'https://picsum.photos/200'),
+                    ),
+                    const SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.fullName.isEmpty ? 'Người dùng RunVix' : user.fullName,
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                        Text(user.address.isEmpty ? 'Trái Đất' : user.address,
+                            style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
 
             // Followers Stats
             Padding(
@@ -162,8 +177,8 @@ class ProfileDetailScreen extends StatelessWidget {
 
             const SizedBox(height: 60),
           ],
-        ),
-      ),
+        ),);
+      }),
     );
   }
 

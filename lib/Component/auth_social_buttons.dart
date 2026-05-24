@@ -17,19 +17,8 @@ class AuthSocialButtons extends StatelessWidget {
           borderColor: Colors.grey.shade300,
           borderWidth: 1,
           borderRadius: 50,
-          onPressed: () => print('Google login'),
-        ),
-        const SizedBox(height: 12),
-        ButtonComponent(
-          text: 'Tiếp tục với Apple',
-          width: double.infinity,
-          height: 48,
-          color: Colors.white,
-          textColor: Colors.black,
-          borderColor: Colors.grey.shade300,
-          borderWidth: 1,
-          borderRadius: 50,
-          onPressed: () => print('Apple login'),
+          // SỬA Ở ĐÂY: Gọi hàm từ Repository thay vì print
+          onPressed: () => AuthenticationRepository.instance.signInWithGoogle(),
         ),
       ],
     );

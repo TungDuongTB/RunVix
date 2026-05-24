@@ -1,0 +1,62 @@
+scalar Timestamp
+scalar UUID
+scalar Instant
+scalar URL
+
+type User @table {
+  uid: String! @primaryKey
+  email: String! @unique
+  displayName: String
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  cartItems: [CartItem!] @relationship(references: "userUid")
+  orders: [Order!] @relationship(references: "userUid")
+}
+
+type Product @table {
+  id: UUID! @primaryKey
+  name: String! @unique
+  description: String
+  price: Float!
+  imageUrl: URL
+  stock: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  cartItems: [CartItem!] @relationship(references: "productID")
+  orderItems: [OrderItem!] @relationship(references: "productID")
+}
+
+type CartItem @table {
+  id: UUID! @primaryKey
+  userUid: String!
+  productID: UUID!
+  quantity: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  user: User! @relationship(references: "userUid")
+  product: Product! @relationship(references: "productID")
+}
+
+type Order @table {
+  id: UUID! @primaryKey
+  userUid: String!
+  orderDate: Timestamp!
+  totalAmount: Float!
+  status: String! # e.g., "pending", "shipped", "delivered"
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  user: User! @relationship(references: "userUid")
+  orderItems: [OrderItem!] @relationship(references: "orderID")
+}
+
+type OrderItem @table {
+  id: UUID! @primaryKey
+  orderID: UUID!
+  productID: UUID!
+  quantity: Int!
+  priceAtOrder: Float!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  order: Order! @relationship(references: "orderID")
+  product: Product! @relationship(references: "productID")
+}

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+
 class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});
 
@@ -9,17 +12,68 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
+  GoogleMapController? _mapController;
+  Position? _currentPosition;
+  
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+    
+    if (permission == LocationPermission.deniedForever) return;
+
+    final position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentPosition = position;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(RecordController());
+
     return Scaffold(
       body: Stack(
         children: [
-          // 1. Nền bản đồ (Map Background)
+          // 1. Nền bản đồ thực tế
           Positioned.fill(
-            child: Image.network(
-              'https://picsum.photos/1080/1920?grayscale',
-              fit: BoxFit.cover,
-            ),
+            child: Obx(() {
+              if (_currentPosition == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                  zoom: 16,
+                ),
+                onMapCreated: (mapController) => _mapController = mapController,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                polylines: {
+                  Polyline(
+                    polylineId: const PolylineId('route'),
+                    points: controller.polylinePoints.toList(),
+                    color: AppColors.buttonColor,
+                    width: 5,
+                  ),
+                },
+              );
+            }),
           ),
 
           // 2. Top UI: Badge Trends

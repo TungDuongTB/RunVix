@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:runvix/Data/Controller/user_controller.dart';
 import 'package:runvix/export.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final userController = Get.put(UserController());
 
   final List<Widget> _pages = [
     const HomeContentBody(),
@@ -27,10 +29,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ? AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
-              leading: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage('https://picsum.photos/200'),
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => const ProfileDetailScreen());
+                  },
+                  child: Obx(() {
+                    final user = userController.user.value;
+                    final networkImage = user.profilePicture;
+                    return CircleAvatar(
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: networkImage.isNotEmpty 
+                          ? NetworkImage(networkImage) 
+                          : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                      child: networkImage.isEmpty 
+                          ? const Icon(Icons.person, color: Colors.grey) 
+                          : null,
+                    );
+                  }),
                 ),
               ),
               title: const Text(

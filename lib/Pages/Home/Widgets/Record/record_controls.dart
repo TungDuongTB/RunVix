@@ -6,14 +6,93 @@ class RecordControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(RecordController());
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Row(
+      child: Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildModeButton(Icons.directions_run, 'Chạy bộ'),
-          _buildStartButton(),
+          
+          // Nút Start / Stop / Resume
+          if (!controller.isRecording.value)
+            _buildActionButton(
+              icon: Icons.play_arrow_rounded,
+              label: 'BẮT ĐẦU',
+              onTap: () => controller.startRecording(),
+              color: AppColors.buttonColor,
+            )
+          else ...[
+            if (controller.isPaused.value)
+              _buildActionButton(
+                icon: Icons.play_arrow_rounded,
+                label: 'TIẾP TỤC',
+                onTap: () => controller.resumeRecording(),
+                color: Colors.green,
+              )
+            else
+              _buildActionButton(
+                icon: Icons.pause_rounded,
+                label: 'TẠM DỪNG',
+                onTap: () => controller.pauseRecording(),
+                color: Colors.orange,
+              ),
+            
+            _buildActionButton(
+              icon: Icons.stop_rounded,
+              label: 'KẾT THÚC',
+              onTap: () => _showStopConfirmation(context, controller),
+              color: Colors.red,
+            ),
+          ],
+
           _buildRouteButton(Icons.add_location_alt_outlined, 'Thêm lộ trình'),
+        ],
+      )),
+    );
+  }
+
+  void _showStopConfirmation(BuildContext context, RecordController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Kết thúc hoạt động?"),
+        content: const Text("Bạn có chắc chắn muốn dừng và lưu hoạt động này không?"),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Hủy")),
+          ElevatedButton(
+            onPressed: () {
+              controller.stopRecording();
+              Get.back();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text("Kết thúc", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({required IconData icon, required String label, required VoidCallback onTap, required Color color}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 75,
+            height: 75,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: color.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 5))
+              ],
+            ),
+            child: Icon(icon, color: Colors.white, size: 45),
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
         ],
       ),
     );
@@ -23,18 +102,17 @@ class RecordControls extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 65,
-          height: 65,
+          width: 55,
+          height: 55,
           decoration: BoxDecoration(
             color: Colors.orange.shade50,
             shape: BoxShape.circle,
             border: Border.all(color: Colors.orange.shade200, width: 2),
           ),
-          child: Icon(icon, color: Colors.orange.shade900, size: 28),
+          child: Icon(icon, color: Colors.orange.shade900, size: 24),
         ),
         const SizedBox(height: 8),
-        Text(label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -43,42 +121,13 @@ class RecordControls extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 65,
-          height: 65,
-          decoration: BoxDecoration(
-              color: Colors.grey.shade100, shape: BoxShape.circle),
-          child: Icon(icon, color: Colors.black87, size: 28),
+          width: 55,
+          height: 55,
+          decoration: BoxDecoration(color: Colors.grey.shade100, shape: BoxShape.circle),
+          child: Icon(icon, color: Colors.black87, size: 24),
         ),
         const SizedBox(height: 8),
-        Text(label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-      ],
-    );
-  }
-
-  Widget _buildStartButton() {
-    return Column(
-      children: [
-        Container(
-          width: 85,
-          height: 85,
-          decoration: const BoxDecoration(
-            color: AppColors.buttonColor,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0x66FF4500), blurRadius: 20, offset: Offset(0, 8))
-            ],
-          ),
-          child: const Icon(Icons.play_arrow_rounded,
-              color: Colors.white, size: 55),
-        ),
-        const SizedBox(height: 8),
-        const Text('BẮT ĐẦU',
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.buttonColor)),
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
       ],
     );
   }
