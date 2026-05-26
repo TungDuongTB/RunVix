@@ -6,6 +6,18 @@ class HomeStreakSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final calendarController = Get.put(CalendarController());
+    
+    // Tính toán các ngày trong tuần hiện tại
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    
+    List<DateTime> weekDates = List.generate(7, (index) {
+      return startOfWeek.add(Duration(days: index));
+    });
+
+    final List<String> weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16.0),
@@ -20,8 +32,26 @@ class HomeStreakSection extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               TextButton(
-                onPressed: () {},
-                child: const Text('Ghi ngay', style: TextStyle(color: AppColors.buttonColor)),
+                onPressed: () async {
+                  if (!calendarController.isAuthorized.value) {
+                    await AuthenticationRepository.instance.googleSignIn.requestScopes([
+                      'https://www.googleapis.com/auth/calendar',
+                      'https://www.googleapis.com/auth/calendar.events'
+                    ]);
+                    calendarController.checkAuthorization();
+                  } else {
+                    calendarController.fetchCurrentWeekEvents();
+                  }
+                },
+                child: Obx(() {
+                  if (calendarController.isLoading.value) {
+                    return const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2));
+                  }
+                  return Text(
+                    calendarController.isAuthorized.value ? 'Đồng bộ' : 'Kết nối Lịch',
+                    style: const TextStyle(color: AppColors.buttonColor),
+                  );
+                }),
               ),
             ],
           ),
@@ -33,8 +63,15 @@ class HomeStreakSection extends StatelessWidget {
                   Stack(
                     alignment: Alignment.center,
                     children: [
-                      Icon(Icons.local_fire_department, size: 48, color: Colors.grey.shade300),
-                      const Text('0', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Obx(() => Icon(
+                        Icons.local_fire_department, 
+                        size: 48, 
+                        color: calendarController.weeklyEvents.isNotEmpty ? Colors.orange : Colors.grey.shade300
+                      )),
+                      Obx(() => Text(
+                        '${calendarController.weeklyEvents.length}', 
+                        style: const TextStyle(fontWeight: FontWeight.bold)
+                      )),
                     ],
                   ),
                   const Text('Tuần', style: TextStyle(fontSize: 12, color: Colors.grey)),
@@ -42,18 +79,24 @@ class HomeStreakSection extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildDayCircle('T2', '6'),
-                    _buildDayCircle('T3', '7', isToday: true),
-                    _buildDayCircle('T4', '8'),
-                    _buildDayCircle('T5', '9'),
-                    _buildDayCircle('T6', '10'),
-                    _buildDayCircle('T7', '11'),
-                    _buildDayCircle('CN', '12'),
-                  ],
-                ),
+                child: Obx(() {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: List.generate(7, (index) {
+                      DateTime date = weekDates[index];
+                      bool isToday = date.day == now.day && date.month == now.month && date.year == now.year;
+                      bool hasEvent = calendarController.weeklyEvents.any((d) => 
+                        d.day == date.day && d.month == date.month && d.year == date.year);
+                      
+                      return _buildDayCircle(
+                        weekDays[index], 
+                        date.day.toString(), 
+                        isToday: isToday,
+                        hasEvent: hasEvent,
+                      );
+                    }),
+                  );
+                }),
               ),
             ],
           ),
@@ -69,13 +112,43 @@ class HomeStreakSection extends StatelessWidget {
                 color: index == 0 ? Colors.black : Colors.grey.shade300,
               ),
             )),
-          )
+          ),
+          Obx(() {
+            if (calendarController.todayEvents.isEmpty) return const SizedBox.shrink();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const Text(
+                  'Sự kiện hôm nay:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey),
+                ),
+                const SizedBox(height: 8),
+                ...calendarController.todayEvents.map((event) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.circle, size: 8, color: Colors.orange),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          event,
+                          style: const TextStyle(fontSize: 13, color: Colors.black87),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                )).toList(),
+              ],
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildDayCircle(String day, String date, {bool isToday = false}) {
+  Widget _buildDayCircle(String day, String date, {bool isToday = false, bool hasEvent = false}) {
     return Column(
       children: [
         Text(day, style: const TextStyle(fontSize: 12, color: Colors.grey)),
@@ -85,11 +158,20 @@ class HomeStreakSection extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-            border: isToday ? Border.all(color: Colors.black, width: 1) : null,
+            color: hasEvent ? Colors.orange.withOpacity(0.2) : Colors.grey.shade100,
+            border: isToday 
+                ? Border.all(color: Colors.black, width: 1.5) 
+                : (hasEvent ? Border.all(color: Colors.orange, width: 1) : null),
           ),
           alignment: Alignment.center,
-          child: Text(date, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+          child: Text(
+            date, 
+            style: TextStyle(
+              fontSize: 12, 
+              fontWeight: FontWeight.w600,
+              color: hasEvent ? Colors.orange.shade900 : Colors.black,
+            )
+          ),
         ),
       ],
     );

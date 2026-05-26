@@ -8,6 +8,7 @@ class HomeSuggestedFollows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = UserController.instance;
+    final calendarController = Get.put(CalendarController());
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     return Padding(
@@ -15,6 +16,40 @@ class HomeSuggestedFollows extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Tạo lịch nhanh (Google Calendar)',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.buttonColor),
+                ),
+                const SizedBox(height: 8),
+                Obx(() => TextField(
+                  onChanged: (value) => calendarController.onSearchChanged(value),
+                  decoration: InputDecoration(
+                    hintText: 'Ví dụ: "Chạy bộ lúc 5h chiều mai"',
+                    prefixIcon: calendarController.isLoading.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.buttonColor),
+                            ),
+                          )
+                        : const Icon(Icons.auto_awesome, color: AppColors.buttonColor),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                )),
+              ],
+            ),
+          ),
+          const Divider(indent: 16, endIndent: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -39,9 +74,9 @@ class HomeSuggestedFollows extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
               }
 
-              // Lọc bỏ user hiện tại khỏi danh sách gợi ý
+              // Lọc bỏ user hiện tại và những người có vai trò admin/điều phối khỏi danh sách gợi ý
               final displayUsers = userController.allUsers
-                  .where((u) => u.id != currentUserId)
+                  .where((u) => u.id != currentUserId && u.role != 'admin' && u.role != 'coordinator')
                   .toList();
 
               if (displayUsers.isEmpty) {

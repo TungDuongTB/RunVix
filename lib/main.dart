@@ -24,8 +24,10 @@ void main() async {
 
   // Luôn nạp Repository để tránh lỗi "not found"
   print("📦 Đang tải Repositories...");
-  Get.put(AuthenticationRepository());
   Get.put(UserRepository());
+  Get.put(UserController()); // Khởi tạo UserController ngay từ đầu
+  Get.put(AuthenticationRepository());
+  Get.put(CalendarController()); // Khởi tạo sớm để tránh lỗi UI
   print("✅ Repositories đã sẵn sàng!");
 
   runApp(const MyApp());
@@ -40,6 +42,10 @@ class MyApp extends StatelessWidget {
       title: 'RunVix',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
+      initialRoute: '/', // Xác định rõ route khởi đầu
+      getPages: [
+        GetPage(name: '/', page: () => const LoadingScreen()),
+      ],
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,

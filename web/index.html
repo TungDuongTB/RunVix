@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -33,10 +20,38 @@
   <title>runvix</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Firebase SDK for Web (compat builds so firebase.initializeApp is available) -->
+  <!-- Firebase SDK for Web -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+  <!-- Google Identity Services & GAPI -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    // Initialize GAPI client as required by the Flutter googleapis extension
+    function gapiInit() {
+      gapi.load('client', () => {
+        gapi.client.init({
+          // We don't need apiKey here because we use OAuth2 tokens,
+          // but discoveryDocs help GAPI understand the Calendar API structure
+          discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+        }).then(() => {
+          console.log('✅ GAPI client initialized');
+          window.gapi_initialized = true;
+        });
+      });
+    }
+
+    if (typeof gapi !== 'undefined') {
+      gapiInit();
+    } else {
+      window.addEventListener('load', gapiInit);
+    }
+  </script>
+
+  <!-- Google Maps JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0BPP2TbHU1Byy7QY7JH2CREr0ucVwV1A"></script>
 
   <script>
     const firebaseConfig = {
@@ -49,14 +64,9 @@
       appId: "1:827778185994:web:9ac430f6020bd3f1b698f3",
       measurementId: "G-7TCDFLSQH5"
     };
-
-    // Do not call firebase.initializeApp here. Flutter (FlutterFire) will initialize
-    // Firebase with the same config when running the web app. This avoids double-init
-    // and the "FirebaseOptions cannot be null" error.
   </script>
 </head>
 <body>
-
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
