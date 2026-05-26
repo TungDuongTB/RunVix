@@ -9,32 +9,26 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="sign in - login username">
-      <change afterPath="$PROJECT_DIR$/lib/Data/Controller/calendar_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Model/challenge_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Model/route_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Repository/calendar_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_graph.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_graph.json" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Admin_Screen">
+      <change afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Images/Map.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Images/Run.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Images/Runner.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Images/bike.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RunVix.iml" beforeDir="false" afterPath="$PROJECT_DIR$/RunVix.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/user_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/user_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_streak_section.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_streak_section.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/LoadingScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/LoadingScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +102,8 @@
     "io.flutter.project.isFirstOpen": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "settings.editor.selected.configurable": "com.android.studio.ml.bot.mainConfigurable",
+    "last_opened_file_path": "D:/DoAn/Project/RunVix/android/app",
+    "settings.editor.selected.configurable": "device.screenshot",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -116,12 +111,16 @@
     <option name="SHOW_DETAILS_PANEL" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\DoAn\Project\RunVix\android\app" />
+      <recent name="D:\DoAn\Project\RunVix\Images" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\DoAn\Project\RunVix\assets\Images" />
+      <recent name="D:\DoAn\Project\RunVix\assets" />
+      <recent name="D:\DoAn\Project\RunVix" />
       <recent name="D:\DoAn\Project\RunVix\lib\Pages\Home\Widgets\Record" />
       <recent name="D:\DoAn\Project\RunVix\lib\Pages\Home\Widgets\Group" />
-      <recent name="D:\DoAn\Project\RunVix\lib\Pages\Home\Widgets\map" />
-      <recent name="D:\DoAn\Project\RunVix\lib\Pages\Home\Widgets\home" />
-      <recent name="D:\DoAn\Project\RunVix\lib\Pages\Authen" />
     </key>
   </component>
   <component name="RunManager">
@@ -203,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779642165100</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Admin_Screen">
+      <option name="closed" value="true" />
+      <created>1779812495641</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1779812495641</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -226,7 +233,8 @@
     <MESSAGE value="unversioned" />
     <MESSAGE value="login_google" />
     <MESSAGE value="sign in - login username" />
-    <option name="LAST_COMMIT_MESSAGE" value="sign in - login username" />
+    <MESSAGE value="Admin_Screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Admin_Screen" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
