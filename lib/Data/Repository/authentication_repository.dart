@@ -1,15 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
-import 'package:get/get.dart';
-import 'package:runvix/Component/ColorComponent.dart';
-import 'package:runvix/Data/Model/user_model.dart';
-import 'package:runvix/Data/Repository/user_repository.dart';
-import 'package:runvix/Pages/Admin/admin_dashboard_screen.dart';
-import 'package:runvix/Pages/Authen/LoginScreen.dart';
-import 'package:runvix/Pages/Home/Widgets/home/HomeScreen.dart';
+import 'package:runvix/export.dart';
+
+
 
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
@@ -144,7 +140,17 @@ class AuthenticationRepository extends GetxController {
     _lastProcessedUid = null;
     await _googleSignIn.signOut();
     await _auth.signOut();
-    Get.offAll(() => const Loginscreen());
+    if (Get.isRegistered<UserController>()) {
+      UserController.instance.user.value = UserModel.empty();
+      UserController.instance.allUsers.clear();
+    }
+
+    if (Get.isRegistered<CalendarController>()) {
+      CalendarController.instance.weeklyEvents.clear();
+      CalendarController.instance.todayEvents.clear();
+      CalendarController.instance.isAuthorized.value = false;
+    }
+    Get.offAll(() => const LoadingScreen());
   }
 
   // Các hàm login/register email giữ nguyên như cũ...

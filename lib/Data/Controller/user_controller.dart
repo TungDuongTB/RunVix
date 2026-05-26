@@ -28,6 +28,7 @@ class UserController extends GetxController {
       } else {
         debugPrint("👤 Auth detected: No user logged in. Clearing data.");
         user.value = UserModel.empty();
+        allUsers.clear();
       }
     });
   }

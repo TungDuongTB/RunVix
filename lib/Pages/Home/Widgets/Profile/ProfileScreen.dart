@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:runvix/Data/Controller/user_controller.dart';
 import 'package:runvix/export.dart';
 
 class ProfileScreen extends StatefulWidget {

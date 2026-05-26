@@ -49,31 +49,29 @@ class _RecordScreenState extends State<RecordScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // 1. Nền bản đồ thực tế
           Positioned.fill(
-            child: Obx(() {
-              if (_currentPosition == null) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                  zoom: 16,
+            child: _currentPosition == null
+                ? const Center(child: CircularProgressIndicator())
+                : Obx(() => GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(_currentPosition!.latitude,
+                    _currentPosition!.longitude),
+                zoom: 16,
+              ),
+              onMapCreated: (mapController) =>
+              _mapController = mapController,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              polylines: {
+                Polyline(
+                  polylineId: const PolylineId('route'),
+                  points: controller.polylinePoints.toList(),
+                  color: AppColors.buttonColor,
+                  width: 5,
                 ),
-                onMapCreated: (mapController) => _mapController = mapController,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                polylines: {
-                  Polyline(
-                    polylineId: const PolylineId('route'),
-                    points: controller.polylinePoints.toList(),
-                    color: AppColors.buttonColor,
-                    width: 5,
-                  ),
-                },
-              );
-            }),
+              },
+            )),
           ),
 
           // 2. Top UI: Badge Trends

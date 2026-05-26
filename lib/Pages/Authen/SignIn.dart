@@ -32,7 +32,7 @@ class Signin extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF000000),
+                    color: AppColors.black,
                     decoration: TextDecoration.none,
                   ),
                 ),

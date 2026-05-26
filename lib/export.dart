@@ -74,3 +74,6 @@ export './Component/TextFieldComponent.dart';
 export './Component/InputComponent.dart';
 export './Component/auth_social_buttons.dart';
 export './Component/auth_terms_agreement.dart';
+
+//firebase
+export 'package:firebase_auth/firebase_auth.dart';

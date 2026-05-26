@@ -171,7 +171,7 @@ class HomeSuggestedFollows extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           OutlinedButton(
-            onPressed: () {},
+            onPressed: ()=>Get.to(()=>const LoadingScreen()),
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.grey.shade300),
               minimumSize: const Size(double.infinity, 32),
