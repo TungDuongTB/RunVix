@@ -22,7 +22,7 @@ class ButtonComponent extends StatelessWidget {
     this.borderColor = CupertinoColors.systemPurple,
     this.borderWidth = 0.0,
     this.borderRadius = 8.0,
-    this.textWeight = FontWeight.bold, // default to bold
+    this.textWeight = FontWeight.bold,
     this.onPressed,
   }) : assert(text != '');
 

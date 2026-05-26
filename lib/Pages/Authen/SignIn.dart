@@ -1,128 +1,161 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
-class Signin extends StatelessWidget {
+class Signin extends StatefulWidget {
   const Signin({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final termsRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        Get.toNamed('/terms'); 
-      };
-    final privacyRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        print('Chính sách Quyền riêng tư tapped');
-      };
+  State<Signin> createState() => _SigninState();
+}
 
+class _SigninState extends State<Signin> {
+  late final TextEditingController _fullNameController;
+  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _fullNameController = TextEditingController();
+    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Tạo tài khoản',
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Đăng ký',
                   style: TextStyle(
                     fontSize: 28,
-                    fontWeight: FontWeight.bold,
                     color: AppColors.black,
-                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ButtonComponent(
-                    text: 'Tiếp tục với Google',
-                    width: double.infinity,
-                    height: 48,
-                    color: CupertinoColors.white,
-                    textColor: CupertinoColors.black,
-                    borderColor: CupertinoColors.inactiveGray,
-                    borderWidth: 1,
-                    borderRadius: 50,
-                    // GỌI HÀM Ở ĐÂY
-                    onPressed: () => AuthenticationRepository.instance.signInWithGoogle(),
-                  ),
-                  const SizedBox(height: 12),
-                  ButtonComponent(
-                    text: 'Tiếp tục với Apple',
-                    width: double.infinity,
-                    height: 48,
-                    color: CupertinoColors.white,
-                    textColor: CupertinoColors.black,
-                    borderColor: CupertinoColors.inactiveGray,
-                    borderWidth: 1,
-                    borderRadius: 50,
-                    onPressed: () {
-                      print('Tiếp tục với Apple pressed');
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  const DividerWithCenter(centerText: 'Hoặc'),
-                  const SizedBox(height: 16),
+                const SizedBox(height: 32),
+                
+                _buildLabel('HỌ VÀ TÊN'),
+                const SizedBox(height: 8),
+                Inputcomponent(
+                  hintText: 'Nhập họ và tên',
+                  controller: _fullNameController,
+                ),
+                const SizedBox(height: 20),
 
-                  ButtonComponent(
-                    text: 'Đăng ký bằng email',
-                    width: double.infinity,
-                    height: 48,
-                    color: AppColors.buttonColor,
-                    textColor: CupertinoColors.white,
-                    borderWidth: 0,
-                    borderRadius: 8,
-                    onPressed: () {
-                      Get.to(() => const RegisterScreen());
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: const TextStyle(
-                          color: CupertinoColors.inactiveGray,
-                          fontSize: 12,
-                        ),
-                        children: [
-                          const TextSpan(text: 'Khi tiếp tục, bạn đồng ý với '),
-                          TextSpan(
-                            text: 'điều khoản dịch vụ',
-                            style: const TextStyle(
-                              color: CupertinoColors.activeBlue,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: termsRecognizer,
-                          ),
-                          const TextSpan(text: ' và '),
-                          TextSpan(
-                            text: 'chính sách Quyền riêng tư',
-                            style: const TextStyle(
-                              color: CupertinoColors.activeBlue,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: privacyRecognizer,
-                          ),
-                          const TextSpan(text: ' của chúng tôi'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                _buildLabel('USERNAME'),
+                const SizedBox(height: 8),
+                Inputcomponent(
+                  hintText: 'Nhập username',
+                  controller: _usernameController,
+                ),
+                const SizedBox(height: 20),
+
+                _buildLabel('EMAIL'),
+                const SizedBox(height: 8),
+                Inputcomponent(
+                  hintText: 'Nhập email của bạn',
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+
+                _buildLabel('MẬT KHẨU'),
+                const SizedBox(height: 8),
+                Inputcomponent(
+                  hintText: 'Tạo mật khẩu',
+                  controller: _passwordController,
+                  obscureText: true,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                ButtonComponent(
+                  text: 'ĐĂNG KÝ'.toUpperCase(),
+                  width: double.infinity,
+                  height: 52,
+                  color: AppColors.buttonColor,
+                  textColor: Colors.white,
+                  borderWidth: 0,
+                  borderRadius: 12,
+                  textWeight: FontWeight.w700,
+                  onPressed: () async {
+                    final name = _fullNameController.text.trim();
+                    final username = _usernameController.text.trim();
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+
+                    if (name.isNotEmpty && username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+                      final newUser = UserModel(
+                        username: username,
+                        email: email,
+                        fullName: name,
+                        address: "",
+                        profilePicture: "https://picsum.photos/200",
+                      );
+                      
+                      await AuthenticationRepository.instance.registerWithEmailAndPassword(
+                        newUser, 
+                        password
+                      );
+                    } else {
+                      Get.snackbar("Thông báo", "Vui lòng nhập đầy đủ thông tin", 
+                        snackPosition: SnackPosition.BOTTOM);
+                    }
+                  },
+                ),
+                
+                const SizedBox(height: 24),
+                const DividerWithCenter(centerText: 'Hoặc'),
+                const SizedBox(height: 24),
+                const AuthSocialButtons(),
+                
+                const SizedBox(height: 32),
+                const AuthTermsAgreement(),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        color: AppColors.black,
+        letterSpacing: 1.2,
       ),
     );
   }

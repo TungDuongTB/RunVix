@@ -100,7 +100,7 @@ class ProfileDetailScreen extends StatelessWidget {
                         side: BorderSide(color: AppColors.buttonColor.withOpacity(0.5)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
-                      onPressed: () {},
+                      onPressed: () => Get.to(() => const EditProfileScreen()),
                       icon: const Icon(Icons.edit_outlined, size: 18),
                       label: const Text('Chỉnh sửa', style: TextStyle(fontSize: 12)),
                     ),

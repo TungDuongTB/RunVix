@@ -25,7 +25,6 @@ export './Data/Controller/calendar_controller.dart';
 export './Pages/LoadingScreen.dart';
 export './Pages/Authen/LoginScreen.dart';
 export './Pages/Authen/SignIn.dart';
-export './Pages/Authen/RegisterScreen.dart';
 export './reponsive.dart';
 export './Pages/Authen/AuthTermsPage.dart';
 export 'Pages/Home/Widgets/home/HomeScreen.dart';
@@ -58,6 +57,7 @@ export './Pages/Home/Widgets/Profile/ProfileScreen.dart';
 export './Pages/Home/Widgets/Profile/profile_progress_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_activities_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_detail_screen.dart';
+export './Pages/Home/Widgets/Profile/edit_profile_screen.dart';
 export './Pages/Home/Widgets/Profile/SettingsScreen.dart';
 
 // Admin Pages

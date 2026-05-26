@@ -27,6 +27,10 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<void> updateUserRecord(UserModel user) async {
+    await _db.collection("Users").doc(user.id).update(user.toJson());
+  }
+
   Future<UserModel?> findUserByUsername(String username) async {
     try {
       // Tìm kiếm username (đã lưu dưới dạng lowercase)

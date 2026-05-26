@@ -66,6 +66,20 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> updateUserSettings(UserModel updatedUser) async {
+    try {
+      isLoading.value = true;
+      await _userRepo.updateUserRecord(updatedUser);
+      user.value = updatedUser;
+      Get.back();
+      Get.snackbar("Thành công", "Thông tin cá nhân đã được cập nhật");
+    } catch (e) {
+      Get.snackbar("Lỗi", "Không thể cập nhật thông tin: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> saveUserRecord(UserCredential? userCredential, {required String username, required String name, required String address}) async {
     try {
       if (userCredential != null) {

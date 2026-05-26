@@ -46,8 +46,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Đăng nhập vào Runvix',
-                    textAlign: TextAlign.center,
+                    'Đăng nhập',
                     style: TextStyle(
                       fontSize: 28,
                       color: AppColors.black,
@@ -56,8 +55,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  
-                  // USERNAME FIELD
+
                   _buildLabel('USERNAME HOẶC EMAIL'),
                   const SizedBox(height: 8),
                   Inputcomponent(
@@ -65,8 +63,6 @@ class _LoginscreenState extends State<Loginscreen> {
                     controller: _usernameController,
                   ),
                   const SizedBox(height: 20),
-
-                  // PASSWORD FIELD
                   _buildLabel('MẬT KHẨU'),
                   const SizedBox(height: 8),
                   Inputcomponent(
@@ -77,7 +73,6 @@ class _LoginscreenState extends State<Loginscreen> {
                   
                   const SizedBox(height: 24),
                   
-                  // LOGIN BUTTON
                   ButtonComponent(
                     text: 'Đăng nhập'.toUpperCase(),
                     width: double.infinity,
@@ -91,11 +86,9 @@ class _LoginscreenState extends State<Loginscreen> {
                       final identifier = _usernameController.text.trim();
                       final password = _passwordController.text.trim();
                       if (identifier.isNotEmpty && password.isNotEmpty) {
-                        // Nếu là email (chứa @), dùng loginWithEmail
                         if (identifier.contains('@')) {
                           await AuthenticationRepository.instance.loginWithEmailAndPassword(identifier, password);
                         } else {
-                          // Nếu là username, dùng loginWithUsername
                           await AuthenticationRepository.instance.loginWithUsernameAndPassword(identifier, password);
                         }
                       } else {
@@ -111,7 +104,6 @@ class _LoginscreenState extends State<Loginscreen> {
                   const AuthSocialButtons(),
                   const SizedBox(height: 24),
                   
-                  // Chuyển sang Đăng ký
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

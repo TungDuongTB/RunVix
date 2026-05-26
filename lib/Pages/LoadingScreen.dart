@@ -44,9 +44,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack( // Sử dụng Stack để ảnh tràn toàn màn hình
+      body: Stack(
         children: [
-          // 1. Hình ảnh nền (PageView)
           PageView.builder(
             controller: _pageController,
             onPageChanged: (int page) {
@@ -59,8 +58,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
               return _buildCardSlide(index);
             },
           ),
-
-          // 2. Các thành phần điều khiển (Dots và Buttons) nằm đè lên ảnh
           Positioned(
             bottom: 0,
             left: 0,
@@ -71,7 +68,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Indicators (dấu chấm)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
@@ -91,12 +87,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
                       ),
                     ),
                     const SizedBox(height: 32),
-
-                    // Hàng chứa các nút điều hướng
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Nút Quay lại
                         _currentPage > 0
                             ? GestureDetector(
                           onTap: () {
@@ -117,8 +110,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
                           ),
                         )
                             : const SizedBox(width: 45),
-
-                        // Nút Tiếp theo hoặc Bắt đầu
                         _currentPage < _images.length - 1
                             ? GestureDetector(
                           onTap: () {
@@ -181,10 +172,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ),
           ),
         ),
-
-        // Nội dung văn bản - Đẩy cao lên để không bị các nút che mất
         Positioned(
-          bottom: 160, // Đẩy text lên trên khu vực nút bấm
+          bottom: 160,
           left: 24,
           right: 24,
           child: Column(
@@ -194,7 +183,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               Text(
                 _titles[index],
                 style: const TextStyle(
-                  fontSize: 28, // Tăng kích thước chữ cho đẹp hơn trên nền full ảnh
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   height: 1.2,

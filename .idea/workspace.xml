@@ -9,26 +9,23 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Admin_Screen">
-      <change afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Images/Map.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Images/Run.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Images/Runner.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Images/bike.jpg" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="loadding_screen &amp; build android">
+      <change afterPath="$PROJECT_DIR$/assets/Images/google.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/edit_profile_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/ButtonComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/ButtonComponent.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/auth_social_buttons.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/auth_social_buttons.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/user_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/user_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/RegisterScreen.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/LoadingScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/LoadingScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +99,7 @@
     "io.flutter.project.isFirstOpen": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/DoAn/Project/RunVix/android/app",
+    "last_opened_file_path": "D:/DoAn/Project/RunVix/assets/Images",
     "settings.editor.selected.configurable": "device.screenshot",
     "show.migrate.to.gradle.popup": "false"
   }
@@ -112,6 +109,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\DoAn\Project\RunVix\assets\Images" />
       <recent name="D:\DoAn\Project\RunVix\android\app" />
       <recent name="D:\DoAn\Project\RunVix\Images" />
     </key>
@@ -210,7 +208,23 @@
       <option name="project" value="LOCAL" />
       <updated>1779812495641</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="loadding_screen &amp; build android">
+      <option name="closed" value="true" />
+      <created>1779832185102</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1779832185103</updated>
+    </task>
+    <task id="LOCAL-00011" summary="loadding_screen &amp; build android">
+      <option name="closed" value="true" />
+      <created>1779832206432</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1779832206432</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -234,7 +248,8 @@
     <MESSAGE value="login_google" />
     <MESSAGE value="sign in - login username" />
     <MESSAGE value="Admin_Screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Admin_Screen" />
+    <MESSAGE value="loadding_screen &amp; build android" />
+    <option name="LAST_COMMIT_MESSAGE" value="loadding_screen &amp; build android" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
