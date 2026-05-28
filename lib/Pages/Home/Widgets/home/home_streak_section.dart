@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
 class HomeStreakSection extends StatelessWidget {
@@ -32,27 +31,13 @@ class HomeStreakSection extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               TextButton(
-                onPressed: () async {
-                  if (!calendarController.isAuthorized.value) {
-                    await AuthenticationRepository.instance.googleSignIn.requestScopes([
-                      'https://www.googleapis.com/auth/calendar',
-                      'https://www.googleapis.com/auth/calendar.events'
-                    ]);
-                    calendarController.checkAuthorization();
-                  } else {
-                    calendarController.fetchCurrentWeekEvents();
-                  }
-                },
-                child: Obx(() {
-                  if (calendarController.isLoading.value) {
-                    return const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2));
-                  }
-                  return Text(
-                    calendarController.isAuthorized.value ? 'Đồng bộ' : 'Kết nối Lịch',
-                    style: const TextStyle(color: AppColors.buttonColor),
-                  );
-                }),
+                onPressed: () => NavigationController.instance.changeProfileTab(0),
+                child: const Text(
+                  'Xem lịch',
+                  style: TextStyle(color: AppColors.buttonColor),
+                ),
               ),
+
             ],
           ),
           const SizedBox(height: 16),

@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeSuggestedFollows extends StatelessWidget {
   const HomeSuggestedFollows({super.key});
@@ -73,10 +71,8 @@ class HomeSuggestedFollows extends StatelessWidget {
               if (userController.isLoading.value) {
                 return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
               }
-
-              // Lọc bỏ user hiện tại và những người có vai trò admin/điều phối khỏi danh sách gợi ý
               final displayUsers = userController.allUsers
-                  .where((u) => u.id != currentUserId && u.role != 'admin' && u.role != 'coordinator')
+                  .where((u) => u.id != currentUserId && !u.isAdmin)
                   .toList();
 
               if (displayUsers.isEmpty) {

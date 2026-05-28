@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:runvix/Data/Controller/user_controller.dart';
 import 'package:runvix/export.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,8 +8,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  final userController = Get.put(UserController());
+  final userController = UserController.instance;
+  final navigationController = NavigationController.instance;
 
   final List<Widget> _pages = [
     const HomeContentBody(),
@@ -23,57 +21,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
       backgroundColor: const Color(0xFFF2F2F7),
-      appBar: _selectedIndex == 0
+      appBar: navigationController.selectedIndex.value == 0
           ? AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
               leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Get.to(() => const ProfileDetailScreen());
-                  },
-                  child: Obx(() {
+                padding: const EdgeInsets.all(10.0),
+                child: Image.asset(
+                  'assets/Images/logo.jpg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              title: const Text(
+                'RUNVIX',
+                style: TextStyle(
+                  color: AppColors.buttonColor, 
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: Obx(() {
                     final user = userController.user.value;
                     final networkImage = user.profilePicture;
                     return CircleAvatar(
+                      radius: 14,
                       backgroundColor: Colors.grey.shade200,
                       backgroundImage: networkImage.isNotEmpty 
                           ? NetworkImage(networkImage) 
                           : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
-                      child: networkImage.isEmpty 
-                          ? const Icon(Icons.person, color: Colors.grey) 
+                      child: networkImage.isEmpty
+                          ? const Icon(Icons.person, size: 18, color: Colors.grey) 
                           : null,
                     );
                   }),
+                  onPressed: () => Get.to(() => const ProfileDetailScreen()),
                 ),
-              ),
-              title: const Text(
-                'Trang chủ',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-              centerTitle: true,
-              actions: [
-                IconButton(icon: const Icon(Icons.search, color: Colors.black), onPressed: () {}),
-                IconButton(icon: const Icon(Icons.chat_bubble_outline, color: Colors.black), onPressed: () {}),
-                IconButton(icon: const Icon(Icons.notifications_none, color: Colors.black), onPressed: () {}),
+                const SizedBox(width: 8),
               ],
             )
           : null,
       body: IndexedStack(
-        index: _selectedIndex,
+        index: navigationController.selectedIndex.value,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+        currentIndex: navigationController.selectedIndex.value,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.buttonColor,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
         unselectedLabelStyle: const TextStyle(fontSize: 12),
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) => navigationController.changeIndex(index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
           BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Bản đồ'),
@@ -82,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Bạn'),
         ],
       ),
-    );
+    ));
   }
 }
 

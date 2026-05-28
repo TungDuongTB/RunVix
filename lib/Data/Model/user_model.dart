@@ -16,8 +16,8 @@ class UserModel {
   final String gender;
   final double weight;
   final double height;
-  final String role; // 'admin', 'coordinator', 'user'
-  final String status; // 'active', 'blocked'
+  final Map<String, bool> roles;
+  final String status;
 
   const UserModel({
     this.id,
@@ -35,9 +35,13 @@ class UserModel {
     this.gender = "Nam",
     this.weight = 0.0,
     this.height = 0.0,
-    this.role = 'user',
+    this.roles = const {'user': true},
     this.status = 'active',
   });
+
+  bool get isAdmin => roles['admin'] ?? false;
+  bool get isCoordinator => roles['coordinator'] ?? false;
+  bool get isUser => roles['user'] ?? false;
 
   toJson() {
     return {
@@ -55,7 +59,7 @@ class UserModel {
       "Gender": gender,
       "Weight": weight,
       "Height": height,
-      "Role": role,
+      "Roles": roles,
       "Status": status,
     };
   }
@@ -79,7 +83,7 @@ class UserModel {
       gender: data["Gender"] ?? "Nam",
       weight: (data["Weight"] ?? 0.0).toDouble(),
       height: (data["Height"] ?? 0.0).toDouble(),
-      role: data["Role"] ?? "user",
+      roles: Map<String, bool>.from(data["Roles"] ?? {'user': true}),
       status: data["Status"] ?? "active",
     );
   }
@@ -91,7 +95,7 @@ class UserModel {
         fullName: "",
         address: "",
         profilePicture: "https://picsum.photos/200",
-        role: "user",
+        roles: {'user': true},
         status: "active",
       );
 
@@ -111,7 +115,7 @@ class UserModel {
     String? gender,
     double? weight,
     double? height,
-    String? role,
+    Map<String, bool>? roles,
     String? status,
   }) {
     return UserModel(
@@ -130,7 +134,7 @@ class UserModel {
       gender: gender ?? this.gender,
       weight: weight ?? this.weight,
       height: height ?? this.height,
-      role: role ?? this.role,
+      roles: roles ?? this.roles,
       status: status ?? this.status,
     );
   }

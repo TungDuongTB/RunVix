@@ -90,7 +90,7 @@ class UserController extends GetxController {
           email: userCredential.user!.email ?? "",
           address: address,
           profilePicture: "https://picsum.photos/200",
-          role: "user",
+          roles: {'user': true},
         );
 
         await _userRepo.createUser(newUser);

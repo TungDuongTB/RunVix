@@ -53,14 +53,6 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'RUNVIX',
-                    style: TextStyle(
-                      color: Color(0xFFFF4500), // Màu cam giống Strava
-                      fontSize: 24,
-                      letterSpacing: -1,
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   const Text(
                     'Cập nhật Điều khoản\nDịch vụ và Chính sách',

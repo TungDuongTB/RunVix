@@ -1,25 +1,38 @@
 //package
 export 'package:get/get.dart';
-export 'package:flutter/cupertino.dart';
+export 'package:flutter/material.dart';
 export 'package:flutter/gestures.dart';
+export 'package:image_picker/image_picker.dart';
+
+//firebase
+export 'package:firebase_core/firebase_core.dart';
+export 'package:firebase_auth/firebase_auth.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
+export 'package:firebase_storage/firebase_storage.dart';
 
 // Data - Model
 export './Data/Model/user_model.dart';
 export './Data/Model/workout_model.dart';
 export './Data/Model/challenge_model.dart';
 export './Data/Model/route_model.dart';
+export './Data/Model/post_model.dart';
+export './Data/Model/comment_model.dart';
+export './Data/Model/like_model.dart';
 
 // Data - Repository
 export './Data/Repository/authentication_repository.dart';
 export './Data/Repository/user_repository.dart';
 export './Data/Repository/workout_repository.dart';
 export './Data/Repository/calendar_repository.dart';
+export './Data/Repository/post_repository.dart';
 
 // Data - Controller
 export './Data/Controller/user_controller.dart';
 export './Data/Controller/record_controller.dart';
 export './Data/Controller/profile_controller.dart';
 export './Data/Controller/calendar_controller.dart';
+export './Data/Controller/navigation_controller.dart';
+export './Data/Controller/post_controller.dart';
 
 //pages
 export './Pages/LoadingScreen.dart';
@@ -58,6 +71,7 @@ export './Pages/Home/Widgets/Profile/profile_progress_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_activities_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_detail_screen.dart';
 export './Pages/Home/Widgets/Profile/edit_profile_screen.dart';
+export './Pages/Home/Widgets/Profile/create_post_screen.dart';
 export './Pages/Home/Widgets/Profile/SettingsScreen.dart';
 
 // Admin Pages
@@ -74,6 +88,4 @@ export './Component/TextFieldComponent.dart';
 export './Component/InputComponent.dart';
 export './Component/auth_social_buttons.dart';
 export './Component/auth_terms_agreement.dart';
-
-//firebase
-export 'package:firebase_auth/firebase_auth.dart';
+export './Component/action_dialog.dart';

@@ -98,15 +98,15 @@ class _AdminUsersPanelState extends State<AdminUsersPanel> {
                           DataCell(Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: user.role == 'admin' ? Colors.red.withOpacity(0.1) : (user.role == 'coordinator' ? Colors.blue.withOpacity(0.1) : Colors.green.withOpacity(0.1)),
+                              color: user.isAdmin ? Colors.red.withOpacity(0.1) : (user.isCoordinator ? Colors.blue.withOpacity(0.1) : Colors.green.withOpacity(0.1)),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              user.role.toUpperCase(),
+                              user.roles.toString().toLowerCase(),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: user.role == 'admin' ? Colors.red : (user.role == 'coordinator' ? Colors.blue : Colors.green),
+                                color: user.isAdmin ? Colors.red : (user.isCoordinator ? Colors.blue : Colors.green),
                               ),
                             ),
                           )),
@@ -154,7 +154,7 @@ class _AdminUsersPanelState extends State<AdminUsersPanel> {
             Text("Username: @${user.username}"),
             Text("Email: ${user.email}"),
             Text("Địa chỉ: ${user.address}"),
-            Text("Vai trò: ${user.role}"),
+            Text("Vai trò: ${user.roles}"),
             const SizedBox(height: 16),
             const Text("Hoạt động gần đây:", style: TextStyle(fontWeight: FontWeight.bold)),
             const Text("- Chạy bộ 5km (2 ngày trước)"),

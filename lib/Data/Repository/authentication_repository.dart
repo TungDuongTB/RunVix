@@ -92,7 +92,7 @@ class AuthenticationRepository extends GetxController {
       try {
         // Fetch user data to check role
         final userData = await UserRepository.instance.getUserDetails(user.uid);
-        if (userData.role == 'admin' || userData.role == 'coordinator') {
+        if (userData.isAdmin || userData.isCoordinator) {
           Get.offAll(() => const AdminDashboardScreen());
         } else {
           Get.offAll(() => const HomeScreen());
