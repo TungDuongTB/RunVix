@@ -15,8 +15,8 @@ class PostModel {
   PostModel({
     this.id,
     required this.userId,
-    required this.userName,
-    required this.userProfilePicture,
+    this.userName = "",
+    this.userProfilePicture = "",
     required this.title,
     required this.content,
     required this.imageUrl,
@@ -28,8 +28,6 @@ class PostModel {
   toJson() {
     return {
       "UserId": userId,
-      "UserName": userName,
-      "UserProfilePicture": userProfilePicture,
       "Title": title,
       "Content": content,
       "ImageUrl": imageUrl,
@@ -39,13 +37,13 @@ class PostModel {
     };
   }
 
-  factory PostModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory PostModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document, {String? userName, String? userProfilePicture}) {
     final data = document.data()!;
     return PostModel(
       id: document.id,
       userId: data["UserId"] ?? "",
-      userName: data["UserName"] ?? "",
-      userProfilePicture: data["UserProfilePicture"] ?? "",
+      userName: userName ?? "",
+      userProfilePicture: userProfilePicture ?? "",
       title: data["Title"] ?? "",
       content: data["Content"] ?? "",
       imageUrl: data["ImageUrl"] ?? "",

@@ -8,44 +8,101 @@ class PostController extends GetxController {
 
   final title = TextEditingController();
   final content = TextEditingController();
+  
   final isLoading = false.obs;
+  final isLoadingMore = false.obs;
+  final allPosts = <PostModel>[].obs;
+  
+  DocumentSnapshot? _lastDocument;
+  bool _hasMore = true;
+  final int _limit = 10;
+
+  @override
+  void onInit() {
+    fetchPosts();
+    super.onInit();
+  }
+
+  Future<void> fetchPosts() async {
+    if (isLoading.value) return;
+    
+    try {
+      isLoading.value = true;
+      _lastDocument = null;
+      _hasMore = true;
+      
+      final result = await postRepo.getPaginatedPosts(null, _limit);
+      final posts = result["posts"] as List<PostModel>;
+      _lastDocument = result["lastDocument"] as DocumentSnapshot?;
+      
+      allPosts.assignAll(posts);
+      
+      if (posts.length < _limit) {
+        _hasMore = false;
+      }
+    } catch (e) {
+      print("Fetch Error: $e");
+      Get.snackbar("Lỗi", "Không thể tải bài viết");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> loadMorePosts() async {
+    // Ngăn chặn gọi đồng thời hoặc khi đang tải trang đầu, hoặc khi đã hết dữ liệu
+    if (isLoading.value || isLoadingMore.value || !_hasMore || allPosts.isEmpty) return;
+
+    try {
+      isLoadingMore.value = true;
+      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit);
+      final posts = result["posts"] as List<PostModel>;
+      final newLastDoc = result["lastDocument"] as DocumentSnapshot?;
+      
+      if (posts.isEmpty) {
+        _hasMore = false;
+      } else {
+        // Lọc bỏ bài viết trùng lặp dựa trên ID để tránh hiện tượng "loop" dữ liệu
+        final existingIds = allPosts.map((p) => p.id).toSet();
+        final uniqueNewPosts = posts.where((p) => !existingIds.contains(p.id)).toList();
+        
+        if (uniqueNewPosts.isNotEmpty) {
+          allPosts.addAll(uniqueNewPosts);
+          _lastDocument = newLastDoc;
+        }
+
+        if (posts.length < _limit) {
+          _hasMore = false;
+        }
+      }
+    } catch (e) {
+      print("Error loading more: $e");
+    } finally {
+      isLoadingMore.value = false;
+    }
+  }
+
+  // Xóa hàm _getLastDocumentFromFirestore vì không còn cần thiết
+
 
   Future<void> createPost(XFile? imageFile) async {
     try {
-      // 1. Kiểm tra quyền (Chỉ Điều phối viên hoặc Admin mới được đăng bài)
-      if (!userController.user.value.isCoordinator && !userController.user.value.isAdmin) {
-        Get.snackbar("Thông báo", "Bạn không có quyền thực hiện chức năng này.");
-        return;
-      }
-
-      // 2. Kiểm tra dữ liệu đầu vào
-      if (title.text.trim().isEmpty || content.text.trim().isEmpty) {
-        Get.snackbar("Thông báo", "Vui lòng nhập tiêu đề và nội dung");
-        return;
-      }
-
-      if (imageFile == null) {
-        Get.snackbar("Thông báo", "Vui lòng chọn ảnh cho bài viết");
-        return;
-      }
-
       isLoading.value = true;
 
       final post = PostModel(
         userId: userController.user.value.id ?? "",
-        userName: userController.user.value.fullName,
-        userProfilePicture: userController.user.value.profilePicture,
         title: title.text.trim(),
         content: content.text.trim(),
-        imageUrl: "", // Sẽ được cập nhật trong repository
+        imageUrl: "", 
       );
 
       await postRepo.createPost(post, imageFile);
 
-      Get.back(); // Quay lại màn hình trước
+      // Reset và tải lại dữ liệu mới nhất
+      await fetchPosts();
+
+      Get.back(); 
       Get.snackbar("Thành công", "Bài viết của bạn đã được đăng!");
       
-      // Clear inputs
       title.clear();
       content.clear();
     } catch (e) {
