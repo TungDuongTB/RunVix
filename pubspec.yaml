@@ -45,7 +45,6 @@ dependencies:
   googleapis_auth: ^1.6.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.13
   image_picker: ^1.2.2
-  firebase_storage: ^12.4.10
   cloudinary_flutter: ^1.0.0
   cloudinary_url_gen: ^1.0.0
   http: ^1.1.0

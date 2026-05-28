@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../Model/user_model.dart';
-import '../Repository/user_repository.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:runvix/export.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.find();
@@ -11,11 +9,11 @@ class UserController extends GetxController {
   final user = UserModel.empty().obs;
   final allUsers = <UserModel>[].obs;
   final isLoading = false.obs;
+  final imageUploading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Lắng nghe sự thay đổi của Auth để tự động fetch dữ liệu
     _listenToAuthChanges();
     fetchAllUsers();
   }
@@ -39,7 +37,7 @@ class UserController extends GetxController {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         final userData = await _userRepo.getUserDetails(currentUser.uid);
-        
+
         if (userData != null) {
           user.value = userData;
           debugPrint("✅ Dữ liệu đã được lưu vào UserController: ${user.value.fullName}");
@@ -63,6 +61,39 @@ class UserController extends GetxController {
       debugPrint("❌ Lỗi khi lấy tất cả user: $e");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<String> uploadImage(XFile image) async {
+    try {
+      imageUploading.value = true;
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('https://api.cloudinary.com/v1_1/dz1z232l7/image/upload'),
+      );
+      request.fields['upload_preset'] = 'RunVix';
+      final bytes = await image.readAsBytes();
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: image.name,
+      ));
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['secure_url'];
+      } else {
+        debugPrint("Cloudinary Error: ${response.body}");
+        final errorData = jsonDecode(response.body);
+        throw errorData['error']['message'];
+      }
+    } catch (e) {
+      debugPrint("Upload Error: $e");
+      throw "Lỗi khi tải ảnh lên: $e";
+    } finally {
+      imageUploading.value = false;
     }
   }
 

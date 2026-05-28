@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class Inputcomponent extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final bool obscureText;
 
   const Inputcomponent({
     super.key,
     required this.hintText,
     this.controller,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType,
     this.obscureText = false,
   });
 
