@@ -8,14 +8,12 @@ class MapScreen extends GetView<StravaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        // Hiển thị loading khi đang xác định vị trí ban đầu
         if (controller.isLoadingLocation.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
         return Stack(
           children: [
-            // 1. Google Map - Tự động cập nhật khi polylines thay đổi
             Positioned.fill(
               child: Obx(() {
                 final pos = controller.currentPosition.value;
@@ -26,7 +24,7 @@ class MapScreen extends GetView<StravaController> {
                   initialCameraPosition: CameraPosition(
                     target: pos != null
                         ? LatLng(pos.latitude, pos.longitude)
-                        : const LatLng(21.0285, 105.8542), // Mặc định Hà Nội
+                        : const LatLng(21.0285, 105.8542),
                     zoom: 15.0,
                   ),
                   myLocationEnabled: true,
@@ -39,7 +37,6 @@ class MapScreen extends GetView<StravaController> {
               }),
             ),
 
-            // 2. Thanh tìm kiếm và bộ lọc phía trên (Đã tách widget)
             const Positioned(
               top: 0,
               left: 0,
@@ -47,13 +44,11 @@ class MapScreen extends GetView<StravaController> {
               child: MapTopSearch(),
             ),
 
-            // 3. Các nút chức năng nổi phía bên phải (Đã tách widget)
             Positioned(
               right: 16,
               top: MediaQuery.of(context).size.height * 0.25,
               child: const MapFloatingButtons(),
             ),
-            // 4. Thẻ thông tin dưới cùng (Lộ trình hoặc Chi tiết đoạn đường)
             Obx(() {
               if (controller.selectedSegment.value != null) {
                 return Positioned(

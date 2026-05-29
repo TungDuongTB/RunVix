@@ -117,9 +117,7 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: OutlinedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Loginscreen()), (route) => false);
-              },
+              onPressed: () => AuthenticationRepository.instance.logout(),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.buttonColor),
                 padding: const EdgeInsets.symmetric(vertical: 14),

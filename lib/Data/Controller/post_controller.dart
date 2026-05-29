@@ -19,8 +19,10 @@ class PostController extends GetxController {
 
   @override
   void onInit() {
-    fetchPosts();
     super.onInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchPosts();
+    });
   }
 
   Future<void> fetchPosts() async {

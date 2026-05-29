@@ -15,19 +15,23 @@ class UserController extends GetxController {
   void onInit() {
     super.onInit();
     _listenToAuthChanges();
-    fetchAllUsers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchAllUsers();
+    });
   }
 
   void _listenToAuthChanges() {
     FirebaseAuth.instance.authStateChanges().listen((User? firebaseUser) {
-      if (firebaseUser != null) {
-        debugPrint("🔄 Auth detected: Fetching user data for ${firebaseUser.uid}...");
-        fetchUserRecord();
-      } else {
-        debugPrint("👤 Auth detected: No user logged in. Clearing data.");
-        user.value = UserModel.empty();
-        allUsers.clear();
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (firebaseUser != null) {
+          debugPrint("🔄 Auth detected: Fetching user data for ${firebaseUser.uid}...");
+          fetchUserRecord();
+        } else {
+          debugPrint("👤 Auth detected: No user logged in. Clearing data.");
+          user.value = UserModel.empty();
+          allUsers.clear();
+        }
+      });
     });
   }
 

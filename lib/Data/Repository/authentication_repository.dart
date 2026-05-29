@@ -67,9 +67,10 @@ class AuthenticationRepository extends GetxController {
   void _initializeFirebaseAuth() {
     try {
       firebaseUser.value = _auth.currentUser;
-      print("✅ Firebase initialized. Current user: ${firebaseUser.value?.email}");
+      print("🔐 Firebase initialized. Current user: ${firebaseUser.value?.email ?? 'None'}");
     } catch (e) {
       print("❌ Firebase init error: $e");
+      firebaseUser.value = null;
     }
   }
 
@@ -90,11 +91,16 @@ class AuthenticationRepository extends GetxController {
       }
     } else {
       try {
-        // Fetch user data to check role
-        final userData = await UserRepository.instance.getUserDetails(user.uid);
-        if (userData.isAdmin || userData.isCoordinator) {
-          Get.offAllNamed('/admin-dashboard'); // Đảm bảo bạn có route này
-        } else {
+        try {
+          final userData = await UserRepository.instance.getUserDetails(user.uid);
+          print("User Role Admin: ${userData.isAdmin}"); // Thêm dòng này để debug
+          if (userData.isAdmin) {
+            Get.offAllNamed('/admin-dashboard');
+          } else {
+            Get.offAllNamed('/home');
+          }
+        } catch (e) {
+          print("Error fetching user role: $e");
           Get.offAllNamed('/home');
         }
       } catch (e) {
@@ -103,6 +109,7 @@ class AuthenticationRepository extends GetxController {
       }
     }
   }
+
 
   Future<void> signInWithGoogle() async {
     try {
@@ -138,20 +145,31 @@ class AuthenticationRepository extends GetxController {
 
   Future<void> logout() async {
     _lastProcessedUid = null;
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    if (Get.isRegistered<UserController>()) {
-      UserController.instance.user.value = UserModel.empty();
-      UserController.instance.allUsers.clear();
-    }
 
-    if (Get.isRegistered<CalendarController>()) {
-      CalendarController.instance.weeklyEvents.clear();
-      CalendarController.instance.todayEvents.clear();
-      CalendarController.instance.isAuthorized.value = false;
+    try {
+      if (Get.isRegistered<UserController>()) {
+        UserController.instance.user.value = UserModel.empty();
+        UserController.instance.allUsers.clear();
+      }
+
+      if (Get.isRegistered<CalendarController>()) {
+        CalendarController.instance.weeklyEvents.clear();
+        CalendarController.instance.todayEvents.clear();
+        CalendarController.instance.isAuthorized.value = false;
+      }
+
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+
+      print("✅ Successfully signed out");
+      Get.offAllNamed('/login');
+    } catch (e) {
+      print("⚠️ Logout error: $e");
+      Get.snackbar("Lỗi", "Không thể đăng xuất",
+          backgroundColor: AppColors.danger, colorText: Colors.white);
     }
-    Get.offAll(() => const LoadingScreen());
   }
+
 
   // Các hàm login/register email giữ nguyên như cũ...
   Future<void> loginWithEmailAndPassword(String email, String password) async {

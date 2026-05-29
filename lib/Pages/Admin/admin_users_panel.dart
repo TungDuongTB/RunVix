@@ -15,7 +15,9 @@ class _AdminUsersPanelState extends State<AdminUsersPanel> {
   @override
   void initState() {
     super.initState();
-    userController.fetchAllUsers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      userController.fetchAllUsers();
+    });
   }
 
   @override
