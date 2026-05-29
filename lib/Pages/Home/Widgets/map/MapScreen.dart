@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:runvix/export.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
-// Dùng GetView thay StatefulWidget cho phần controller
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
@@ -12,11 +13,56 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
+  Position? _currentPosition;
+  bool _isLoadingLocation = true;
 
-  // Dùng Get.find trực tiếp, KHÔNG dùng late + initState
   StravaController get controller => Get.find<StravaController>();
 
-  final LatLng _center = const LatLng(10.762622, 106.660172);
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+  Future<void> _determinePosition() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) setState(() => _isLoadingLocation = false);
+        return;
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) setState(() => _isLoadingLocation = false);
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) setState(() => _isLoadingLocation = false);
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition();
+      if (mounted) {
+        setState(() {
+          _currentPosition = position;
+          _isLoadingLocation = false;
+        });
+      }
+    } catch (e) {
+      debugPrint("Lỗi khi lấy vị trí: $e");
+      if (mounted) {
+        setState(() => _isLoadingLocation = false);
+      }
+    }
+  }
 
   void _onMapCreated(GoogleMapController googleMapController) {
     mapController = googleMapController;
@@ -35,45 +81,48 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // 1. Google Map
-          Positioned.fill(
-            child: Obx(() {
-              // Phải đọc .value hoặc toSet() để Obx track được
-              final polylinesSet = controller.polylines.toSet();
+      body: _isLoadingLocation
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                // 1. Google Map
+                Positioned.fill(
+                  child: Obx(() {
+                    final polylinesSet = controller.polylines.toSet();
 
-              return GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 15.0,
+                    return GoogleMap(
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: CameraPosition(
+                        target: _currentPosition != null
+                            ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
+                            : const LatLng(21.0285, 105.8542),
+                        zoom: 15.0,
+                      ),
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      mapType: MapType.normal,
+                      polylines: polylinesSet,
+                      onCameraIdle: _fetchSegments,
+                    );
+                  }),
                 ),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                mapType: MapType.normal,
-                polylines: polylinesSet, // ← dùng biến đã extract
-                onCameraIdle: _fetchSegments,
-              );
-            }),
-          ),
 
-          // 2. Top Search & Filters
-          const MapTopSearch(),
+                // 2. Top Search & Filters
+                const MapTopSearch(),
 
-          // 3. Floating Action Buttons
-          const MapFloatingButtons(),
+                // 3. Floating Action Buttons
+                const MapFloatingButtons(),
 
-          // 4. Bottom Card
-          Obx(() {
-            if (controller.selectedSegment.value != null) {
-              return const MapSegmentDetailCard();
-            }
-            return const MapRouteCard();
-          }),
-        ],
-      ),
+                // 4. Bottom Card
+                Obx(() {
+                  if (controller.selectedSegment.value != null) {
+                    return const MapSegmentDetailCard();
+                  }
+                  return const MapRouteCard();
+                }),
+              ],
+            ),
     );
   }
 }
