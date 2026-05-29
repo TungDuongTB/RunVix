@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:runvix/firebase_options.dart'; // File này sẽ được sinh ra khi anh chạy lệnh cấu hình
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:runvix/firebase_options.dart'; 
 import 'export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
   
   print("🚀 Khởi động ứng dụng RunVix...");
 
@@ -22,15 +23,8 @@ void main() async {
     print("📋 Hướng dẫn: Mở Terminal và chạy lệnh 'flutterfire configure' để tạo file cấu hình.");
   }
 
-  // Luôn nạp Repository để tránh lỗi "not found"
-  print("📦 Đang tải Repositories...");
-  Get.put(UserRepository());
-  Get.put(UserController()); 
-  Get.put(AuthenticationRepository());
-  Get.put(PostRepository()); // Thêm PostRepository
-  Get.put(CalendarController()); 
-  Get.put(NavigationController());
-  print("✅ Repositories đã sẵn sàng!");
+  // Luôn nạp Repository qua InitialBinding
+  print("📦 Đang khởi tạo ứng dụng với InitialBinding...");
 
   runApp(const MyApp());
 }
@@ -44,9 +38,16 @@ class MyApp extends StatelessWidget {
       title: 'RunVix',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
-      initialRoute: '/', // Xác định rõ route khởi đầu
+      initialRoute: '/',
+      initialBinding: InitialBinding(),
       getPages: [
         GetPage(name: '/', page: () => const LoadingScreen()),
+        GetPage(name: '/login', page: () => const Loginscreen()),
+        GetPage(
+          name: '/home', 
+          page: () => const HomeScreen(),
+          binding: MapBinding(),
+        ),
       ],
       theme: ThemeData(
         useMaterial3: true,

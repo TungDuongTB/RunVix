@@ -15,6 +15,8 @@
         "firebase_auth",
         "firebase_core",
         "flutter",
+        "flutter_dotenv",
+        "flutter_polyline_points",
         "flutter_svg",
         "geolocator",
         "get",
@@ -54,6 +56,21 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "flutter_polyline_points",
+      "version": "3.1.0",
+      "dependencies": [
+        "flutter",
+        "http"
+      ]
+    },
+    {
+      "name": "flutter_dotenv",
+      "version": "6.0.1",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

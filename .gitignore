@@ -52,3 +52,6 @@ cmake_install.cmake
 .idea/workspace.xml
 .idea/libraries/
 .idea/easycode/
+
+# Environment variables
+.env

@@ -86,20 +86,20 @@ class AuthenticationRepository extends GetxController {
 
     if (user == null) {
       if (Get.currentRoute != '/login') {
-        Get.offAll(() => const Loginscreen());
+        Get.offAllNamed('/login');
       }
     } else {
       try {
         // Fetch user data to check role
         final userData = await UserRepository.instance.getUserDetails(user.uid);
         if (userData.isAdmin || userData.isCoordinator) {
-          Get.offAll(() => const AdminDashboardScreen());
+          Get.offAllNamed('/admin-dashboard'); // Đảm bảo bạn có route này
         } else {
-          Get.offAll(() => const HomeScreen());
+          Get.offAllNamed('/home');
         }
       } catch (e) {
         print("Error fetching user role: $e");
-        Get.offAll(() => const HomeScreen());
+        Get.offAllNamed('/home');
       }
     }
   }
