@@ -53,19 +53,18 @@ class MapScreen extends GetView<StravaController> {
               top: MediaQuery.of(context).size.height * 0.25,
               child: const MapFloatingButtons(),
             ),
-
             // 4. Thẻ thông tin dưới cùng (Lộ trình hoặc Chi tiết đoạn đường)
-            Positioned(
-              bottom: 16,
-              left: 16,
-              right: 16,
-              child: Obx(() {
-                if (controller.selectedSegment.value != null) {
-                  return const MapSegmentDetailCard();
-                }
-                return const MapRouteCard();
-              }),
-            ),
+            Obx(() {
+              if (controller.selectedSegment.value != null) {
+                return Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: const MapSegmentDetailCard(),
+                );
+              }
+              return const MapRouteBottomSheet();
+            }),
           ],
         );
       }),

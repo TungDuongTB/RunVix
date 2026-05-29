@@ -56,7 +56,7 @@ export './Pages/Home/Widgets/home/home_suggested_challenges.dart';
 // Map Widgets
 export './Pages/Home/Widgets/map/map_top_search.dart';
 export './Pages/Home/Widgets/map/map_floating_button.dart';
-export './Pages/Home/Widgets/map/map_route_card.dart';
+export './Pages/Home/Widgets/map/map_route_bottom_sheet.dart';
 export './Pages/Home/Widgets/map/map_segment_detail_card.dart';
 
 // Group Widgets

@@ -26,7 +26,29 @@ class StravaController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    determinePosition();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    await determinePosition();
+    if (currentPosition.value != null) {
+      await fetchNearbySegments();
+    }
+  }
+
+  Future<void> fetchNearbySegments() async {
+    if (currentPosition.value == null) return;
+    
+    final lat = currentPosition.value!.latitude;
+    final lng = currentPosition.value!.longitude;
+    
+    // Tạo bounds khoảng 5km xung quanh vị trí hiện tại
+    const offset = 0.045; // Khoảng 5km
+    final southwest = LatLng(lat - offset, lng - offset);
+    final northeast = LatLng(lat + offset, lng + offset);
+    
+    final bounds = LatLngBounds(southwest: southwest, northeast: northeast);
+    await fetchSegments(bounds);
   }
 
   Future<void> determinePosition() async {
