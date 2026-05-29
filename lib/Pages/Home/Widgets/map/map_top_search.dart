@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
-import '../../../../Component/FilterComponent.dart';
 
 class MapTopSearch extends StatelessWidget {
   const MapTopSearch({super.key});
@@ -12,9 +10,7 @@ class MapTopSearch extends StatelessWidget {
         children: [
           _buildSearchRow(),
           const SizedBox(height: 8),
-          _buildFilterRow(),
-          const SizedBox(height: 16),
-          _buildSearchHereButton(),
+          _buildFilterRow(context),
         ],
       ),
     );
@@ -57,32 +53,36 @@ class MapTopSearch extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterRow() {
+  Widget _buildFilterRow(BuildContext context) {
+    final controller = StravaController.instance;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          AppFilterChip(label: 'Lộ trình', isSelected: true, hasDropdown: true, onTap: () {}),
-          AppFilterChip(label: 'Độ dài', onTap: () {}),
-          AppFilterChip(label: 'Độ cao', onTap: () {}),
-          AppFilterChip(label: 'Bề mặt', onTap: () {}),
-          AppFilterChip(label: 'Khó khăn', onTap: () {}),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchHereButton() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.buttonColor,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 2,
-      ),
-      child: const Text('Tìm kiếm tại đây', style: TextStyle(fontWeight: FontWeight.bold)),
+      child: Obx(() {
+        final distance = controller.selectedDistance.value;
+        final isDistanceSelected = distance > 0;
+        
+        return Row(
+          children: [
+            AppFilterChip(label: 'Lộ trình', isSelected: true, hasDropdown: true, onTap: () {}),
+            AppFilterChip(
+              label: isDistanceSelected ? 'Độ dài: ${distance.round()} km+' : 'Độ dài',
+              isSelected: isDistanceSelected,
+              hasDropdown: isDistanceSelected,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const MapDistanceFilterSheet(),
+                );
+              },
+            ),
+            AppFilterChip(label: 'Bề mặt', onTap: () {}),
+            AppFilterChip(label: 'Khó khăn', onTap: () {}),
+          ],
+        );
+      }),
     );
   }
 }

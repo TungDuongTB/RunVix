@@ -16,8 +16,12 @@ class StravaController extends GetxController {
   var isLoadingLocation = true.obs;
   
   var segments = <dynamic>[].obs;
+  var allSegments = <dynamic>[].obs; // Lưu trữ tất cả để lọc
   var isLoading = false.obs;
   var polylines = <Polyline>{}.obs;
+  
+  // Filters
+  var selectedDistance = 0.0.obs;
   
   var selectedSegment = Rxn<dynamic>();
   var selectedSegmentLeaderboard = <dynamic>[].obs;
@@ -27,6 +31,59 @@ class StravaController extends GetxController {
   void onInit() {
     super.onInit();
     _initData();
+    
+    // Lắng nghe thay đổi khoảng cách để lọc lại và focus
+    ever(selectedDistance, (_) => applyFilters(shouldFocus: true));
+  }
+
+  /// Lọc các đoạn đường dựa trên khoảng cách
+  void applyFilters({bool shouldFocus = false}) {
+    if (selectedDistance.value == 0) {
+      segments.assignAll(allSegments);
+    } else {
+      segments.assignAll(allSegments.where((s) {
+        final distanceKm = (s['distance'] ?? 0) / 1000;
+        return distanceKm >= selectedDistance.value;
+      }).toList());
+    }
+    _updatePolylinesFromSegments();
+    
+    // Chỉ focus nếu được yêu cầu (ví dụ: khi người dùng thay đổi bộ lọc)
+    if (shouldFocus && segments.isNotEmpty && currentPosition.value != null) {
+      focusNearestSegment();
+    }
+  }
+
+  void focusNearestSegment() {
+    if (segments.isEmpty || currentPosition.value == null) return;
+
+    dynamic nearest;
+    double minDistance = double.infinity;
+
+    for (var segment in segments) {
+      final startLatLng = segment['start_latlng'];
+      if (startLatLng != null && startLatLng is List && startLatLng.length == 2) {
+        double dist = Geolocator.distanceBetween(
+          currentPosition.value!.latitude,
+          currentPosition.value!.longitude,
+          startLatLng[0],
+          startLatLng[1],
+        );
+        if (dist < minDistance) {
+          minDistance = dist;
+          nearest = segment;
+        }
+      }
+    }
+
+    if (nearest != null) {
+      final lat = nearest['start_latlng'][0];
+      final lng = nearest['start_latlng'][1];
+      mapController.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14),
+      );
+      selectSegment(nearest['id']);
+    }
   }
 
   Future<void> _initData() async {
@@ -79,13 +136,30 @@ class StravaController extends GetxController {
     fetchSegmentsInView();
   }
 
+  LatLngBounds? _lastFetchedBounds;
+
   Future<void> fetchSegmentsInView() async {
     try {
       LatLngBounds bounds = await mapController.getVisibleRegion();
+      
+      // Nếu vùng hiển thị không thay đổi đáng kể, đừng gọi API
+      if (_lastFetchedBounds != null && 
+          _isBoundsSimilar(_lastFetchedBounds!, bounds)) {
+        return;
+      }
+      _lastFetchedBounds = bounds;
       await fetchSegments(bounds);
     } catch (e) {
       debugPrint("Lỗi khi lấy vùng bản đồ: $e");
     }
+  }
+
+  bool _isBoundsSimilar(LatLngBounds b1, LatLngBounds b2) {
+    const double threshold = 0.001; // Ngưỡng thay đổi nhỏ để bỏ qua
+    return (b1.southwest.latitude - b2.southwest.latitude).abs() < threshold &&
+           (b1.southwest.longitude - b2.southwest.longitude).abs() < threshold &&
+           (b1.northeast.latitude - b2.northeast.latitude).abs() < threshold &&
+           (b1.northeast.longitude - b2.northeast.longitude).abs() < threshold;
   }
 
   /// Lấy các đoạn đường dựa trên vùng bản đồ hiện tại
@@ -101,9 +175,8 @@ class StravaController extends GetxController {
       ];
 
       final result = await _stravaRepo.exploreSegments(stravaBounds);
-      segments.assignAll(result);
-      
-      _updatePolylinesFromSegments();
+      allSegments.assignAll(result); // Lưu vào danh sách gốc để lọc
+      applyFilters(shouldFocus: false); // Không tự động focus khi di chuyển bản đồ
       
     } catch (e) {
       print('Error fetching segments: $e');

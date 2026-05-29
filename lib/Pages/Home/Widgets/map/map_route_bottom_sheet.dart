@@ -1,5 +1,4 @@
 import 'package:runvix/export.dart';
-import '../../../../Component/RouteCardComponent.dart';
 
 class MapRouteBottomSheet extends StatefulWidget {
   const MapRouteBottomSheet({super.key});
@@ -11,12 +10,9 @@ class MapRouteBottomSheet extends StatefulWidget {
 class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
   final controller = Get.find<StravaController>();
   final DraggableScrollableController _sheetController = DraggableScrollableController();
-  
-  // Chiều cao ban đầu của 1 card + padding (khoảng 160-180px)
-  static const double minSize = 0.22; 
-  // Chiều cao khi hiện 3 card (khoảng 450-500px)
+
+  static const double minSize = 0.22;
   static const double midSize = 0.6;
-  // Chiều cao tối đa
   static const double maxSize = 0.9;
 
   @override
@@ -34,7 +30,7 @@ class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
-              BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
+              BoxShadow(color: Colors.black54, blurRadius: 10, spreadRadius: 2),
             ],
           ),
           child: Column(
@@ -46,7 +42,7 @@ class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -55,7 +51,7 @@ class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
               Expanded(
                 child: Obx(() {
                   if (controller.segments.isEmpty) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
                   }
 
                   final segments = controller.segments;
