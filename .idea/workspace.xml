@@ -9,9 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="mapScreen">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="position">
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_segment_detail_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/MapScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/MapScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,11 +154,12 @@
     "com.google.services.firebase.aqiPopupShown": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "Dev",
+    "ignore.virus.scanning.warn.message": "true",
     "io.flutter.project.isFirstOpen": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/DoAn/Project/RunVix/assets/Images",
-    "settings.editor.selected.configurable": "com.google.gct.login2.settings.GoogleLoginApplicationSettingsConfigurableProvider",
+    "settings.editor.selected.configurable": "templates.modelproviders.configurable",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -308,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780032551088</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="position">
+      <option name="closed" value="true" />
+      <created>1780033061594</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1780033061594</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -337,7 +352,8 @@
     <MESSAGE value="PostScreen" />
     <MESSAGE value="EditProfile" />
     <MESSAGE value="mapScreen" />
-    <option name="LAST_COMMIT_MESSAGE" value="mapScreen" />
+    <MESSAGE value="position" />
+    <option name="LAST_COMMIT_MESSAGE" value="position" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

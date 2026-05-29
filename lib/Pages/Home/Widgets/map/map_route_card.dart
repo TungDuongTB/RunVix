@@ -6,19 +6,14 @@ class MapRouteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Positioned(
-      bottom: 20,
-      left: 16,
-      right: 16,
-      child: RouteCard(
-        imageUrl: 'https://picsum.photos/140/140',
-        title: 'Đường Di Trạch-Đường Di Ái',
-        distance: '6.40 km',
-        elevation: '3 m',
-        duration: '0 giờ 43 phút',
-        difficulty: 'Dễ dàng',
-        isTailored: true,
-      ),
+    return const RouteCard(
+      imageUrl: 'https://picsum.photos/140/140',
+      title: 'Đường Di Trạch-Đường Di Ái',
+      distance: '6.40 km',
+      elevation: '3 m',
+      duration: '0 giờ 43 phút',
+      difficulty: 'Dễ dàng',
+      isTailored: true,
     );
   }
 }
