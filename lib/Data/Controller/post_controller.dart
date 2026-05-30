@@ -138,4 +138,21 @@ class PostController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> toggleLockPost(PostModel post) async {
+    try {
+      final updatedPost = post.copyWith(isLocked: !post.isLocked);
+      await postRepo.updatePost(updatedPost);
+      
+      // Cập nhật local list để UI phản hồi ngay lập tức
+      int index = allPosts.indexWhere((p) => p.id == post.id);
+      if (index != -1) {
+        allPosts[index] = updatedPost;
+      }
+      
+      Get.snackbar("Thành công", updatedPost.isLocked ? "Đã khóa bài viết" : "Đã mở khóa bài viết");
+    } catch (e) {
+      Get.snackbar("Lỗi", "Không thể thay đổi trạng thái bài viết: $e");
+    }
+  }
 }

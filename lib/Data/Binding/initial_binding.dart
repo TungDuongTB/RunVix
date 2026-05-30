@@ -13,6 +13,7 @@ class InitialBinding extends Bindings {
     // Các Controller
     Get.put(UserController(), permanent: true);
     Get.put(PostController(), permanent: true);
+    Get.put(ReportController(), permanent: true);
     Get.put(CalendarController(), permanent: true);
     Get.put(NavigationController(), permanent: true);
     

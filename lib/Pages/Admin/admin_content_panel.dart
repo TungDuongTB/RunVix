@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
 class AdminContentPanel extends StatefulWidget {
@@ -12,6 +11,7 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   final postController = Get.find<PostController>();
+  final reportController = Get.find<ReportController>();
   String _searchQuery = "";
   @override
   void initState() {
@@ -364,16 +364,47 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
                                   errorBuilder: (context, error, stackTrace) => 
                                     const Icon(Icons.broken_image)),
                             )
+
                           : const CircleAvatar(
                               backgroundColor: Colors.orangeAccent,
                               child: Icon(Icons.article, color: Colors.white)),
-                      title: Text(post.title,
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(post.title,
+                                maxLines: 1, overflow: TextOverflow.ellipsis),
+                          ),
+                          if (post.reportCount > 0)
+                            GestureDetector(
+                              onTap: () => _showReportsList(post.id!),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(12)),
+                                child: Text("${post.reportCount} Báo cáo", style: const TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                          if (post.isLocked)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Icon(Icons.lock, color: Colors.red, size: 16),
+                            ),
+                        ],
+                      ),
                       subtitle: Text(
                           "Tác giả: ${post.userName} • ${post.createdAt != null ? post.createdAt!.toString().substring(0, 10) : 'N/A'}"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                              icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.green),
+                              onPressed: () => _viewPostDetail(post),
+                              tooltip: "Xem chi tiết"),
+                          IconButton(
+                              icon: Icon(
+                                  post.isLocked ? Icons.lock_open : Icons.lock_outline,
+                                  color: post.isLocked ? Colors.orange : Colors.grey),
+                              onPressed: () => postController.toggleLockPost(post),
+                              tooltip: post.isLocked ? "Mở khóa" : "Khóa bài viết"),
                           IconButton(
                               icon: const Icon(Icons.edit_outlined,
                                   color: Colors.blue),
@@ -392,6 +423,146 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
           }),
         ),
       ],
+    );
+  }
+
+  void _viewPostDetail(PostModel post) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.article, color: AppColors.buttonColor),
+            const SizedBox(width: 10),
+            Expanded(child: Text(post.title)),
+            if (post.isLocked) const Icon(Icons.lock, color: Colors.red),
+          ],
+        ),
+        content: SizedBox(
+          width: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (post.imageUrl.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(post.imageUrl, width: double.infinity, fit: BoxFit.cover),
+                  ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: post.userProfilePicture.isNotEmpty ? NetworkImage(post.userProfilePicture) : null,
+                      child: post.userProfilePicture.isEmpty ? const Icon(Icons.person) : null,
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(post.userName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(post.createdAt?.toString() ?? "N/A", style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      ],
+                    ),
+                    const Spacer(),
+                    Column(
+                      children: [
+                        Text("${post.likes} Likes", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showReportsList(post.id!);
+                          },
+                          child: Text("${post.reportCount} Báo cáo", style: TextStyle(color: post.reportCount > 0 ? Colors.red : Colors.grey, decoration: post.reportCount > 0 ? TextDecoration.underline : null)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(height: 32),
+                const Text("Nội dung:", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text(post.content),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Đóng")),
+          if (!post.isLocked)
+            ElevatedButton.icon(
+              onPressed: () {
+                postController.toggleLockPost(post);
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.lock),
+              label: const Text("Khóa bài"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            )
+          else
+             ElevatedButton.icon(
+              onPressed: () {
+                postController.toggleLockPost(post);
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.lock_open),
+              label: const Text("Mở khóa"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+            ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _confirmDelete(post.id!);
+            },
+            icon: const Icon(Icons.delete),
+            label: const Text("Xóa bài viết"),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showReportsList(String postId) {
+    reportController.fetchReportsByPost(postId);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Danh sách báo cáo vi phạm"),
+        content: SizedBox(
+          width: 500,
+          height: 400,
+          child: Obx(() {
+            if (reportController.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (reportController.reports.isEmpty) {
+              return const Center(child: Text("Không có báo cáo nào"));
+            }
+            return ListView.builder(
+              itemCount: reportController.reports.length,
+              itemBuilder: (context, index) {
+                final report = reportController.reports[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(report.reason),
+                    subtitle: Text("Từ: ${report.reporterName} • ${report.createdAt?.toString().substring(0, 16) ?? ''}"),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.check_circle_outline, color: Colors.green),
+                      onPressed: () => reportController.resolveReport(report.id!, postId),
+                      tooltip: "Đã xử lý / Bác bỏ",
+                    ),
+                  ),
+                );
+              },
+            );
+          }),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Đóng")),
+        ],
+      ),
     );
   }
 

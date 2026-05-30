@@ -33,6 +33,7 @@ class AppFilterChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             Text(
               label,
               style: TextStyle(

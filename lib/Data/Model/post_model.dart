@@ -11,6 +11,7 @@ class PostModel {
   final DateTime? createdAt;
   final int likes;
   final int comments;
+  final bool isLocked;
 
   PostModel({
     this.id,
@@ -23,6 +24,7 @@ class PostModel {
     this.createdAt,
     this.likes = 0,
     this.comments = 0,
+    this.isLocked = false,
   });
 
   toJson() {
@@ -34,6 +36,7 @@ class PostModel {
       "CreatedAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
       "Likes": likes,
       "Comments": comments,
+      "IsLocked": isLocked,
     };
   }
 
@@ -50,6 +53,36 @@ class PostModel {
       createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
       likes: data["Likes"] ?? 0,
       comments: data["Comments"] ?? 0,
+      isLocked: data["IsLocked"] ?? false,
+    );
+  }
+
+  PostModel copyWith({
+    String? id,
+    String? userId,
+    String? userName,
+    String? userProfilePicture,
+    String? title,
+    String? content,
+    String? imageUrl,
+    DateTime? createdAt,
+    int? likes,
+    int? comments,
+    bool? isLocked,
+    int? reportCount,
+  }) {
+    return PostModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userProfilePicture: userProfilePicture ?? this.userProfilePicture,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      imageUrl: imageUrl ?? this.imageUrl,
+      createdAt: createdAt ?? this.createdAt,
+      likes: likes ?? this.likes,
+      comments: comments ?? this.comments,
+      isLocked: isLocked ?? this.isLocked,
     );
   }
 }
