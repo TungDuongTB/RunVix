@@ -11,12 +11,19 @@ class AdminContentPanel extends StatefulWidget {
 class _AdminContentPanelState extends State<AdminContentPanel> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
+  final postController = Get.find<PostController>();
   String _searchQuery = "";
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,7 +43,8 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
                   unselectedLabelColor: Colors.grey,
                   indicatorColor: AppColors.buttonColor,
                   tabs: const [
-                    Tab(text: "Bài tập & Hoạt động"),
+                    Tab(text: "Bài viết"),
+                    Tab(text: "Bài tập"),
                     Tab(text: "Thử thách"),
                     Tab(text: "Tuyến đường"),
                   ],
@@ -59,10 +67,12 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
             ],
           ),
           const SizedBox(height: 24),
+          
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
+                _buildPostList(),
                 _buildWorkoutList(),
                 _buildChallengeList(),
                 _buildRouteList(),
@@ -297,6 +307,172 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text("Hủy")),
           ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text("Lưu")),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPostList() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Quản lý bài viết cộng đồng",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ElevatedButton.icon(
+              onPressed: () => _showPostForm(),
+              icon: const Icon(Icons.add),
+              label: const Text("Tạo bài viết"),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.buttonColor,
+                  foregroundColor: Colors.white),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: Obx(() {
+            if (postController.isLoading.value && postController.allPosts.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final posts = postController.allPosts.where((post) {
+              return _searchQuery.isEmpty ||
+                  post.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                  post.userName.toLowerCase().contains(_searchQuery.toLowerCase());
+            }).toList();
+
+            if (posts.isEmpty) {
+              return const Center(child: Text("Không tìm thấy bài viết nào"));
+            }
+
+            return RefreshIndicator(
+              onRefresh: () => postController.fetchPosts(),
+              child: ListView.builder(
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      leading: post.imageUrl.isNotEmpty
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.network(post.imageUrl,
+                                  width: 50, height: 50, fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => 
+                                    const Icon(Icons.broken_image)),
+                            )
+                          : const CircleAvatar(
+                              backgroundColor: Colors.orangeAccent,
+                              child: Icon(Icons.article, color: Colors.white)),
+                      title: Text(post.title,
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      subtitle: Text(
+                          "Tác giả: ${post.userName} • ${post.createdAt != null ? post.createdAt!.toString().substring(0, 10) : 'N/A'}"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.edit_outlined,
+                                  color: Colors.blue),
+                              onPressed: () => _showPostForm(post: post)),
+                          IconButton(
+                              icon: const Icon(Icons.delete_outline,
+                                  color: Colors.red),
+                              onPressed: () => _confirmDelete(post.id!)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  void _confirmDelete(String postId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Xác nhận xóa"),
+        content: const Text("Bạn có chắc chắn muốn xóa bài viết này không?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Hủy")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            onPressed: () {
+              postController.deletePost(postId);
+              Navigator.pop(context);
+            },
+            child: const Text("Xóa"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPostForm({PostModel? post}) {
+    if (post != null) {
+      postController.title.text = post.title;
+      postController.content.text = post.content;
+    } else {
+      postController.title.clear();
+      postController.content.clear();
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(post == null ? "Tạo bài viết mới" : "Chỉnh sửa bài viết"),
+        content: SizedBox(
+          width: 500,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                    controller: postController.title,
+                    decoration: const InputDecoration(labelText: "Tiêu đề bài viết")),
+                const SizedBox(height: 16),
+                TextField(
+                    controller: postController.content,
+                    decoration: const InputDecoration(labelText: "Nội dung"),
+                    maxLines: 10),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Hủy")),
+          ElevatedButton(
+              onPressed: () {
+                if (post == null) {
+                  postController.createPost(null);
+                } else {
+                  final updatedPost = PostModel(
+                    id: post.id,
+                    userId: post.userId,
+                    userName: post.userName,
+                    userProfilePicture: post.userProfilePicture,
+                    title: postController.title.text.trim(),
+                    content: postController.content.text.trim(),
+                    imageUrl: post.imageUrl,
+                    createdAt: post.createdAt,
+                    likes: post.likes,
+                    comments: post.comments,
+                  );
+                  postController.updatePost(updatedPost);
+                }
+                Navigator.pop(context);
+              },
+              child: const Text("Lưu")),
         ],
       ),
     );

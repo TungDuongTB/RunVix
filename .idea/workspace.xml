@@ -9,15 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="admin_dashboard">
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_distance_filter_sheet.dart" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="search">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RunVix.iml" beforeDir="false" afterPath="$PROJECT_DIR$/RunVix.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/FilterComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/FilterComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_bottom_sheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_bottom_sheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -347,7 +345,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780063262355</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="search">
+      <option name="closed" value="true" />
+      <created>1780083852420</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1780083852420</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -380,7 +386,8 @@
     <MESSAGE value="CleanCode" />
     <MESSAGE value="ShowCungDuong" />
     <MESSAGE value="admin_dashboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin_dashboard" />
+    <MESSAGE value="search" />
+    <option name="LAST_COMMIT_MESSAGE" value="search" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -169,4 +169,21 @@ class PostRepository extends GetxController {
       throw "Không thể tải bình luận";
     }
   }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      await _db.collection("Posts").doc(postId).delete();
+      // Có thể xóa thêm Likes và Comments liên quan ở đây nếu cần
+    } catch (e) {
+      throw "Lỗi khi xóa bài viết";
+    }
+  }
+
+  Future<void> updatePost(PostModel post) async {
+    try {
+      await _db.collection("Posts").doc(post.id).update(post.toJson());
+    } catch (e) {
+      throw "Lỗi khi cập nhật bài viết";
+    }
+  }
 }

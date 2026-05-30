@@ -54,19 +54,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   label: Text('Quản lý nội dung'),
                 ),
               ],
-              trailing: Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 24.0),
-                    child: IconButton(
-                      icon: const Icon(Icons.logout, color: Colors.redAccent),
-                      onPressed: () => AuthenticationRepository.instance.logout(),
-                      tooltip: "Đăng xuất",
-                    ),
-                  ),
-                ),
-              ),
             ),
           const VerticalDivider(thickness: 1, width: 1),
           // Main Content

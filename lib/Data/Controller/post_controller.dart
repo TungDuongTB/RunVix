@@ -8,7 +8,6 @@ class PostController extends GetxController {
 
   final title = TextEditingController();
   final content = TextEditingController();
-  
   final isLoading = false.obs;
   final isLoadingMore = false.obs;
   final allPosts = <PostModel>[].obs;
@@ -109,6 +108,32 @@ class PostController extends GetxController {
       content.clear();
     } catch (e) {
       Get.snackbar("Lỗi", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      isLoading.value = true;
+      await postRepo.deletePost(postId);
+      allPosts.removeWhere((p) => p.id == postId);
+      Get.snackbar("Thành công", "Đã xóa bài viết");
+    } catch (e) {
+      Get.snackbar("Lỗi", "Không thể xóa bài viết: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updatePost(PostModel post) async {
+    try {
+      isLoading.value = true;
+      await postRepo.updatePost(post);
+      await fetchPosts();
+      Get.snackbar("Thành công", "Đã cập nhật bài viết");
+    } catch (e) {
+      Get.snackbar("Lỗi", "Không thể cập nhật bài viết: $e");
     } finally {
       isLoading.value = false;
     }
