@@ -5,10 +5,30 @@ class ReportController extends GetxController {
   static ReportController get instance => Get.find();
 
   final reportRepo = Get.put(ReportRepository());
-  final reports = <ReportModel>[].obs;
+  final reports = <ReportModel>[].obs; // Danh sách cho dialog chi tiết
+  final allReports = <ReportModel>[].obs; // Toàn bộ báo cáo để đếm số lượng
   final isLoading = false.obs;
 
-  // Lấy danh sách báo cáo cho một bài viết cụ thể
+  @override
+  void onInit() {
+    super.onInit();
+    fetchAllReports();
+  }
+
+  // Lấy toàn bộ báo cáo để đếm số lượng trên giao diện chính
+  Future<void> fetchAllReports() async {
+    try {
+      isLoading.value = true;
+      final result = await reportRepo.getAllReports();
+      allReports.assignAll(result);
+    } catch (e) {
+      print("Error fetching all reports: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Lấy danh sách báo cáo cho một bài viết cụ thể (dùng cho dialog)
   Future<void> fetchReportsByPost(String postId) async {
     try {
       isLoading.value = true;
@@ -25,9 +45,12 @@ class ReportController extends GetxController {
   Future<void> resolveReport(String reportId, String postId) async {
     try {
       await reportRepo.deleteReport(reportId, postId);
-      reports.removeWhere((r) => r.id == reportId);
       
-      // Cập nhật lại list posts bên PostController nếu cần
+      // Cập nhật các danh sách cục bộ để UI thay đổi ngay lập tức
+      reports.removeWhere((r) => r.id == reportId);
+      allReports.removeWhere((r) => r.id == reportId);
+      
+      // Cập nhật lại list posts bên PostController (nếu vẫn dùng reportCount trong Model ở đâu đó)
       if (Get.isRegistered<PostController>()) {
         final postController = PostController.instance;
         int index = postController.allPosts.indexWhere((p) => p.id == postId);

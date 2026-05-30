@@ -11,6 +11,7 @@ class AdminDashboardScreen extends StatefulWidget {
 }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
   final List<Widget> _panels = [
@@ -22,6 +23,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Row(
         children: [
           // Sidebar
@@ -129,20 +131,26 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           if (!Reponsive.isDesktop(context))
             IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openDrawer(),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
             ),
-          Text(
-            _selectedIndex == 0 ? "Thống kê hiệu suất" : _selectedIndex == 1 ? "Quản lý người dùng" : "Quản lý dữ liệu hệ thống",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+
+          Expanded(
+            child: Text(
+              _selectedIndex == 0 ? "Thống kê hiệu suất" : _selectedIndex == 1 ? "Quản lý người dùng" : "Quản lý dữ liệu hệ thống",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          const Spacer(),
+          const SizedBox(width: 16),
           const CircleAvatar(
             backgroundColor: AppColors.buttonColor,
             child: Icon(Icons.admin_panel_settings, color: Colors.white),
           ),
           const SizedBox(width: 12),
-          const Text("Admin", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 16),
+          if (Reponsive.isDesktop(context))
+            const Text("Admin", style: TextStyle(fontWeight: FontWeight.bold)),
+          if (Reponsive.isDesktop(context))
+            const SizedBox(width: 16),
           IconButton(
             onPressed: () => AuthenticationRepository.instance.logout(),
             icon: const Icon(Icons.logout, color: Colors.redAccent),

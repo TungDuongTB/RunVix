@@ -10,7 +10,17 @@ class AdminUsersPanel extends StatefulWidget {
 
 class _AdminUsersPanelState extends State<AdminUsersPanel> {
   final userController = UserController.instance;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = "";
+  bool _isSearchExpanded = false;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -29,27 +39,58 @@ class _AdminUsersPanelState extends State<AdminUsersPanel> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: TextField(
-                  onChanged: (value) => setState(() => _searchQuery = value),
-                  decoration: InputDecoration(
-                    hintText: "Tìm kiếm người dùng theo tên hoặc email...",
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
+              const Text("Danh sách người dùng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: _isSearchExpanded ? (Reponsive.isMobile(context) ? 180 : 300) : 40,
+                child: _isSearchExpanded
+                    ? TextField(
+                        controller: _searchController,
+                        focusNode: _searchFocusNode,
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                        decoration: InputDecoration(
+                          hintText: "Tìm kiếm...",
+                          prefixIcon: const Icon(Icons.search, size: 20),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.close, size: 20),
+                            onPressed: () {
+                              setState(() {
+                                _isSearchExpanded = false;
+                                _searchController.clear();
+                                _searchQuery = "";
+                              });
+                            },
+                          ),
+                          isDense: true,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.search, color: AppColors.buttonColor),
+                        onPressed: () {
+                          setState(() {
+                            _isSearchExpanded = true;
+                          });
+                          Future.delayed(Duration.zero, () => _searchFocusNode.requestFocus());
+                        },
+                      ),
               ),
               const SizedBox(width: 16),
               ElevatedButton.icon(
                 onPressed: () => userController.fetchAllUsers(),
                 icon: const Icon(Icons.refresh),
-                label: const Text("Tải lại"),
+                label: Text(Reponsive.isMobile(context) ? "Tải" : "Tải lại"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.buttonColor,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Reponsive.isMobile(context) ? 12 : 20, 
+                    vertical: 16
+                  ),
                 ),
               ),
             ],

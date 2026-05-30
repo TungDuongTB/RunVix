@@ -36,6 +36,20 @@ class ReportRepository extends GetxController {
     }
   }
 
+  // Lấy tất cả báo cáo
+  Future<List<ReportModel>> getAllReports() async {
+    try {
+      final snapshot = await _db
+          .collection("Reports")
+          .orderBy("CreatedAt", descending: true)
+          .get();
+      
+      return snapshot.docs.map((doc) => ReportModel.fromSnapshot(doc)).toList();
+    } catch (e) {
+      throw "Không thể tải tất cả báo cáo: $e";
+    }
+  }
+
   // Xóa báo cáo (khi admin xử lý xong hoặc bác bỏ)
   Future<void> deleteReport(String reportId, String postId) async {
     try {

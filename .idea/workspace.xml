@@ -9,17 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Quan_li_bai_viet">
-      <change afterPath="$PROJECT_DIR$/lib/Data/Controller/report_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Model/report_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Repository/report_repository.dart" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Bao_cao_bai_viet">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/FilterComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/FilterComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/report_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/report_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/report_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/report_repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -365,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780126222151</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Bao_cao_bai_viet">
+      <option name="closed" value="true" />
+      <created>1780126936882</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1780126936882</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -400,7 +406,8 @@
     <MESSAGE value="admin_dashboard" />
     <MESSAGE value="search" />
     <MESSAGE value="Quan_li_bai_viet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Quan_li_bai_viet" />
+    <MESSAGE value="Bao_cao_bai_viet" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bao_cao_bai_viet" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

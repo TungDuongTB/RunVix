@@ -13,7 +13,11 @@ class AdminStatsPanel extends StatelessWidget {
         children: [
           _buildSummaryCards(context),
           const SizedBox(height: 32),
-          const Text("Số liệu hoạt động cộng đồng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Số liệu hoạt động cộng đồng",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 16),
           _buildPerformanceChart(context),
           const SizedBox(height: 32),
@@ -21,9 +25,10 @@ class AdminStatsPanel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildRecentActivityTable(context)),
-              const SizedBox(width: 24),
-              if (Reponsive.isDesktop(context))
+              if (Reponsive.isDesktop(context)) ...[
+                const SizedBox(width: 24),
                 SizedBox(width: 300, child: _buildActivityDistribution(context)),
+              ],
             ],
           ),
         ],
@@ -32,17 +37,23 @@ class AdminStatsPanel extends StatelessWidget {
   }
 
   Widget _buildSummaryCards(BuildContext context) {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: [
-        _buildStatCard("Tổng người dùng", "1,284", Icons.people, Colors.blue),
-        _buildStatCard("Hoạt động tuần này", "+15%", Icons.trending_up, Colors.green),
-        _buildStatCard("Thử thách đang chạy", "12", Icons.emoji_events, Colors.orange),
-        _buildStatCard("Báo cáo vi phạm", "3", Icons.report_problem, Colors.red),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          _buildStatCard("Tổng người dùng", "1,284", Icons.people, Colors.blue),
+          const SizedBox(width: 16),
+          _buildStatCard("Hoạt động tuần này", "+15%", Icons.trending_up, Colors.green),
+          const SizedBox(width: 16),
+          _buildStatCard("Thử thách đang chạy", "12", Icons.emoji_events, Colors.orange),
+          const SizedBox(width: 16),
+          _buildStatCard("Báo cáo vi phạm", "3", Icons.report_problem, Colors.red),
+        ],
+      ),
     );
   }
+
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color) {
     return Container(
@@ -100,7 +111,14 @@ class AdminStatsPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Thống kê theo Tuần/Tháng/Năm", style: TextStyle(fontWeight: FontWeight.bold)),
+              const Expanded(
+                child: Text(
+                  "Thống kê theo Tuần/Tháng/Năm",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
               DropdownButton<String>(
                 value: "Tháng này",
                 underline: const SizedBox(),
@@ -132,7 +150,11 @@ class AdminStatsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Phân công & Điều phối công việc", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text(
+            "Phân công & Điều phối công việc",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 16),
           ListView.separated(
             shrinkWrap: true,
@@ -162,7 +184,11 @@ class AdminStatsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Tỷ lệ hoạt động", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text(
+            "Tỷ lệ hoạt động",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 24),
           _buildDistItem("Chạy bộ", 0.7, Colors.blue),
           _buildDistItem("Đạp xe", 0.2, Colors.green),
@@ -181,12 +207,27 @@ class AdminStatsPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12)),
-              Text("${(percent * 100).toInt()}%", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "${(percent * 100).toInt()}%",
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 8),
-          LinearProgressIndicator(value: percent, color: color, backgroundColor: color.withOpacity(0.1), minHeight: 6),
+          LinearProgressIndicator(
+            value: percent,
+            color: color,
+            backgroundColor: color.withOpacity(0.1),
+            minHeight: 6,
+          ),
         ],
       ),
     );

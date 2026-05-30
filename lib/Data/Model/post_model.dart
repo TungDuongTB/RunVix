@@ -11,6 +11,7 @@ class PostModel {
   final DateTime? createdAt;
   final int likes;
   final int comments;
+  final int reportCount;
   final bool isLocked;
 
   PostModel({
@@ -24,6 +25,7 @@ class PostModel {
     this.createdAt,
     this.likes = 0,
     this.comments = 0,
+    this.reportCount = 0,
     this.isLocked = false,
   });
 
@@ -36,6 +38,7 @@ class PostModel {
       "CreatedAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
       "Likes": likes,
       "Comments": comments,
+      "ReportCount": reportCount,
       "IsLocked": isLocked,
     };
   }
@@ -53,6 +56,7 @@ class PostModel {
       createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
       likes: data["Likes"] ?? 0,
       comments: data["Comments"] ?? 0,
+      reportCount: data["ReportCount"] ?? 0,
       isLocked: data["IsLocked"] ?? false,
     );
   }
@@ -82,6 +86,7 @@ class PostModel {
       createdAt: createdAt ?? this.createdAt,
       likes: likes ?? this.likes,
       comments: comments ?? this.comments,
+      reportCount: reportCount ?? this.reportCount,
       isLocked: isLocked ?? this.isLocked,
     );
   }

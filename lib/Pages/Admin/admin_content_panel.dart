@@ -10,9 +10,12 @@ class AdminContentPanel extends StatefulWidget {
 class _AdminContentPanelState extends State<AdminContentPanel> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   final postController = Get.find<PostController>();
   final reportController = Get.find<ReportController>();
   String _searchQuery = "";
+  bool _isSearchExpanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +26,7 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
   void dispose() {
     _tabController.dispose();
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -51,18 +55,41 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
                 ),
               ),
               const SizedBox(width: 16),
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (value) => setState(() => _searchQuery = value),
-                  decoration: InputDecoration(
-                    hintText: "Tìm kiếm nhanh...",
-                    prefixIcon: const Icon(Icons.search),
-                    isDense: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: _isSearchExpanded ? (Reponsive.isMobile(context) ? 180 : 300) : 40,
+                child: _isSearchExpanded
+                    ? TextField(
+                        controller: _searchController,
+                        focusNode: _searchFocusNode,
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                        decoration: InputDecoration(
+                          hintText: "Tìm kiếm...",
+                          prefixIcon: const Icon(Icons.search, size: 20),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.close, size: 20),
+                            onPressed: () {
+                              setState(() {
+                                _isSearchExpanded = false;
+                                _searchController.clear();
+                                _searchQuery = "";
+                              });
+                            },
+                          ),
+                          isDense: true,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.search, color: AppColors.buttonColor),
+                        onPressed: () {
+                          setState(() {
+                            _isSearchExpanded = true;
+                          });
+                          Future.delayed(Duration.zero, () => _searchFocusNode.requestFocus());
+                        },
+                      ),
               ),
             ],
           ),
@@ -90,40 +117,54 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Duyệt & Điều phối hoạt động", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Expanded(
+              child: Text("Duyệt & Điều phối hoạt động", 
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _showWorkoutForm(),
               icon: const Icon(Icons.add),
-              label: const Text("Thêm bài tập mẫu"),
+              label: Text(Reponsive.isMobile(context) ? "Thêm" : "Thêm bài tập mẫu"),
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.buttonColor, foregroundColor: Colors.white),
             ),
           ],
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              final title = "Chạy bộ buổi sáng #$index";
-              if (_searchQuery.isNotEmpty && !title.toLowerCase().contains(_searchQuery.toLowerCase())) return const SizedBox();
+          child: Builder(
+            builder: (context) {
+              final workouts = List.generate(5, (index) => "Chạy bộ buổi sáng #$index");
+              final filteredWorkouts = workouts.where((w) => _searchQuery.isEmpty || w.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
               
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: const CircleAvatar(backgroundColor: Colors.blueAccent, child: Icon(Icons.directions_run, color: Colors.white)),
-                  title: Text(title),
-                  subtitle: const Text("Người dùng: Nguyen Van A • Trạng thái: Chờ duyệt"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.check_circle_outline, color: Colors.green), onPressed: () {}, tooltip: "Duyệt"),
-                      IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.blue), onPressed: () => _showWorkoutForm()),
-                      IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () {}),
-                    ],
-                  ),
-                ),
+              if (filteredWorkouts.isEmpty) return const Center(child: Text("Không tìm thấy bài tập nào"));
+
+              return ListView.builder(
+                itemCount: filteredWorkouts.length,
+                itemBuilder: (context, index) {
+                  final title = filteredWorkouts[index];
+                  
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      leading: const CircleAvatar(backgroundColor: Colors.blueAccent, child: Icon(Icons.directions_run, color: Colors.white)),
+                      title: Text(title),
+                      subtitle: const Text("Người dùng: Nguyen Van A • Trạng thái: Chờ duyệt"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(icon: const Icon(Icons.check_circle_outline, color: Colors.green), onPressed: () {}, tooltip: "Duyệt"),
+                          IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.blue), onPressed: () => _showWorkoutForm()),
+                          IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () {}),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
-            },
+            }
           ),
         ),
       ],
@@ -136,60 +177,74 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Quản lý thử thách cộng đồng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Expanded(
+              child: Text("Quản lý thử thách cộng đồng", 
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _showChallengeForm(),
               icon: const Icon(Icons.add),
-              label: const Text("Tạo thử thách"),
+              label: Text(Reponsive.isMobile(context) ? "Tạo" : "Tạo thử thách"),
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.buttonColor, foregroundColor: Colors.white),
             ),
           ],
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: Reponsive.isDesktop(context) ? 3 : 1,
-              childAspectRatio: 2.8,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: 4,
-            itemBuilder: (context, index) {
-              final title = "Thử thách RunVix ${index + 1}";
-              if (_searchQuery.isNotEmpty && !title.toLowerCase().contains(_searchQuery.toLowerCase())) return const SizedBox();
+          child: Builder(
+            builder: (context) {
+              final challenges = List.generate(4, (index) => "Thử thách RunVix ${index + 1}");
+              final filteredChallenges = challenges.where((c) => _searchQuery.isEmpty || c.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
 
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(12),
+              if (filteredChallenges.isEmpty) return const Center(child: Text("Không tìm thấy thử thách nào"));
+
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: Reponsive.isDesktop(context) ? 3 : (Reponsive.isTablet(context) ? 2 : 1),
+                  childAspectRatio: 2.8,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 50, height: 50,
-                      decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(8)),
-                      child: const Icon(Icons.emoji_events, color: Colors.orange),
+                itemCount: filteredChallenges.length,
+                itemBuilder: (context, index) {
+                  final title = filteredChallenges[index];
+
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(title, style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
-                          const Text("Mục tiêu: 50km chạy bộ", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        ],
-                      ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50, height: 50,
+                          decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(8)),
+                          child: const Icon(Icons.emoji_events, color: Colors.orange),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(title, style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              const Text("Mục tiêu: 50km chạy bộ", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                        IconButton(icon: const Icon(Icons.edit, color: Colors.blue, size: 20), onPressed: () => _showChallengeForm()),
+                        IconButton(icon: const Icon(Icons.delete, color: Colors.red, size: 20), onPressed: () {}),
+                      ],
                     ),
-                    IconButton(icon: const Icon(Icons.edit, color: Colors.blue, size: 20), onPressed: () => _showChallengeForm()),
-                    IconButton(icon: const Icon(Icons.delete, color: Colors.red, size: 20), onPressed: () {}),
-                  ],
-                ),
+                  );
+                },
               );
-            },
+            }
           ),
         ),
       ],
@@ -202,39 +257,53 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Điều phối tuyến đường gợi ý", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Expanded(
+              child: Text("Điều phối tuyến đường gợi ý", 
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _showRouteForm(),
               icon: const Icon(Icons.add),
-              label: const Text("Thêm tuyến đường"),
+              label: Text(Reponsive.isMobile(context) ? "Thêm" : "Thêm tuyến đường"),
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.buttonColor, foregroundColor: Colors.white),
             ),
           ],
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              final title = "Cung đường Hồ Tây #$index";
-              if (_searchQuery.isNotEmpty && !title.toLowerCase().contains(_searchQuery.toLowerCase())) return const SizedBox();
+          child: Builder(
+            builder: (context) {
+              final routes = List.generate(3, (index) => "Cung đường Hồ Tây #$index");
+              final filteredRoutes = routes.where((r) => _searchQuery.isEmpty || r.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
 
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: const Icon(Icons.map, color: Colors.green),
-                  title: Text(title),
-                  subtitle: const Text("15km • Độ khó: Trung bình"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => _showRouteForm()),
-                      IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () {}),
-                    ],
-                  ),
-                ),
+              if (filteredRoutes.isEmpty) return const Center(child: Text("Không tìm thấy tuyến đường nào"));
+
+              return ListView.builder(
+                itemCount: filteredRoutes.length,
+                itemBuilder: (context, index) {
+                  final title = filteredRoutes[index];
+
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      leading: const Icon(Icons.map, color: Colors.green),
+                      title: Text(title),
+                      subtitle: const Text("15km • Độ khó: Trung bình"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => _showRouteForm()),
+                          IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () {}),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
-            },
+            }
           ),
         ),
       ],
@@ -318,12 +387,17 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Quản lý bài viết cộng đồng",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Expanded(
+              child: Text("Quản lý bài viết cộng đồng",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _showPostForm(),
               icon: const Icon(Icons.add),
-              label: const Text("Tạo bài viết"),
+              label: Text(Reponsive.isMobile(context) ? "Tạo" : "Tạo bài viết"),
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.buttonColor,
                   foregroundColor: Colors.white),
@@ -348,11 +422,19 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
             }
 
             return RefreshIndicator(
-              onRefresh: () => postController.fetchPosts(),
+              onRefresh: () async {
+                await postController.fetchPosts();
+                await reportController.fetchAllReports();
+              },
               child: ListView.builder(
                 itemCount: posts.length,
-                itemBuilder: (context, index) {
+                  itemBuilder: (context, index) {
                   final post = posts[index];
+                  // Đếm số lượng báo cáo từ danh sách allReports của reportController
+                  final reportsCount = reportController.allReports
+                      .where((r) => r.postId == post.id)
+                      .length;
+
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     child: ListTile(
@@ -374,13 +456,13 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
                             child: Text(post.title,
                                 maxLines: 1, overflow: TextOverflow.ellipsis),
                           ),
-                          if (post.reportCount > 0)
+                          if (reportsCount > 0)
                             GestureDetector(
                               onTap: () => _showReportsList(post.id!),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(12)),
-                                child: Text("${post.reportCount} Báo cáo", style: const TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
+                                child: Text("$reportsCount Báo cáo", style: const TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
                               ),
                             ),
                           if (post.isLocked)
@@ -469,12 +551,24 @@ class _AdminContentPanelState extends State<AdminContentPanel> with SingleTicker
                     Column(
                       children: [
                         Text("${post.likes} Likes", style: const TextStyle(fontWeight: FontWeight.bold)),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            _showReportsList(post.id!);
-                          },
-                          child: Text("${post.reportCount} Báo cáo", style: TextStyle(color: post.reportCount > 0 ? Colors.red : Colors.grey, decoration: post.reportCount > 0 ? TextDecoration.underline : null)),
+                        Builder(
+                          builder: (context) {
+                            final reportsCount = reportController.allReports
+                                .where((r) => r.postId == post.id)
+                                .length;
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                _showReportsList(post.id!);
+                              },
+                              child: Text("$reportsCount Báo cáo", 
+                                style: TextStyle(
+                                  color: reportsCount > 0 ? Colors.red : Colors.grey, 
+                                  decoration: reportsCount > 0 ? TextDecoration.underline : null
+                                )
+                              ),
+                            );
+                          }
                         ),
                       ],
                     ),
