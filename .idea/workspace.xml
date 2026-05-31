@@ -9,15 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Bao_cao_bai_viet">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="Bao_cao_bai_viet__fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/report_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/report_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/report_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/report_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_content_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_dashboard_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/GroupScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/GroupScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/edit_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/edit_profile_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -371,7 +370,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780126936882</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Bao_cao_bai_viet__fix">
+      <option name="closed" value="true" />
+      <created>1780133923464</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1780133923464</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -407,7 +414,8 @@
     <MESSAGE value="search" />
     <MESSAGE value="Quan_li_bai_viet" />
     <MESSAGE value="Bao_cao_bai_viet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bao_cao_bai_viet" />
+    <MESSAGE value="Bao_cao_bai_viet__fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bao_cao_bai_viet__fix" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

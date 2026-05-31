@@ -7,8 +7,8 @@ class GroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
-      initialIndex: 2, // Mặc định ở tab "Câu lạc bộ"
+      length: 2,
+      initialIndex: 1, // Mặc định ở tab "Câu lạc bộ"
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -40,7 +40,6 @@ class GroupScreen extends StatelessWidget {
             unselectedLabelColor: Colors.grey,
             labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             tabs: [
-              Tab(text: 'Hoạt động'),
               Tab(text: 'Thử thách'),
               Tab(
                 child: Row(
@@ -57,7 +56,6 @@ class GroupScreen extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            Center(child: Text('Hoạt động Content')),
             Center(child: Text('Thử thách Content')),
             ClubTabContent(), // Sử dụng widget đã tách ra
           ],

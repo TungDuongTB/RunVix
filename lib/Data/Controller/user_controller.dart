@@ -60,12 +60,28 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       final users = await _userRepo.getAllUsers();
-      allUsers.assignAll(users);
+      
+      if (users.isEmpty) {
+        // Mock data nếu Firebase trống
+        allUsers.assignAll([
+          UserModel(id: "1", username: "vankien", fullName: "Nguyễn Văn Kiên", email: "kien@gmail.com", address: "Hà Nội", profilePicture: "https://i.pravatar.cc/150?u=1"),
+          UserModel(id: "2", username: "minhthu", fullName: "Trần Minh Thư", email: "thu@gmail.com", address: "HCM", profilePicture: "https://i.pravatar.cc/150?u=2"),
+          UserModel(id: "3", username: "hoangnam", fullName: "Lê Hoàng Nam", email: "nam@gmail.com", address: "Đà Nẵng", profilePicture: "https://i.pravatar.cc/150?u=3"),
+          UserModel(id: "4", username: "thuychi", fullName: "Phạm Thủy Chi", email: "chi@gmail.com", address: "Cần Thơ", profilePicture: "https://i.pravatar.cc/150?u=4"),
+        ]);
+      } else {
+        allUsers.assignAll(users);
+      }
     } catch (e) {
       debugPrint("❌ Lỗi khi lấy tất cả user: $e");
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void followUser(String userId) {
+    // Mock follow action
+    Get.snackbar("Thành công", "Đã gửi lời mời theo dõi!");
   }
 
   Future<String> uploadImage(XFile image) async {

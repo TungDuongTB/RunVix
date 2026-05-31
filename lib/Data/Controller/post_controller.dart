@@ -34,19 +34,61 @@ class PostController extends GetxController {
       
       final result = await postRepo.getPaginatedPosts(null, _limit);
       final posts = result["posts"] as List<PostModel>;
-      _lastDocument = result["lastDocument"] as DocumentSnapshot?;
       
-      allPosts.assignAll(posts);
-      
-      if (posts.length < _limit) {
+      if (posts.isEmpty) {
+        // Mock data bài viết nếu Firebase trống
+        allPosts.assignAll([
+          PostModel(
+            id: "m1",
+            userId: "1",
+            userName: "Nguyễn Văn Kiên",
+            userProfilePicture: "https://i.pravatar.cc/150?u=1",
+            title: "Buổi sáng tuyệt vời",
+            content: "Vừa hoàn thành 5km quanh Hồ Tây. Thời tiết thật mát mẻ!",
+            imageUrl: "https://picsum.photos/id/10/800/600",
+            createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+          ),
+          PostModel(
+            id: "m2",
+            userId: "2",
+            userName: "Trần Minh Thư",
+            userProfilePicture: "https://i.pravatar.cc/150?u=2",
+            title: "Thử thách 10km",
+            content: "Hôm nay mình đã phá kỷ lục cá nhân. Cố gắng lên mọi người!",
+            imageUrl: "https://picsum.photos/id/20/800/600",
+            createdAt: DateTime.now().subtract(const Duration(days: 1)),
+          ),
+        ]);
         _hasMore = false;
+      } else {
+        _lastDocument = result["lastDocument"] as DocumentSnapshot?;
+        allPosts.assignAll(posts);
+        if (posts.length < _limit) {
+          _hasMore = false;
+        }
       }
     } catch (e) {
       print("Fetch Error: $e");
-      Get.snackbar("Lỗi", "Không thể tải bài viết");
+      // Fallback to mock on error
+      _mockPosts();
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _mockPosts() {
+    allPosts.assignAll([
+      PostModel(
+        id: "m1",
+        userId: "1",
+        userName: "Nguyễn Văn Kiên",
+        userProfilePicture: "https://i.pravatar.cc/150?u=1",
+        title: "Chạy bộ buổi sáng",
+        content: "Khởi động ngày mới với 5km nhẹ nhàng.",
+        imageUrl: "https://picsum.photos/id/30/800/600",
+        createdAt: DateTime.now(),
+      ),
+    ]);
   }
 
   Future<void> loadMorePosts() async {

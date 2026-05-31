@@ -106,7 +106,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 ProfilePickerRow(
                   label: 'Chọn ngày sinh', 
-                  value: selectedDate != null ? DateFormat('ngày d thg M, yyyy').format(selectedDate!) : 'Chọn ngày sinh', 
+                  value: selectedDate != null ? DateFormat('d/M/yyyy').format(selectedDate!) : 'Chọn ngày sinh',
                   onTap: () => _selectDate(context)
                 ),
                 ProfilePickerRow(label: 'Giới tính', value: selectedGender, onTap: _showGenderPicker),

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class WorkoutModel {
   final String? id;
   final String userId;
-  final String type; // Running, Cycling, Walking
-  final double distance; // in meters
-  final int duration; // in seconds
-  final double averagePace; // min/km
+  final String type;
+  final double distance;
+  final int duration;
+  final double averagePace;
   final DateTime timestamp;
   final List<GeoPoint> route;
 

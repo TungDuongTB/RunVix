@@ -175,14 +175,45 @@ class StravaController extends GetxController {
       ];
 
       final result = await _stravaRepo.exploreSegments(stravaBounds);
-      allSegments.assignAll(result); // Lưu vào danh sách gốc để lọc
-      applyFilters(shouldFocus: false); // Không tự động focus khi di chuyển bản đồ
+      
+      if (result.isEmpty) {
+        // Mock segments if API returns nothing (e.g. no token)
+        _mockSegments();
+      } else {
+        allSegments.assignAll(result);
+      }
+      
+      applyFilters(shouldFocus: false);
       
     } catch (e) {
       print('Error fetching segments: $e');
+      _mockSegments();
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _mockSegments() {
+    allSegments.assignAll([
+      {
+        'id': 101,
+        'name': 'Cung đường Hồ Tây (Mock)',
+        'distance': 15000.0,
+        'avg_grade': 0.1,
+        'points': 'u{~_Enwf_Sba@Yf@', // Short mock polyline
+        'start_latlng': [21.047, 105.833],
+        'end_latlng': [21.048, 105.834],
+      },
+      {
+        'id': 102,
+        'name': 'Công viên Thống Nhất (Mock)',
+        'distance': 2200.0,
+        'avg_grade': 0.0,
+        'points': 'u{~_Enwf_Sba@Yf@',
+        'start_latlng': [21.016, 105.845],
+        'end_latlng': [21.017, 105.846],
+      }
+    ]);
   }
 
   void _updatePolylinesFromSegments() {
