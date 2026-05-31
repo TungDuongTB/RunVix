@@ -22,7 +22,7 @@ class ProfileDetailScreen extends StatelessWidget {
           IconButton(icon: const Icon(Icons.search, color: Colors.black), onPressed: () {}),
           IconButton(
               icon: const Icon(Icons.settings_outlined, color: Colors.black),
-              onPressed: () => Get.to(() => const SettingsScreen())),
+              onPressed: () => Get.to(() =>  SettingsScreen())),
         ],
       ),
       body: Obx(() {

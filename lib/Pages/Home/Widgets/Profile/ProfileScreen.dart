@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         _buildAddMenu(),
         IconButton(
           icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 28),
-          onPressed: () => Get.to(() => const SettingsScreen()),
+          onPressed: () => Get.to(() =>  SettingsScreen()),
         ),
       ],
       bottom: _buildTabBar(),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+
+import 'dart:math' as math;
 import 'package:runvix/export.dart';
 
 class AdminStatsPanel extends StatelessWidget {
@@ -6,54 +7,73 @@ class AdminStatsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSummaryCards(context),
-          const SizedBox(height: 32),
-          const Text(
-            "Số liệu hoạt động cộng đồng",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 16),
-          _buildPerformanceChart(context),
-          const SizedBox(height: 32),
-          Row(
+    final controller = Get.put(AdminController());
+
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      final stats = controller.stats.value;
+      if (stats == null) {
+        return const Center(child: Text("Không có dữ liệu"));
+      }
+
+      return RefreshIndicator(
+        onRefresh: () => controller.fetchAdminStats(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: _buildRecentActivityTable(context)),
-              if (Reponsive.isDesktop(context)) ...[
-                const SizedBox(width: 24),
-                SizedBox(width: 300, child: _buildActivityDistribution(context)),
+              _buildSummaryCards(context, stats),
+              const SizedBox(height: 32),
+              const Text(
+                "Số liệu hoạt động cộng đồng",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 16),
+              _buildPerformanceChart(context, stats),
+              const SizedBox(height: 32),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (Reponsive.isDesktop(context)) ...[
+                    const SizedBox(width: 24),
+                    Expanded(child: _buildActivityDistribution(context, stats)),
+                  ],
+                ],
+              ),
+              if (!Reponsive.isDesktop(context)) ...[
+                const SizedBox(height: 24),
+                _buildActivityDistribution(context, stats),
               ],
             ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
-  Widget _buildSummaryCards(BuildContext context) {
+  Widget _buildSummaryCards(BuildContext context, stats) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
       child: Row(
         children: [
-          _buildStatCard("Tổng người dùng", "1,284", Icons.people, Colors.blue),
+          _buildStatCard("Tổng người dùng", stats.totalUsers.toString(), Icons.people, Colors.blue),
           const SizedBox(width: 16),
-          _buildStatCard("Hoạt động tuần này", "+15%", Icons.trending_up, Colors.green),
+          _buildStatCard("Hoạt động tuần này", stats.activityGrowth, Icons.trending_up, Colors.green),
           const SizedBox(width: 16),
-          _buildStatCard("Thử thách đang chạy", "12", Icons.emoji_events, Colors.orange),
+          _buildStatCard("Thử thách đang chạy", stats.activeChallenges.toString(), Icons.emoji_events, Colors.orange),
           const SizedBox(width: 16),
-          _buildStatCard("Báo cáo vi phạm", "3", Icons.report_problem, Colors.red),
+          _buildStatCard("Báo cáo vi phạm", stats.violationReports.toString(), Icons.report_problem, Colors.red),
         ],
       ),
     );
   }
-
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color) {
     return Container(
@@ -95,11 +115,18 @@ class AdminStatsPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildPerformanceChart(BuildContext context) {
+  Widget _buildPerformanceChart(BuildContext context, stats) {
+    // Tìm giá trị lớn nhất để làm mốc 100% chiều cao
+    double maxValue = 0;
+    for (var d in stats.performanceData) {
+      if ((d.value as num).toDouble() > maxValue) maxValue = (d.value as num).toDouble();
+    }
+    if (maxValue == 0) maxValue = 1.0;
+
     return Container(
-      height: 300,
+      height: 350,
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -113,14 +140,15 @@ class AdminStatsPanel extends StatelessWidget {
             children: [
               const Expanded(
                 child: Text(
-                  "Thống kê theo Tuần/Tháng/Năm",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Thống kê hiệu suất tuần",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 8),
               DropdownButton<String>(
                 value: "Tháng này",
+                style: const TextStyle(fontSize: 13, color: Colors.black),
                 underline: const SizedBox(),
                 items: ["Tuần này", "Tháng này", "Năm nay"].map((String value) {
                   return DropdownMenuItem<String>(value: value, child: Text(value));
@@ -129,9 +157,48 @@ class AdminStatsPanel extends StatelessWidget {
               ),
             ],
           ),
-          const Expanded(
-            child: Center(
-              child: Text("Biểu đồ tăng trưởng người dùng và hoạt động (Sử dụng fl_chart hoặc tương tự)", style: TextStyle(color: Colors.grey)),
+          const SizedBox(height: 20),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Đảm bảo availableHeight không âm
+                final availableHeight = (constraints.maxHeight - 25).clamp(0.0, constraints.maxHeight);
+                
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: stats.performanceData.map<Widget>((data) {
+                        final barHeight = ((data.value as num).toDouble() / maxValue) * availableHeight;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                width: Reponsive.isMobile(context) ? 15 : 25,
+                                height: barHeight.clamp(4.0, availableHeight),
+                                decoration: BoxDecoration(
+                                  color: AppColors.buttonColor.withOpacity(0.8),
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                data.label,
+                                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -139,41 +206,7 @@ class AdminStatsPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivityTable(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Phân công & Điều phối công việc",
-            style: TextStyle(fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 16),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 4,
-            separatorBuilder: (_, __) => const Divider(),
-            itemBuilder: (context, index) => ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.person)),
-              title: Text("Điều phối viên ${index + 1}"),
-              subtitle: Text("Nhiệm vụ: Duyệt nội dung bài tập #$index"),
-              trailing: const Chip(label: Text("Đang xử lý", style: TextStyle(fontSize: 10))),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActivityDistribution(BuildContext context) {
+  Widget _buildActivityDistribution(BuildContext context, stats) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -190,9 +223,68 @@ class AdminStatsPanel extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 24),
-          _buildDistItem("Chạy bộ", 0.7, Colors.blue),
-          _buildDistItem("Đạp xe", 0.2, Colors.green),
-          _buildDistItem("Đi bộ", 0.1, Colors.orange),
+          SizedBox(
+            height: 200,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final size = math.min(constraints.maxWidth, constraints.maxHeight);
+                      return Center(
+                        child: SizedBox(
+                          width: size,
+                          height: size,
+                          child: CustomPaint(
+                            painter: PieChartPainter(
+                              data: stats.activityDistribution,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: stats.activityDistribution.entries.map<Widget>((entry) {
+                      Color color = entry.key == "Chạy bộ" ? Colors.blue : (entry.key == "Đạp xe" ? Colors.green : Colors.orange);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                "${entry.key}: ${(entry.value * 100).toInt()}%",
+                                style: const TextStyle(fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          ...stats.activityDistribution.entries.map((entry) {
+            Color color = entry.key == "Chạy bộ" ? Colors.blue : (entry.key == "Đạp xe" ? Colors.green : Colors.orange);
+            return _buildDistItem(entry.key, entry.value, color);
+          }).toList(),
         ],
       ),
     );
@@ -232,4 +324,41 @@ class AdminStatsPanel extends StatelessWidget {
       ),
     );
   }
+}
+
+class PieChartPainter extends CustomPainter {
+  final Map<String, double> data;
+
+  PieChartPainter({required this.data});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    double startAngle = -math.pi / 2;
+
+    final entries = data.entries.toList();
+    for (int i = 0; i < entries.length; i++) {
+      final entry = entries[i];
+      final sweepAngle = entry.value * 2 * math.pi;
+      final paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = _getColor(entry.key);
+
+      canvas.drawArc(rect, startAngle, sweepAngle, true, paint);
+      startAngle += sweepAngle;
+    }
+
+    // Draw white circle in middle to make it a donut chart (optional)
+    final center = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(center, size.width * 0.25, Paint()..color = Colors.white);
+  }
+
+  Color _getColor(String label) {
+    if (label == "Chạy bộ") return Colors.blue;
+    if (label == "Đạp xe") return Colors.green;
+    return Colors.orange;
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

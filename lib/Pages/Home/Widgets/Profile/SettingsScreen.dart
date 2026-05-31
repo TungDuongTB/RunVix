@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  SettingsScreen({super.key});
+  final userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
+    var user = userController.user.value;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -15,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
         leading: TextButton.icon(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.black),
-          label: const Text('Bạn', style: TextStyle(color: Colors.black, fontSize: 16)),
+          label: const Text('Bạn', style: TextStyle(color: Colors.black, fontSize: 14)),
         ),
         title: const Text(
           'Cài đặt',
@@ -26,22 +27,10 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           const SizedBox(height: 16),
-          _buildSectionHeader('TÀI KHOẢN DOANDUONG0403@GMAIL.COM'),
-          
-          _buildSettingItem(
-            icon: Icons.sensors,
-            title: 'Kết nối ứng dụng hoặc thiết bị',
-            subtitle: 'Tải trực tiếp lên Strava với hầu hết các ứng dụng hoặc thiết bị thể lực',
-            onTap: () {},
-          ),
-          
+          _buildSectionHeader(user.email.isEmpty ? 'Tài khoản' : user.email),
+
           _buildSettingItem(
             title: 'Quản lý ứng dụng và thiết bị',
-            onTap: () {},
-          ),
-          
-          _buildSettingItem(
-            title: 'Khôi phục các giao dịch mua hàng',
             onTap: () {},
           ),
           
@@ -51,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           
           _buildSettingItem(
-            title: 'Giúp đỡ',
+            title: 'Đổi mật khẩu',
             onTap: () {},
           ),
 
