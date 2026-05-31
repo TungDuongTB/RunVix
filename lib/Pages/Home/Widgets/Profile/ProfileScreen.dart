@@ -1,3 +1,4 @@
+import 'package:runvix/Pages/Home/Widgets/Profile/add_manual_activity_screen.dart';
 import 'package:runvix/export.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   void _initTabController() {
     _tabController = TabController(
-      length: 3,
+      length: 2,
       vsync: this,
       initialIndex: navigationController.profileTabIndex.value,
     );
@@ -55,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         controller: _tabController,
         children: const [
           ProfileProgressTab(),
-          Center(child: Text('Buổi tập')),
           ProfileActivitiesTab(),
         ],
       ),
@@ -113,7 +113,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       onSelected: (value) {
         if (value == 0) {
           Get.to(() => const CreatePostScreen());
+        } else if (value == 2) {
+          Get.to(() => const AddManualActivityScreen());
         }
+
       },
       itemBuilder: (context) => [
         _buildPopupMenuItem(0, 'Đăng', Icons.article_outlined),
@@ -149,24 +152,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       labelColor: Colors.black,
       unselectedLabelColor: Colors.grey,
       indicatorColor: AppColors.buttonColor,
-      indicatorWeight: 3,
+      indicatorWeight: 2,
       labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       tabs: [
         const Tab(text: 'Tiến trình'),
-        Tab(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Buổi tập'),
-              const SizedBox(width: 4),
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-              ),
-            ],
-          ),
-        ),
         const Tab(text: 'Hoạt động'),
       ],
     );

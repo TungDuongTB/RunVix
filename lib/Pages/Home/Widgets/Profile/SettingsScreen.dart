@@ -69,37 +69,8 @@ class SettingsScreen extends StatelessWidget {
             value: 'Celsius',
             onTap: () {},
           ),
-          
-          _buildSettingItem(
-            title: 'Hình ảnh nổi bật mặc định',
-            subtitle: 'Chọn bản đồ hoặc hình ảnh đại diện cho các hoạt động bạn đã tải lên trong bảng tin.',
-            value: 'Hình ảnh',
-            onTap: () {},
-          ),
-          
-          _buildSwitchItem(
-            title: 'Tự động phát video',
-            value: true,
-            onChanged: (val) {},
-          ),
-          
+
           _buildSettingItem(title: 'Bản đồ mặc định'),
-          _buildSettingItem(
-            title: 'Thứ tự trên bảng tin',
-            subtitle: 'Thay đổi cách sắp xếp các hoạt động trên bảng tin',
-          ),
-          _buildSettingItem(
-            title: 'Vùng tập luyện',
-            subtitle: 'Tùy chỉnh các vùng tập luyện của bạn',
-          ),
-          _buildSettingItem(title: 'Siri & Lối tắt'),
-          _buildSettingItem(title: 'Beacon'),
-          _buildSettingItem(title: 'Tích hợp đối tác'),
-          _buildSettingItem(title: 'Thời tiết'),
-          _buildSettingItem(title: 'Dữ liệu sức khỏe'),
-          _buildSettingItem(title: 'Liên hệ'),
-          _buildSettingItem(title: 'Thông báo đẩy'),
-          _buildSettingItem(title: 'Thông báo qua email'),
 
           const SizedBox(height: 32),
           
@@ -178,7 +149,7 @@ class SettingsScreen extends StatelessWidget {
         value: value,
         onChanged: onChanged,
         activeColor: Colors.white,
-        activeTrackColor: Colors.orange,
+        activeTrackColor: Colors.lightBlueAccent,
       ),
     );
   }
@@ -188,7 +159,7 @@ class SettingsScreen extends StatelessWidget {
       margin: const EdgeInsets.only(left: 8),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.orange,
+        color: Colors.lightBlueAccent,
         borderRadius: BorderRadius.circular(4),
       ),
       child: const Text(

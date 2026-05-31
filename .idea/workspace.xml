@@ -9,16 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix giao dien">
-      <change afterPath="$PROJECT_DIR$/lib/Data/Controller/admin_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Model/admin_stats_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Data/Repository/admin_repository.dart" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix admin">
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/add_manual_activity_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_stats_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/GroupScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/GroupScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/SettingsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/SettingsScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -389,7 +387,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780219853806</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="fix admin">
+      <option name="closed" value="true" />
+      <created>1780221921819</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1780221921819</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -427,7 +433,8 @@
     <MESSAGE value="Bao_cao_bai_viet" />
     <MESSAGE value="Bao_cao_bai_viet__fix" />
     <MESSAGE value="fix giao dien" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix giao dien" />
+    <MESSAGE value="fix admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix admin" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

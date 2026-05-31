@@ -84,6 +84,7 @@ export './Pages/Home/Widgets/Profile/profile_activities_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_detail_screen.dart';
 export './Pages/Home/Widgets/Profile/edit_profile_screen.dart';
 export './Pages/Home/Widgets/Profile/create_post_screen.dart';
+export './Pages/Home/Widgets/Profile/add_manual_activity_screen.dart';
 export './Pages/Home/Widgets/Profile/SettingsScreen.dart';
 
 // Admin Pages

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
+
+import 'challenge_tab_content.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({super.key});
@@ -57,7 +58,7 @@ class GroupScreen extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            Center(child: Text('Thử thách Content')),
+            ChallengeTabContent(),
             ClubTabContent(), // Sử dụng widget đã tách ra
           ],
         ),
