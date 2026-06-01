@@ -118,19 +118,21 @@ class PostCard extends StatelessWidget {
   }
 
   Widget _buildActions(PostController postController, UserController userController) {
+    final isLiked = post.isLiked;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextButton.icon(
-          onPressed: () {
-            if (post.id != null && userController.user.value.id != null) {
-              postController.postRepo.likePost(post.id!, userController.user.value.id!);
-            }
-          },
-          icon: const Icon(Icons.favorite_border, size: 20, color: Colors.grey),
+          onPressed: () => postController.toggleLike(post),
+          icon: Icon(
+            isLiked ? Icons.favorite : Icons.favorite_border, 
+            size: 20, 
+            color: isLiked ? Colors.red : Colors.grey
+          ),
           label: Text(
             "${post.likes} Thích",
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: isLiked ? Colors.red : Colors.grey),
           ),
         ),
         TextButton.icon(

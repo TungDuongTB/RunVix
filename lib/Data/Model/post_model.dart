@@ -13,6 +13,7 @@ class PostModel {
   final int comments;
   final int reportCount;
   final bool isLocked;
+  final bool isLiked;
 
   PostModel({
     this.id,
@@ -27,6 +28,7 @@ class PostModel {
     this.comments = 0,
     this.reportCount = 0,
     this.isLocked = false,
+    this.isLiked = false,
   });
 
   toJson() {
@@ -44,7 +46,7 @@ class PostModel {
   }
 
   factory PostModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document, {String? userName, String? userProfilePicture}) {
-    final data = document.data()!;
+    final data = document.data() ?? {};
     return PostModel(
       id: document.id,
       userId: data["UserId"] ?? "",
@@ -54,10 +56,11 @@ class PostModel {
       content: data["Content"] ?? "",
       imageUrl: data["ImageUrl"] ?? "",
       createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
-      likes: data["Likes"] ?? 0,
-      comments: data["Comments"] ?? 0,
-      reportCount: data["ReportCount"] ?? 0,
-      isLocked: data["IsLocked"] ?? false,
+      likes: (data["Likes"] ?? 0) as int,
+      comments: (data["Comments"] ?? 0) as int,
+      reportCount: (data["ReportCount"] ?? 0) as int,
+      isLocked: data["IsLocked"] == true, // Ép kiểu về bool an toàn
+      isLiked: false, // Sẽ được cập nhật lại trong Repository
     );
   }
 
@@ -74,6 +77,7 @@ class PostModel {
     int? comments,
     bool? isLocked,
     int? reportCount,
+    bool? isLiked,
   }) {
     return PostModel(
       id: id ?? this.id,
@@ -88,6 +92,7 @@ class PostModel {
       comments: comments ?? this.comments,
       reportCount: reportCount ?? this.reportCount,
       isLocked: isLocked ?? this.isLocked,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 }

@@ -22,7 +22,6 @@ class ProfileController extends GetxController {
   }
 
   Future<void> fetchUserWorkouts() async {
-    try {
       isLoading.value = true;
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId != null) {
@@ -30,11 +29,6 @@ class ProfileController extends GetxController {
         workouts.assignAll(data);
         _calculateStats();
       }
-    } catch (e) {
-      Get.snackbar("Lỗi", "Không thể tải dữ liệu hoạt động");
-    } finally {
-      isLoading.value = false;
-    }
   }
 
   void _calculateStats() {

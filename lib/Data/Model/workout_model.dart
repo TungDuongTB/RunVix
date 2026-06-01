@@ -9,7 +9,6 @@ class WorkoutModel {
   final double averagePace;
   final DateTime timestamp;
   final List<GeoPoint> route;
-
   WorkoutModel({
     this.id,
     required this.userId,

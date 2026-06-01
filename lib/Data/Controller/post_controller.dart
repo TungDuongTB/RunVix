@@ -29,14 +29,22 @@ class PostController extends GetxController {
     
     try {
       isLoading.value = true;
-      _lastDocument = null;
       _hasMore = true;
+
+      // Lấy UID từ FirebaseAuth, nếu null hoặc rỗng thì thử lấy từ userController
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null || uid.isEmpty) {
+        uid = userController.user.value.id;
+      }
       
-      final result = await postRepo.getPaginatedPosts(null, _limit);
+      // Nếu sau tất cả vẫn rỗng hoặc null, gán hẳn là null để Repository không chạy truy vấn sai
+      final String? finalUid = (uid != null && uid.isNotEmpty) ? uid : null;
+      
+      print("DEBUG_POST_CONTROLLER: UID cuối cùng dùng để check Like: '$finalUid'");
+      
+      final result = await postRepo.getPaginatedPosts(null, _limit, currentUserId: finalUid);
       final posts = result["posts"] as List<PostModel>;
-      
       if (posts.isEmpty) {
-        // Mock data bài viết nếu Firebase trống
         allPosts.assignAll([
           PostModel(
             id: "m1",
@@ -97,7 +105,14 @@ class PostController extends GetxController {
 
     try {
       isLoadingMore.value = true;
-      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit);
+      
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null || uid.isEmpty) {
+        uid = userController.user.value.id;
+      }
+      final String? finalUid = (uid != null && uid.isNotEmpty) ? uid : null;
+
+      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit, currentUserId: finalUid);
       final posts = result["posts"] as List<PostModel>;
       final newLastDoc = result["lastDocument"] as DocumentSnapshot?;
       
@@ -145,7 +160,7 @@ class PostController extends GetxController {
 
       Get.back(); 
       Get.snackbar("Thành công", "Bài viết của bạn đã được đăng!");
-      
+
       title.clear();
       content.clear();
     } catch (e) {
@@ -185,16 +200,55 @@ class PostController extends GetxController {
     try {
       final updatedPost = post.copyWith(isLocked: !post.isLocked);
       await postRepo.updatePost(updatedPost);
-      
+
       // Cập nhật local list để UI phản hồi ngay lập tức
       int index = allPosts.indexWhere((p) => p.id == post.id);
       if (index != -1) {
         allPosts[index] = updatedPost;
       }
-      
+
       Get.snackbar("Thành công", updatedPost.isLocked ? "Đã khóa bài viết" : "Đã mở khóa bài viết");
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể thay đổi trạng thái bài viết: $e");
+    }
+  }
+
+  Future<void> toggleLike(PostModel post) async {
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || uid.isEmpty) {
+      uid = userController.user.value.id;
+    }
+
+    if (post.id == null || uid == null || uid.isEmpty) {
+      Get.snackbar("Thông báo", "Vui lòng đăng nhập để thực hiện tính năng này");
+      return;
+    }
+
+    final userId = uid;
+    final postId = post.id!;
+
+    // Tìm index của bài viết trong danh sách
+    int index = allPosts.indexWhere((p) => p.id == postId);
+    if (index == -1) return;
+
+    // Lưu trạng thái cũ để hoàn tác nếu lỗi
+    final oldPost = allPosts[index];
+
+    // Cập nhật UI ngay lập tức (Optimistic UI)
+    final newIsLiked = !oldPost.isLiked;
+    final newLikesCount = newIsLiked ? oldPost.likes + 1 : oldPost.likes - 1;
+    
+    allPosts[index] = oldPost.copyWith(
+      isLiked: newIsLiked,
+      likes: newLikesCount < 0 ? 0 : newLikesCount,
+    );
+
+    try {
+      await postRepo.likePost(postId, userId);
+    } catch (e) {
+      // Hoàn tác nếu có lỗi xảy ra
+      allPosts[index] = oldPost;
+      Get.snackbar("Lỗi", "Không thể thực hiện like: $e");
     }
   }
 }
