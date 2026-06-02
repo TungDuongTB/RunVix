@@ -41,14 +41,10 @@ class HomeStreakSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildPageIndicator(),
-          _TodayEventsList(calendarController: calendarController),
         ],
       ),
     );
   }
-
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +96,6 @@ class _DayCircle extends StatelessWidget {
   final bool hasEvent;
 
   const _DayCircle({required this.day, required this.date, this.isToday = false, this.hasEvent = false});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -111,14 +106,14 @@ class _DayCircle extends StatelessWidget {
           width: 32, height: 32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: hasEvent ? Colors.orange.withOpacity(0.2) : Colors.grey.shade100,
+            color: hasEvent ? Colors.lightBlueAccent.withOpacity(0.2) : Colors.grey.shade100,
             border: isToday ? Border.all(color: Colors.black, width: 1.5) 
-                   : (hasEvent ? Border.all(color: Colors.orange, width: 1) : null),
+                   : (hasEvent ? Border.all(color: Colors.lightBlueAccent, width: 1) : null),
           ),
           alignment: Alignment.center,
           child: Text(date, style: TextStyle(
             fontSize: 12, fontWeight: FontWeight.w600,
-            color: hasEvent ? Colors.orange.shade900 : Colors.black,
+            color: hasEvent ? Colors.lightBlueAccent : Colors.black,
           )),
         ),
       ],
@@ -126,32 +121,4 @@ class _DayCircle extends StatelessWidget {
   }
 }
 
-class _TodayEventsList extends StatelessWidget {
-  final CalendarController calendarController;
-  const _TodayEventsList({required this.calendarController});
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      if (calendarController.todayEvents.isEmpty) return const SizedBox.shrink();
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          const Text('Sự kiện hôm nay:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey)),
-          const SizedBox(height: 8),
-          ...calendarController.todayEvents.map((event) => Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Row(
-              children: [
-                const Icon(Icons.circle, size: 8, color: Colors.orange),
-                const SizedBox(width: 8),
-                Expanded(child: Text(event, style: const TextStyle(fontSize: 13, color: Colors.black87), overflow: TextOverflow.ellipsis)),
-              ],
-            ),
-          )),
-        ],
-      );
-    });
-  }
-}

@@ -19,7 +19,6 @@ class UserController extends GetxController {
       fetchAllUsers();
     });
   }
-
   void _listenToAuthChanges() {
     FirebaseAuth.instance.authStateChanges().listen((User? firebaseUser) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -34,7 +33,6 @@ class UserController extends GetxController {
       });
     });
   }
-
   Future<void> fetchUserRecord() async {
     try {
       isLoading.value = true;

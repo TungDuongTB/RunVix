@@ -10,6 +10,7 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _fullNameController;
   late final TextEditingController _usernameController;
   late final TextEditingController _emailController;
@@ -52,51 +53,87 @@ class _SigninState extends State<Signin> {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildLogo(),
-                    const SizedBox(height: 24),
-                    _buildTitle(),
-                    const SizedBox(height: 32),
-                    
-                    AuthInputGroup(
-                      label: 'Họ và tên',
-                      hintText: 'Nhập họ và tên',
-                      controller: _fullNameController,
-                    ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildLogo(),
+                      const SizedBox(height: 24),
+                      _buildTitle(),
+                      const SizedBox(height: 32),
+                      
+                      AuthInputGroup(
+                        label: 'Họ và tên',
+                        hintText: 'Nhập họ và tên',
+                        controller: _fullNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập họ và tên';
+                          }
+                          return null;
+                        },
+                      ),
 
-                    AuthInputGroup(
-                      label: 'Username',
-                      hintText: 'Nhập username',
-                      controller: _usernameController,
-                    ),
+                      AuthInputGroup(
+                        label: 'Username',
+                        hintText: 'Nhập username',
+                        controller: _usernameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập username';
+                          }
+                          if (value.length < 3) {
+                            return 'Username phải ít nhất 3 ký tự';
+                          }
+                          return null;
+                        },
+                      ),
 
-                    AuthInputGroup(
-                      label: 'Email',
-                      hintText: 'Nhập email của bạn',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
+                      AuthInputGroup(
+                        label: 'Email',
+                        hintText: 'Nhập email của bạn',
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập email';
+                          }
+                          if (!GetUtils.isEmail(value)) {
+                            return 'Email không hợp lệ';
+                          }
+                          return null;
+                        },
+                      ),
 
-                    AuthInputGroup(
-                      label: 'Mật khẩu',
-                      hintText: 'Tạo mật khẩu',
-                      controller: _passwordController,
-                      obscureText: true,
-                    ),
-                    
-                    const SizedBox(height: 12),
-                    _buildSubmitButton(),
-                    
-                    const SizedBox(height: 24),
-                    const DividerWithCenter(centerText: 'Hoặc'),
-                    const SizedBox(height: 24),
-                    const AuthSocialButtons(),
-                    
-                    const SizedBox(height: 32),
-                    const AuthTermsAgreement(),
-                  ],
+                      AuthInputGroup(
+                        label: 'Mật khẩu',
+                        hintText: 'Tạo mật khẩu',
+                        controller: _passwordController,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập mật khẩu';
+                          }
+                          if (value.length < 6) {
+                            return 'Mật khẩu phải ít nhất 6 ký tự';
+                          }
+                          return null;
+                        },
+                      ),
+                      
+                      const SizedBox(height: 12),
+                      _buildSubmitButton(),
+                      
+                      const SizedBox(height: 24),
+                      const DividerWithCenter(centerText: 'Hoặc'),
+                      const SizedBox(height: 24),
+                      const AuthSocialButtons(),
+                      
+                      const SizedBox(height: 32),
+                      const AuthTermsAgreement(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -168,12 +205,12 @@ class _SigninState extends State<Signin> {
   }
 
   Future<void> _handleRegistration() async {
-    final name = _fullNameController.text.trim();
-    final username = _usernameController.text.trim();
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    if (_formKey.currentState!.validate()) {
+      final name = _fullNameController.text.trim();
+      final username = _usernameController.text.trim();
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
 
-    if (name.isNotEmpty && username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
       final newUser = UserModel(
         username: username,
         email: email,
@@ -181,14 +218,11 @@ class _SigninState extends State<Signin> {
         address: "",
         profilePicture: "https://picsum.photos/200",
       );
-      
+
       await AuthenticationRepository.instance.registerWithEmailAndPassword(
-        newUser, 
-        password
+          newUser,
+          password
       );
-    } else {
-      Get.snackbar("Thông báo", "Vui lòng nhập đầy đủ thông tin", 
-        snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

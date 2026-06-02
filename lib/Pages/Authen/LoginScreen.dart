@@ -9,9 +9,9 @@ class Loginscreen extends StatefulWidget {
 }
 
 class _LoginscreenState extends State<Loginscreen> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
-
   @override
   void initState() {
     super.initState();
@@ -44,9 +44,11 @@ class _LoginscreenState extends State<Loginscreen> {
                 constraints: BoxConstraints(minHeight: minHeight),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                       Center(
                         child: Container(
                           height: 80,
@@ -80,6 +82,12 @@ class _LoginscreenState extends State<Loginscreen> {
                       Inputcomponent(
                         hintText: 'Nhập username hoặc email',
                         controller: _usernameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập username hoặc email';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 20),
                       _buildLabel('MẬT KHẨU'),
@@ -88,6 +96,15 @@ class _LoginscreenState extends State<Loginscreen> {
                         hintText: 'Nhập mật khẩu',
                         controller: _passwordController,
                         obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vui lòng nhập mật khẩu';
+                          }
+                          if (value.length < 6) {
+                            return 'Mật khẩu phải ít nhất 6 ký tự';
+                          }
+                          return null;
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -104,17 +121,14 @@ class _LoginscreenState extends State<Loginscreen> {
                           borderRadius: 12,
                           textWeight: FontWeight.w700,
                           onPressed: isLoading ? null : () async {
-                            final identifier = _usernameController.text.trim();
-                            final password = _passwordController.text.trim();
-                            if (identifier.isNotEmpty && password.isNotEmpty) {
+                            if (_formKey.currentState!.validate()) {
+                              final identifier = _usernameController.text.trim();
+                              final password = _passwordController.text.trim();
                               if (identifier.contains('@')) {
                                 await AuthenticationRepository.instance.loginWithEmailAndPassword(identifier, password);
                               } else {
                                 await AuthenticationRepository.instance.loginWithUsernameAndPassword(identifier, password);
                               }
-                            } else {
-                              Get.snackbar("Thông báo", "Vui lòng nhập đầy đủ thông tin",
-                                  snackPosition: SnackPosition.BOTTOM);
                             }
                           },
                         );
@@ -147,6 +161,7 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
             ),
           ),
+        ),
           Obx(() {
             if (AuthenticationRepository.instance.isLoading.value) {
               return Container(

@@ -109,7 +109,26 @@ class AuthenticationRepository extends GetxController {
       }
     }
   }
-
+  void _showErrorDialog(String title, String message) {
+    Get.defaultDialog(
+      title: title,
+      titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ),
+      confirm: TextButton(
+        onPressed: () => Get.back(),
+        child: const Text("Đóng", style: TextStyle(color: AppColors.buttonColor, fontWeight: FontWeight.bold)),
+      ),
+      barrierDismissible: false,
+      radius: 12,
+    );
+  }
 
   Future<void> signInWithGoogle() async {
     try {
@@ -137,7 +156,7 @@ class AuthenticationRepository extends GetxController {
       print("🎉 Đăng nhập thành công!");
     } catch (e) {
       print("❌ LỖI GOOGLE SIGN-IN: $e");
-      Get.snackbar("Thông báo", "Lỗi đăng nhập Google", backgroundColor: AppColors.danger, colorText: Colors.white);
+      _showErrorDialog("Lỗi đăng nhập", "Không thể đăng nhập bằng Google. Vui lòng thử lại sau.");
     } finally {
       isLoading.value = false;
     }
@@ -171,13 +190,12 @@ class AuthenticationRepository extends GetxController {
   }
 
 
-  // Các hàm login/register email giữ nguyên như cũ...
   Future<void> loginWithEmailAndPassword(String email, String password) async {
     try {
       isLoading.value = true;
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar("Lỗi", e.message ?? "Đăng nhập thất bại", backgroundColor: AppColors.danger, colorText: Colors.white);
+      _showErrorDialog("Đăng nhập thất bại", "Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.");
     } finally {
       isLoading.value = false;
     }
@@ -187,15 +205,14 @@ class AuthenticationRepository extends GetxController {
     try {
       isLoading.value = true;
       final user = await UserRepository.instance.findUserByUsername(username.toLowerCase().trim());
-      if (user == null) throw "Không tìm thấy người dùng";
+      if (user == null) throw "Không tìm thấy người dùng với username này.";
       await _auth.signInWithEmailAndPassword(email: user.email, password: password);
     } catch (e) {
-      Get.snackbar("Lỗi", e.toString(), backgroundColor: AppColors.danger, colorText: Colors.white);
+      _showErrorDialog("Lỗi đăng nhập", "Tên đăng nhập hoặc mật khẩu không chính xác.");
     } finally {
       isLoading.value = false;
     }
   }
-
   Future<void> registerWithEmailAndPassword(UserModel user, String password) async {
     try {
       isLoading.value = true;
@@ -206,7 +223,7 @@ class AuthenticationRepository extends GetxController {
         Get.snackbar("Thành công", "Tài khoản đã được tạo", backgroundColor: AppColors.success, colorText: Colors.white);
       }
     } catch (e) {
-      Get.snackbar("Lỗi", e.toString(), backgroundColor: AppColors.danger, colorText: Colors.white);
+      _showErrorDialog("Lỗi đăng ký", "Không thể tạo tài khoản. Email có thể đã được sử dụng hoặc thông tin không hợp lệ.");
     } finally {
       isLoading.value = false;
     }

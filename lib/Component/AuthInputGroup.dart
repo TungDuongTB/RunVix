@@ -6,6 +6,7 @@ class AuthInputGroup extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
 
   const AuthInputGroup({
     super.key,
@@ -14,6 +15,7 @@ class AuthInputGroup extends StatelessWidget {
     required this.controller,
     this.obscureText = false,
     this.keyboardType,
+    this.validator,
   });
 
   @override
@@ -36,6 +38,7 @@ class AuthInputGroup extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          validator: validator,
         ),
         const SizedBox(height: 20),
       ],

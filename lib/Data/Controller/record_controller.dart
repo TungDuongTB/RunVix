@@ -95,7 +95,7 @@ class RecordController extends GetxController {
     _timer?.cancel();
     _positionStream?.cancel();
     
-    if (distance.value > 10) { // Chỉ lưu nếu chạy trên 10m
+    if (distance.value >=0) { // Chỉ lưu nếu chạy trên 10m
       final workout = WorkoutModel(
         userId: FirebaseAuth.instance.currentUser?.uid ?? "",
         type: "Running",
@@ -105,7 +105,6 @@ class RecordController extends GetxController {
         timestamp: DateTime.now(),
         route: polylinePoints.map((p) => GeoPoint(p.latitude, p.longitude)).toList(),
       );
-
       await _workoutRepo.saveWorkout(workout);
       Get.snackbar("Thành công", "Đã lưu hoạt động của bạn!");
     }
@@ -121,7 +120,6 @@ class RecordController extends GetxController {
     pace.value = 0.0;
     polylinePoints.clear();
   }
-
   @override
   void onClose() {
     _timer?.cancel();
