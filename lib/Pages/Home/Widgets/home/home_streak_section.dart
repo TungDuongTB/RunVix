@@ -57,7 +57,6 @@ class HomeStreakSection extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildFireStreak(CalendarController controller) {
     return Column(
       children: [
@@ -76,7 +75,6 @@ class HomeStreakSection extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildPageIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

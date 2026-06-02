@@ -36,6 +36,7 @@ export './Data/Controller/profile_controller.dart';
 export './Data/Controller/calendar_controller.dart';
 export './Data/Controller/navigation_controller.dart';
 export './Data/Controller/post_controller.dart';
+export './Data/Controller/comment_controller.dart';
 export './Data/Controller/strava_controller.dart';
 export './Data/Controller/report_controller.dart';
 export './Data/Controller/admin_controller.dart';
@@ -51,6 +52,7 @@ export './Pages/Authen/SignIn.dart';
 export './reponsive.dart';
 export './Pages/Authen/AuthTermsPage.dart';
 export 'Pages/Home/Widgets/home/HomeScreen.dart';
+export 'Pages/Home/Widgets/home/comment_screen.dart';
 export './Pages/Home/Widgets/map/MapScreen.dart';
 
 // Home Widgets

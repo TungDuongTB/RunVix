@@ -23,10 +23,8 @@ class UserController extends GetxController {
     FirebaseAuth.instance.authStateChanges().listen((User? firebaseUser) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (firebaseUser != null) {
-          debugPrint("🔄 Auth detected: Fetching user data for ${firebaseUser.uid}...");
           fetchUserRecord();
         } else {
-          debugPrint("👤 Auth detected: No user logged in. Clearing data.");
           user.value = UserModel.empty();
           allUsers.clear();
         }
@@ -42,7 +40,6 @@ class UserController extends GetxController {
 
         if (userData != null) {
           user.value = userData;
-          debugPrint("✅ Dữ liệu đã được lưu vào UserController: ${user.value.fullName}");
         } else {
           debugPrint("⚠️ Firestore không có dữ liệu cho UID này.");
         }
@@ -60,7 +57,6 @@ class UserController extends GetxController {
       final users = await _userRepo.getAllUsers();
       
       if (users.isEmpty) {
-        // Mock data nếu Firebase trống
         allUsers.assignAll([
           UserModel(id: "1", username: "vankien", fullName: "Nguyễn Văn Kiên", email: "kien@gmail.com", address: "Hà Nội", profilePicture: "https://i.pravatar.cc/150?u=1"),
           UserModel(id: "2", username: "minhthu", fullName: "Trần Minh Thư", email: "thu@gmail.com", address: "HCM", profilePicture: "https://i.pravatar.cc/150?u=2"),
@@ -78,7 +74,6 @@ class UserController extends GetxController {
   }
 
   void followUser(String userId) {
-    // Mock follow action
     Get.snackbar("Thành công", "Đã gửi lời mời theo dõi!");
   }
 

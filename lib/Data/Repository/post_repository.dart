@@ -93,26 +93,13 @@ class PostRepository extends GetxController {
 
       Set<String> likedPostIds = {};
       if (currentUserId != null && currentUserId.isNotEmpty && snapshot.docs.isNotEmpty) {
-        print("==================================================");
-        print("[DEBUG_LIKE] BẮT ĐẦU QUÁ TRÌNH KIỂM TRA");
-        print("[DEBUG_LIKE] UID NGƯỜI DÙNG HIỆN TẠI: $currentUserId");
-
-        // Truy vấn các bản ghi Like của User này
         final likesSnapshot = await _db.collection("Likes")
             .where("UserId", isEqualTo: currentUserId)
             .get();
-        print("[DEBUG_LIKE] Tìm thấy ${likesSnapshot.docs.length} bản ghi Like của User này trong DB.");
         likedPostIds = likesSnapshot.docs.map((doc) {
           final likeData = doc.data();
           final likeUserId = likeData["UserId"];
           final likePostId = likeData["PostId"];
-          
-          // In chi tiết từng bản ghi Like để đối chiếu
-          print("[DEBUG_LIKE] Đang xem bản ghi Like ID: ${doc.id}");
-          print("[DEBUG_LIKE]   -> UID trong bản ghi Like: $likeUserId");
-          print("[DEBUG_LIKE]   -> So sánh (Hiện tại == LikeUID): ${currentUserId == likeUserId}");
-          print("[DEBUG_LIKE]   -> Dành cho Post ID: $likePostId");
-          
           return likePostId as String;
         }).toSet();
       }
@@ -124,18 +111,12 @@ class PostRepository extends GetxController {
         final userData = userCache[userId];
         String userName = userData?["FullName"] ?? "Người dùng RunVix";
         String userProfilePicture = userData?["ProfilePicture"] ?? "";
-        
-        // --- CHỖ SO SÁNH QUAN TRỌNG ---
         bool isLiked = likedPostIds.contains(doc.id);
-        print("[DEBUG_LIKE] KIỂM TRA BÀI VIẾT ID: ${doc.id}");
-        print("[DEBUG_LIKE]   -> Kết quả so sánh (Có trong Set LikedPostIds?): $isLiked");
-
         posts.add(PostModel.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>, 
           userName: userName, 
           userProfilePicture: userProfilePicture
         ).copyWith(isLiked: isLiked));
       }
-      print("==================================================");
       return {
         "posts": posts,
         "lastDocument": snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
@@ -188,19 +169,30 @@ class PostRepository extends GetxController {
       throw "Lỗi khi gửi bình luận";
     }
   }
-
   Future<List<CommentModel>> getComments(String postId) async {
     try {
+      // Bỏ orderBy ở đây để tránh lỗi thiếu Index trong Firestore (Composite Index)
+      // Khi dùng cả where và orderBy trên 2 trường khác nhau, Firestore yêu cầu tạo Index thủ công.
+      // Sắp xếp local để tránh lỗi này.
       final snapshot = await _db.collection("Comments")
           .where("PostId", isEqualTo: postId)
-          .orderBy("CreatedAt", descending: true)
           .get();
-      return snapshot.docs.map((doc) => CommentModel.fromSnapshot(doc)).toList();
+      
+      final comments = snapshot.docs.map((doc) => CommentModel.fromSnapshot(doc)).toList();
+      
+      // Sắp xếp thủ công tại local (giảm dần theo thời gian)
+      comments.sort((a, b) {
+        if (a.createdAt == null) return -1;
+        if (b.createdAt == null) return 1;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
+      
+      return comments;
     } catch (e) {
-      throw "Không thể tải bình luận";
+      print("Error getComments: $e");
+      throw "Không thể tải bình luận: $e";
     }
   }
-
   Future<void> deletePost(String postId) async {
     try {
       await _db.collection("Posts").doc(postId).delete();

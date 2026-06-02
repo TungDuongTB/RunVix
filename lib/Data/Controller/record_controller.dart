@@ -78,7 +78,7 @@ class RecordController extends GetxController {
 
   void _calculatePace() {
     if (distance.value > 0) {
-      // Pace = (Thời gian / 60) / (Quãng đường / 1000)
+
       pace.value = (duration.value / 60) / (distance.value / 1000);
     }
   }

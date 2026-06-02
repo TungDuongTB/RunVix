@@ -31,16 +31,11 @@ class PostController extends GetxController {
       isLoading.value = true;
       _hasMore = true;
 
-      // Lấy UID từ FirebaseAuth, nếu null hoặc rỗng thì thử lấy từ userController
       String? uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null || uid.isEmpty) {
         uid = userController.user.value.id;
       }
-      
-      // Nếu sau tất cả vẫn rỗng hoặc null, gán hẳn là null để Repository không chạy truy vấn sai
       final String? finalUid = (uid != null && uid.isNotEmpty) ? uid : null;
-      
-      print("DEBUG_POST_CONTROLLER: UID cuối cùng dùng để check Like: '$finalUid'");
       
       final result = await postRepo.getPaginatedPosts(null, _limit, currentUserId: finalUid);
       final posts = result["posts"] as List<PostModel>;
@@ -227,17 +222,11 @@ class PostController extends GetxController {
     final userId = uid;
     final postId = post.id!;
 
-    // Tìm index của bài viết trong danh sách
     int index = allPosts.indexWhere((p) => p.id == postId);
     if (index == -1) return;
-
-    // Lưu trạng thái cũ để hoàn tác nếu lỗi
     final oldPost = allPosts[index];
-
-    // Cập nhật UI ngay lập tức (Optimistic UI)
     final newIsLiked = !oldPost.isLiked;
     final newLikesCount = newIsLiked ? oldPost.likes + 1 : oldPost.likes - 1;
-    
     allPosts[index] = oldPost.copyWith(
       isLiked: newIsLiked,
       likes: newLikesCount < 0 ? 0 : newLikesCount,

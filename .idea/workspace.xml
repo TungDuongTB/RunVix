@@ -9,17 +9,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix Login">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="streak_section">
+      <change afterPath="$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/comment_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/AuthInputGroup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/AuthInputGroup.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/InputComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/InputComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/calendar_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/calendar_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/authentication_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_streak_section.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_streak_section.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -421,7 +421,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780409677019</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="streak_section">
+      <option name="closed" value="true" />
+      <created>1780413436429</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1780413436429</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -436,7 +444,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="log file" />
     <MESSAGE value="xong giao dien cac chuc nang" />
     <MESSAGE value="Connect firebase_ dang nhap bang email" />
     <MESSAGE value="unversioned" />
@@ -461,7 +468,49 @@
     <MESSAGE value="challengetapscreen" />
     <MESSAGE value="like" />
     <MESSAGE value="fix Login" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix Login" />
+    <MESSAGE value="streak_section" />
+    <option name="LAST_COMMIT_MESSAGE" value="streak_section" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>21</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>22</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>23</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>24</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>25</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>20</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart</url>
+          <line>19</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

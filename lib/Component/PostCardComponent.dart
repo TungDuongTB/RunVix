@@ -136,9 +136,7 @@ class PostCard extends StatelessWidget {
           ),
         ),
         TextButton.icon(
-          onPressed: () {
-            // Mở màn hình bình luận
-          },
+          onPressed: () => Get.to(() => CommentScreen(post: post)),
           icon: const Icon(Icons.chat_bubble_outline, size: 20, color: Colors.grey),
           label: Text(
             "${post.comments} Bình luận",
