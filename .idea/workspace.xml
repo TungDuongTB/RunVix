@@ -9,15 +9,11 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="challengetapscreen">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="like">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Admin/admin_users_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/auth_social_buttons.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/auth_social_buttons.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/LoginScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Authen/SignIn.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -403,7 +399,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780224910798</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="like">
+      <option name="closed" value="true" />
+      <created>1780308525614</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1780308525615</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -418,7 +422,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="setup" />
     <MESSAGE value="( fe ) Login,Terms,Home,Map,NavigationBar Screen" />
     <MESSAGE value="log file" />
     <MESSAGE value="xong giao dien cac chuc nang" />
@@ -443,7 +446,8 @@
     <MESSAGE value="fix giao dien" />
     <MESSAGE value="fix admin" />
     <MESSAGE value="challengetapscreen" />
-    <option name="LAST_COMMIT_MESSAGE" value="challengetapscreen" />
+    <MESSAGE value="like" />
+    <option name="LAST_COMMIT_MESSAGE" value="like" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

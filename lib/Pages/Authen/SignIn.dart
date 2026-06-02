@@ -45,59 +45,76 @@ class _SigninState extends State<Signin> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildLogo(),
-                const SizedBox(height: 24),
-                _buildTitle(),
-                const SizedBox(height: 32),
-                
-                AuthInputGroup(
-                  label: 'Họ và tên',
-                  hintText: 'Nhập họ và tên',
-                  controller: _fullNameController,
-                ),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLogo(),
+                    const SizedBox(height: 24),
+                    _buildTitle(),
+                    const SizedBox(height: 32),
+                    
+                    AuthInputGroup(
+                      label: 'Họ và tên',
+                      hintText: 'Nhập họ và tên',
+                      controller: _fullNameController,
+                    ),
 
-                AuthInputGroup(
-                  label: 'Username',
-                  hintText: 'Nhập username',
-                  controller: _usernameController,
-                ),
+                    AuthInputGroup(
+                      label: 'Username',
+                      hintText: 'Nhập username',
+                      controller: _usernameController,
+                    ),
 
-                AuthInputGroup(
-                  label: 'Email',
-                  hintText: 'Nhập email của bạn',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                ),
+                    AuthInputGroup(
+                      label: 'Email',
+                      hintText: 'Nhập email của bạn',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
 
-                AuthInputGroup(
-                  label: 'Mật khẩu',
-                  hintText: 'Tạo mật khẩu',
-                  controller: _passwordController,
-                  obscureText: true,
+                    AuthInputGroup(
+                      label: 'Mật khẩu',
+                      hintText: 'Tạo mật khẩu',
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                    
+                    const SizedBox(height: 12),
+                    _buildSubmitButton(),
+                    
+                    const SizedBox(height: 24),
+                    const DividerWithCenter(centerText: 'Hoặc'),
+                    const SizedBox(height: 24),
+                    const AuthSocialButtons(),
+                    
+                    const SizedBox(height: 32),
+                    const AuthTermsAgreement(),
+                  ],
                 ),
-                
-                const SizedBox(height: 12),
-                _buildSubmitButton(),
-                
-                const SizedBox(height: 24),
-                const DividerWithCenter(centerText: 'Hoặc'),
-                const SizedBox(height: 24),
-                const AuthSocialButtons(),
-                
-                const SizedBox(height: 32),
-                const AuthTermsAgreement(),
-              ],
+              ),
             ),
           ),
-        ),
+          Obx(() {
+            if (AuthenticationRepository.instance.isLoading.value) {
+              return Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.buttonColor,
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
     );
   }
@@ -134,17 +151,20 @@ class _SigninState extends State<Signin> {
   }
 
   Widget _buildSubmitButton() {
-    return ButtonComponent(
-      text: 'ĐĂNG KÝ'.toUpperCase(),
-      width: double.infinity,
-      height: 52,
-      color: AppColors.buttonColor,
-      textColor: Colors.white,
-      borderWidth: 0,
-      borderRadius: 12,
-      textWeight: FontWeight.w700,
-      onPressed: _handleRegistration,
-    );
+    return Obx(() {
+      final isLoading = AuthenticationRepository.instance.isLoading.value;
+      return ButtonComponent(
+        text: 'ĐĂNG KÝ'.toUpperCase(),
+        width: double.infinity,
+        height: 52,
+        color: AppColors.buttonColor,
+        textColor: Colors.white,
+        borderWidth: 0,
+        borderRadius: 12,
+        textWeight: FontWeight.w700,
+        onPressed: isLoading ? null : _handleRegistration,
+      );
+    });
   }
 
   Future<void> _handleRegistration() async {
