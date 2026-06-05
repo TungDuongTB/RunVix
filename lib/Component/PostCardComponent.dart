@@ -98,12 +98,30 @@ class PostCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
+    // Kiểm tra xem imageUrl có phải là URL hợp lệ không
+    if (!post.imageUrl.startsWith('http')) {
+      return const SizedBox.shrink();
+    }
+    
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.network(
         post.imageUrl,
         width: double.infinity,
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          height: 150,
+          width: double.infinity,
+          color: Colors.grey.shade100,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.broken_image_outlined, color: Colors.grey),
+              SizedBox(height: 8),
+              Text("Không thể tải ảnh", style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
+          ),
+        ),
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Container(

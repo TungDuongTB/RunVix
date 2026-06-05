@@ -57,17 +57,45 @@ class RecordControls extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Kết thúc hoạt động?"),
-        content: const Text("Bạn có chắc chắn muốn dừng và lưu hoạt động này không?"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text("Hoàn thành hoạt động", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller.title,
+                decoration: const InputDecoration(hintText: "Tiêu đề (ví dụ: Chạy bộ sáng sớm)"),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: controller.description,
+                maxLines: 2,
+                decoration: const InputDecoration(hintText: "Bạn cảm thấy thế nào?"),
+              ),
+              const SizedBox(height: 12),
+              Obx(() => SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text("Đăng lên bảng tin", style: TextStyle(fontSize: 14)),
+                value: controller.isPublic.value,
+                onChanged: (val) => controller.isPublic.value = val,
+                activeColor: AppColors.buttonColor,
+              )),
+            ],
+          ),
+        ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Hủy")),
+          TextButton(onPressed: () => Get.back(), child: const Text("Hủy", style: TextStyle(color: Colors.grey))),
           ElevatedButton(
             onPressed: () {
               controller.stopRecording();
               Get.back();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Kết thúc", style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.buttonColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text("Lưu & Kết thúc", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

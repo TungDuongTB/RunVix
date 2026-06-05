@@ -3,11 +3,15 @@ export 'package:get/get.dart';
 export 'package:flutter/material.dart';
 export 'package:flutter/gestures.dart';
 export 'package:image_picker/image_picker.dart';
+export 'package:geolocator/geolocator.dart';
+export 'package:google_maps_flutter/google_maps_flutter.dart';
+export 'dart:async';
 
 //firebase
 export 'package:firebase_core/firebase_core.dart';
 export 'package:firebase_auth/firebase_auth.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
+
 
 // Data - Model
 export './Data/Model/user_model.dart';
@@ -37,6 +41,7 @@ export './Data/Controller/calendar_controller.dart';
 export './Data/Controller/navigation_controller.dart';
 export './Data/Controller/post_controller.dart';
 export './Data/Controller/comment_controller.dart';
+export './Data/Controller/manual_activity_controller.dart';
 export './Data/Controller/strava_controller.dart';
 export './Data/Controller/report_controller.dart';
 export './Data/Controller/admin_controller.dart';

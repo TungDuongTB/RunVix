@@ -9,17 +9,12 @@ class PostRepository extends GetxController {
 
   Future<void> createPost(PostModel post, XFile? imageFile) async {
     try {
-      String imageUrl = "";
+      String imageUrl = post.imageUrl; // Giữ lại URL nếu đã có (từ manual activity)
       if (imageFile != null) {
         imageUrl = await uploadImage(imageFile);
       }
 
-      final postWithImage = PostModel(
-        userId: post.userId,
-        userName: post.userName,
-        userProfilePicture: post.userProfilePicture,
-        title: post.title,
-        content: post.content,
+      final postWithImage = post.copyWith(
         imageUrl: imageUrl,
         createdAt: DateTime.now(),
       );

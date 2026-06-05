@@ -123,23 +123,27 @@ class _PostBackground extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
-        image: imageFile != null ? DecorationImage(
-          image: kIsWeb ? NetworkImage(imageFile!.path) : FileImage(File(imageFile!.path)) as ImageProvider,
-          fit: BoxFit.cover,
-        ) : null,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: imageFile != null 
-              ? [Colors.black.withOpacity(0.3), Colors.transparent, Colors.black.withOpacity(0.7)]
-              : [Colors.white, Colors.lightBlueAccent, Colors.lightBlue.withOpacity(0.7)],
+      color: const Color(0xFF1C1C1E),
+      child: Stack(
+        children: [
+          if (imageFile != null)
+            Positioned.fill(
+              child: kIsWeb
+                  ? Image.network(imageFile!.path, fit: BoxFit.cover)
+                  : Image.file(File(imageFile!.path), fit: BoxFit.cover),
+            ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: imageFile != null
+                    ? [Colors.black.withOpacity(0.3), Colors.transparent, Colors.black.withOpacity(0.7)]
+                    : [Colors.white, Colors.lightBlueAccent, Colors.lightBlue.withOpacity(0.7)],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

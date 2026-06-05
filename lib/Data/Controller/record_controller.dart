@@ -1,11 +1,4 @@
-import 'dart:async';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../Model/workout_model.dart';
-import '../Repository/workout_repository.dart';
+import 'package:runvix/export.dart';
 
 class RecordController extends GetxController {
   static RecordController get instance => Get.find();
@@ -19,11 +12,23 @@ class RecordController extends GetxController {
   var distance = 0.0.obs; // meters
   var pace = 0.0.obs; // min/km
   
+  // New States for Posting
+  final title = TextEditingController();
+  final description = TextEditingController();
+  final isPublic = true.obs;
+  final postRepo = Get.put(PostRepository());
+  final userController = Get.put(UserController());
+
   var polylinePoints = <LatLng>[].obs;
   Timer? _timer;
   StreamSubscription<Position>? _positionStream;
 
   void startRecording() async {
+    // Reset inputs
+    title.clear();
+    description.clear();
+    isPublic.value = true;
+
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -95,18 +100,44 @@ class RecordController extends GetxController {
     _timer?.cancel();
     _positionStream?.cancel();
     
-    if (distance.value >=0) { // Chỉ lưu nếu chạy trên 10m
+    if (distance.value >= 10) { // Lưu nếu chạy trên 10m
       final workout = WorkoutModel(
-        userId: FirebaseAuth.instance.currentUser?.uid ?? "",
+        userId: userController.user.value.id ?? FirebaseAuth.instance.currentUser?.uid ?? "",
         type: "Running",
         distance: distance.value,
         duration: duration.value,
         averagePace: pace.value,
         timestamp: DateTime.now(),
         route: polylinePoints.map((p) => GeoPoint(p.latitude, p.longitude)).toList(),
+        title: title.text.trim().isNotEmpty ? title.text.trim() : "Hoạt động chạy bộ",
+        description: description.text.trim(),
       );
+      
+      // 1. Luôn lưu vào Workouts
       await _workoutRepo.saveWorkout(workout);
-      Get.snackbar("Thành công", "Đã lưu hoạt động của bạn!");
+
+      // 2. Nếu isPublic = true, tạo bài đăng ở bảng Posts
+      if (isPublic.value) {
+        final post = PostModel(
+          userId: userController.user.value.id ?? "",
+          userName: userController.user.value.fullName ?? "",
+          userProfilePicture: userController.user.value.profilePicture ?? "",
+          title: title.text.trim().isNotEmpty ? title.text.trim() : "Chạy bộ",
+          content: description.text.trim().isNotEmpty 
+              ? description.text.trim() 
+              : "Tôi vừa hoàn thành ${(distance.value / 1000).toStringAsFixed(2)}km!",
+          imageUrl: "", // GPS record usually doesn't have an image unless we implement map snapshot
+          createdAt: DateTime.now(),
+        );
+        await postRepo.createPost(post, null);
+        
+        if (Get.isRegistered<PostController>()) {
+          PostController.instance.fetchPosts();
+        }
+      }
+      Get.snackbar("Thành công", isPublic.value ? "Đã lưu và đăng hoạt động!" : "Đã lưu vào nhật ký!");
+    } else {
+      Get.snackbar("Thông báo", "Quãng đường quá ngắn để lưu.");
     }
 
     _resetStats();

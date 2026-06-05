@@ -9,6 +9,10 @@ class WorkoutModel {
   final double averagePace;
   final DateTime timestamp;
   final List<GeoPoint> route;
+  final String title;
+  final String description;
+  final String imageUrl;
+
   WorkoutModel({
     this.id,
     required this.userId,
@@ -18,6 +22,9 @@ class WorkoutModel {
     required this.averagePace,
     required this.timestamp,
     required this.route,
+    this.title = "",
+    this.description = "",
+    this.imageUrl = "",
   });
 
   Map<String, dynamic> toJson() {
@@ -27,8 +34,11 @@ class WorkoutModel {
       "Distance": distance,
       "Duration": duration,
       "AveragePace": averagePace,
-      "Timestamp": timestamp,
+      "Timestamp": timestamp != null ? Timestamp.fromDate(timestamp) : FieldValue.serverTimestamp(),
       "Route": route,
+      "Title": title,
+      "Description": description,
+      "ImageUrl": imageUrl,
     };
   }
 
@@ -41,8 +51,11 @@ class WorkoutModel {
       distance: (data["Distance"] ?? 0).toDouble(),
       duration: data["Duration"] ?? 0,
       averagePace: (data["AveragePace"] ?? 0).toDouble(),
-      timestamp: (data["Timestamp"] as Timestamp).toDate(),
+      timestamp: data["Timestamp"] != null ? (data["Timestamp"] as Timestamp).toDate() : DateTime.now(),
       route: List<GeoPoint>.from(data["Route"] ?? []),
+      title: data["Title"] ?? "",
+      description: data["Description"] ?? "",
+      imageUrl: data["ImageUrl"] ?? "",
     );
   }
 }
