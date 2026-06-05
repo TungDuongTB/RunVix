@@ -66,12 +66,15 @@ class HomeStreakSection extends StatelessWidget {
             Obx(() => Icon(
               Icons.local_fire_department, 
               size: 48, 
-              color: controller.weeklyEvents.isNotEmpty ? Colors.orange : Colors.grey.shade300
+              color: controller.streakCount.value > 0 ? Colors.orange : Colors.grey.shade300
             )),
-            Obx(() => Text('${controller.weeklyEvents.length}', style: const TextStyle(fontWeight: FontWeight.bold))),
+            Obx(() => Text(
+              '${controller.streakCount.value}', 
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)
+            )),
           ],
         ),
-        const Text('Tuần', style: TextStyle(fontSize: 12, color: Colors.grey)),
+        const Text('Ngày', style: TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }

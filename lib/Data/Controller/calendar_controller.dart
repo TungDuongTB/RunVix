@@ -13,6 +13,7 @@ class CalendarController extends GetxController {
   final isLoading = false.obs;
   final weeklyEvents = <DateTime>{}.obs;
   final todayEvents = <String>[].obs;
+  final streakCount = 0.obs;
   final isAuthorized = false.obs;
   Timer? _debounce;
   // Biến khóa để ngăn chặn gọi API chồng chéo
@@ -23,6 +24,36 @@ class CalendarController extends GetxController {
     super.onInit();
     // Không gọi fetch tự động nếu chưa chắc chắn về quyền để tránh lỗi "Future already completed"
     checkAuthorization(autoFetch: true);
+  }
+
+  // Hàm tính toán streak thực tế
+  void _calculateStreak(Set<DateTime> allEventDates) {
+    if (allEventDates.isEmpty) {
+      streakCount.value = 0;
+      return;
+    }
+
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+
+    // Kiểm tra xem có hoạt động trong hôm nay hoặc hôm qua không
+    bool activeToday = allEventDates.contains(today);
+    bool activeYesterday = allEventDates.contains(yesterday);
+
+    if (!activeToday && !activeYesterday) {
+      streakCount.value = 0;
+      return;
+    }
+
+    int count = 0;
+    DateTime checkDate = activeToday ? today : yesterday;
+
+    while (allEventDates.contains(checkDate)) {
+      count++;
+      checkDate = checkDate.subtract(const Duration(days: 1));
+    }
+
+    streakCount.value = count;
   }
 
   Future<void> checkAuthorization({bool autoFetch = false}) async {
@@ -42,6 +73,7 @@ class CalendarController extends GetxController {
       }
     }
   }
+
   Future<void> fetchCurrentWeekEvents() async {
     if (_isProcessing) return;
     
@@ -50,15 +82,15 @@ class CalendarController extends GetxController {
       isLoading.value = true;
       
       final eventDates = <DateTime>{};
+      final allHistoryDates = <DateTime>{}; // Dùng để tính streak dài hạn
       final todayList = <String>[];
       DateTime today = DateTime.now();
       
-      // Tính toán khoảng thời gian tuần hiện tại (Thứ 2 - Chủ Nhật)
       DateTime startOfWeekDate = today.subtract(Duration(days: today.weekday - 1));
       DateTime startOfCurrentWeek = DateTime(startOfWeekDate.year, startOfWeekDate.month, startOfWeekDate.day);
       DateTime endOfCurrentWeek = startOfCurrentWeek.add(const Duration(days: 7));
 
-      // --- PHẦN 1: LẤY WORKOUTS TỪ FIRESTORE (Luôn chạy nếu có User Firebase) ---
+      // --- PHẦN 1: LẤY WORKOUTS TỪ FIRESTORE ---
       final userId = AuthenticationRepository.instance.firebaseUser.value?.uid;
       if (userId != null) {
         try {
@@ -67,10 +99,11 @@ class CalendarController extends GetxController {
             DateTime workoutDate = workout.timestamp;
             DateTime dayOnly = DateTime(workoutDate.year, workoutDate.month, workoutDate.day);
             
+            allHistoryDates.add(dayOnly);
+
             if (dayOnly.isAfter(startOfCurrentWeek.subtract(const Duration(seconds: 1))) && 
                 dayOnly.isBefore(endOfCurrentWeek)) {
-              
-              eventDates.add(dayOnly); // Set tự động loại bỏ ngày trùng
+              eventDates.add(dayOnly);
               
               if (dayOnly.year == today.year && dayOnly.month == today.month && dayOnly.day == today.day) {
                 if (!todayList.contains("Hoạt động tập luyện")) {
@@ -83,7 +116,8 @@ class CalendarController extends GetxController {
           debugPrint("Error fetching workouts: $e");
         }
       }
-      // --- PHẦN 2: LẤY SỰ KIỆN TỪ GOOGLE CALENDAR (Chỉ khi đã đăng nhập & cấp quyền) ---
+
+      // --- PHẦN 2: LẤY SỰ KIỆN TỪ GOOGLE CALENDAR ---
       try {
         final googleSignIn = AuthenticationRepository.instance.googleSignIn;
         if (await googleSignIn.isSignedIn() && isAuthorized.value) {
@@ -100,6 +134,7 @@ class CalendarController extends GetxController {
 
               if (date != null) {
                 DateTime dayOnly = DateTime(date.year, date.month, date.day);
+                allHistoryDates.add(dayOnly);
                 eventDates.add(dayOnly);
                 if (dayOnly.year == today.year && dayOnly.month == today.month && dayOnly.day == today.day) {
                   todayList.add(event.summary ?? "(Không có tiêu đề)");
@@ -111,6 +146,9 @@ class CalendarController extends GetxController {
       } catch (e) {
         debugPrint("Error fetching calendar events: $e");
       }
+
+      // Tính toán streak dựa trên toàn bộ lịch sử tìm thấy
+      _calculateStreak(allHistoryDates);
 
       weeklyEvents.value = eventDates;
       todayEvents.value = todayList;
@@ -135,7 +173,6 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
       
-      // Bước 1: Đảm bảo quyền (Sẽ hiện Popup nếu cần)
       final hasPermission = await AuthenticationRepository.instance.ensureCalendarScopes();
       if (!hasPermission) {
         throw "Cần cấp quyền lịch để sử dụng tính năng này";
@@ -143,7 +180,6 @@ class CalendarController extends GetxController {
       
       isAuthorized.value = true;
 
-      // Bước 2: Gọi API
       await _calendarRepo.quickAddEvent(text);
       await fetchCurrentWeekEvents();
       

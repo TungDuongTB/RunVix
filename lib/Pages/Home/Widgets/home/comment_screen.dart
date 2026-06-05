@@ -194,7 +194,7 @@ class CommentScreen extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     Text(
-                      "1h ago", // Mock time for UI
+                      "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}", // Mock time for UI
                       style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
                     ),
                   ],
