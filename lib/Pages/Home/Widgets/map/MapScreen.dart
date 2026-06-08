@@ -1,4 +1,3 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:runvix/export.dart';
 
 class MapScreen extends GetView<StravaController> {

@@ -78,7 +78,6 @@ export './Pages/Home/Widgets/Group/club_tab_content.dart';
 
 // Record Widgets
 export './Pages/Home/Widgets/Record/RecordScreen.dart';
-export './Pages/Home/Widgets/Record/record_top_trends_badge.dart';
 export './Pages/Home/Widgets/Record/record_floating_buttons.dart';
 export './Pages/Home/Widgets/Record/record_stats_card.dart';
 export './Pages/Home/Widgets/Record/record_controls.dart';

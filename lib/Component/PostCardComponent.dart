@@ -33,6 +33,10 @@ class PostCard extends StatelessWidget {
           const SizedBox(height: 12),
           _buildBody(),
           const SizedBox(height: 12),
+          if (post.distance != null && post.distance! > 0) ...[
+            _buildStats(),
+            const SizedBox(height: 12),
+          ],
           if (post.imageUrl.isNotEmpty) _buildImage(),
           const SizedBox(height: 16),
           const Divider(height: 1),
@@ -97,41 +101,88 @@ class PostCard extends StatelessWidget {
     );
   }
 
+  Widget _buildStats() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppColors.buttonColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.buttonColor.withOpacity(0.1)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildStatItem("Quãng đường", "${post.distance?.toStringAsFixed(2)} km", Icons.straighten),
+          _buildStatItem("Thời gian", _formatDuration(post.duration ?? 0), Icons.timer_outlined),
+          _buildStatItem("Nhịp độ", "${post.averagePace?.toStringAsFixed(2)} /km", Icons.speed),
+        ],
+      ),
+    );
+  }
+  Widget _buildStatItem(String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 12, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.buttonColor)),
+      ],
+    );
+  }
+
+  String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    final secs = seconds % 60;
+    if (hours > 0) {
+      return "${hours}g ${minutes}p";
+    }
+    return "${minutes}p ${secs}s";
+  }
+
   Widget _buildImage() {
-    // Kiểm tra xem imageUrl có phải là URL hợp lệ không
-    if (!post.imageUrl.startsWith('http')) {
+    if (post.imageUrl.isEmpty || !post.imageUrl.startsWith('http')) {
       return const SizedBox.shrink();
     }
     
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.network(
-        post.imageUrl,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(
-          height: 150,
-          width: double.infinity,
-          color: Colors.grey.shade100,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.broken_image_outlined, color: Colors.grey),
-              SizedBox(height: 8),
-              Text("Không thể tải ảnh", style: TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: AspectRatio(
+            aspectRatio: 16 / 9, // Tỷ lệ chuẩn cho bản đồ
+            child: Image.network(
+              post.imageUrl,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey.shade100,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.map_outlined, color: Colors.grey, size: 40),
+                    SizedBox(height: 8),
+                    Text("Không thể hiển thị bản đồ quãng đường", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  ],
+                ),
+              ),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  color: Colors.grey.shade100,
+                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                );
+              },
+            ),
           ),
         ),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            height: 200,
-            width: double.infinity,
-            color: Colors.grey.shade100,
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        },
-      ),
+      ],
     );
   }
 
