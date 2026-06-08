@@ -126,7 +126,7 @@ class RecordController extends GetxController {
           content: description.text.trim().isNotEmpty 
               ? description.text.trim() 
               : "Tôi vừa hoàn thành ${(distance.value / 1000).toStringAsFixed(2)}km!",
-          imageUrl: "", // GPS record usually doesn't have an image unless we implement map snapshot
+          imageUrl: "",
           createdAt: DateTime.now(),
         );
         await postRepo.createPost(post, null);

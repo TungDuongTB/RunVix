@@ -9,6 +9,10 @@ class PostModel {
   final String content;
   final String imageUrl;
   final DateTime? createdAt;
+  final double? distance;
+  final int? duration;
+  final double? averagePace;
+  final String? type;
   final int likes;
   final int comments;
   final int reportCount;
@@ -24,6 +28,10 @@ class PostModel {
     required this.content,
     required this.imageUrl,
     this.createdAt,
+    this.distance,
+    this.duration,
+    this.averagePace,
+    this.type,
     this.likes = 0,
     this.comments = 0,
     this.reportCount = 0,
@@ -38,6 +46,10 @@ class PostModel {
       "Content": content,
       "ImageUrl": imageUrl,
       "CreatedAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      "Distance": distance,
+      "Duration": duration,
+      "AveragePace": averagePace,
+      "Type": type,
       "Likes": likes,
       "Comments": comments,
       "ReportCount": reportCount,
@@ -56,6 +68,10 @@ class PostModel {
       content: data["Content"] ?? "",
       imageUrl: data["ImageUrl"] ?? "",
       createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
+      distance: (data["Distance"] ?? 0.0).toDouble(),
+      duration: data["Duration"] ?? 0,
+      averagePace: (data["AveragePace"] ?? 0.0).toDouble(),
+      type: data["Type"] ?? "",
       likes: (data["Likes"] ?? 0) as int,
       comments: (data["Comments"] ?? 0) as int,
       reportCount: (data["ReportCount"] ?? 0) as int,
@@ -73,6 +89,10 @@ class PostModel {
     String? content,
     String? imageUrl,
     DateTime? createdAt,
+    double? distance,
+    int? duration,
+    double? averagePace,
+    String? type,
     int? likes,
     int? comments,
     bool? isLocked,
@@ -88,6 +108,10 @@ class PostModel {
       content: content ?? this.content,
       imageUrl: imageUrl ?? this.imageUrl,
       createdAt: createdAt ?? this.createdAt,
+      distance: distance ?? this.distance,
+      duration: duration ?? this.duration,
+      averagePace: averagePace ?? this.averagePace,
+      type: type ?? this.type,
       likes: likes ?? this.likes,
       comments: comments ?? this.comments,
       reportCount: reportCount ?? this.reportCount,

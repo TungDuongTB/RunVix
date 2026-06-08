@@ -79,6 +79,10 @@ class ManualActivityController extends GetxController {
               : "Đã hoàn thành buổi ${selectedType.value.toLowerCase()} ${distance.value}km!",
           imageUrl: imageUrl,
           createdAt: DateTime.now(),
+          distance: distance.value,
+          duration: totalSeconds,
+          averagePace: avgPace,
+          type: selectedType.value,
         );
         
         // Gọi repo để tạo bài đăng
@@ -89,7 +93,6 @@ class ManualActivityController extends GetxController {
           PostController.instance.fetchPosts();
         }
       }
-
       // Refresh calendar/streak
       try {
         if (Get.isRegistered<CalendarController>()) {
