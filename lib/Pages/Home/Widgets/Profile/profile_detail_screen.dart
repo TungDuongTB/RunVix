@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
+import 'followers_list_screen.dart';
+import 'following_list_screen.dart';
 
 class ProfileDetailScreen extends StatelessWidget {
   const ProfileDetailScreen({super.key});
@@ -62,16 +64,22 @@ class ProfileDetailScreen extends StatelessWidget {
                 ),
               ),
 
-            // Followers Stats
+            // Followers Stats - Real-time
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
+              child: Obx(() => Row(
                 children: [
-                  _buildFollowStat('Đang theo dõi', '0'),
+                  GestureDetector(
+                    onTap: () => Get.to(() => const FollowingListScreen()),
+                    child: _buildFollowStat('Đang theo dõi', controller.followingIds.length.toString()),
+                  ),
                   const SizedBox(width: 40),
-                  _buildFollowStat('Người theo dõi', '0'),
+                  GestureDetector(
+                    onTap: () => Get.to(() => const FollowersListScreen()),
+                    child: _buildFollowStat('Người theo dõi', controller.followerIds.length.toString()),
+                  ),
                 ],
-              ),
+              )),
             ),
 
             const SizedBox(height: 20),

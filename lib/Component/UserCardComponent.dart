@@ -3,12 +3,16 @@ import 'package:runvix/export.dart';
 
 class UserFollowCard extends StatelessWidget {
   final UserModel user;
+  final bool isFollowing;
+  final bool isFollower;
   final VoidCallback? onFollow;
   final VoidCallback? onRemove;
 
   const UserFollowCard({
     super.key,
     required this.user,
+    this.isFollowing = false,
+    this.isFollower = false,
     this.onFollow,
     this.onRemove,
   });
@@ -92,13 +96,17 @@ class UserFollowCard extends StatelessWidget {
         ElevatedButton(
           onPressed: onFollow,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.buttonColor,
-            foregroundColor: Colors.white,
+            backgroundColor: isFollowing ? Colors.grey.shade200 : AppColors.buttonColor,
+            foregroundColor: isFollowing ? Colors.black87 : Colors.white,
             elevation: 0,
+            side: isFollowing ? BorderSide(color: Colors.grey.shade300) : null,
             minimumSize: const Size(double.infinity, 32),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          child: const Text('Theo dõi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+          child: Text(
+            isFollowing ? 'Đã theo dõi' : (isFollower ? 'Theo dõi lại' : 'Theo dõi'),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+          ),
         ),
         const SizedBox(height: 4),
         OutlinedButton(

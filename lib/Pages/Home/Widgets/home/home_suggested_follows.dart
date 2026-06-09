@@ -102,13 +102,16 @@ class HomeSuggestedFollows extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: displayUsers.length,
           itemBuilder: (context, index) {
+            final otherUser = displayUsers[index];
             return Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: UserFollowCard(
-                user: displayUsers[index],
-                onFollow: () {},
+              child: Obx(() => UserFollowCard(
+                user: otherUser,
+                isFollowing: userController.followingIds.contains(otherUser.id),
+                isFollower: userController.followerIds.contains(otherUser.id),
+                onFollow: () => userController.toggleFollowUser(otherUser.id ?? ""),
                 onRemove: () => Get.to(() => const LoadingScreen()),
-              ),
+              )),
             );
           },
         );

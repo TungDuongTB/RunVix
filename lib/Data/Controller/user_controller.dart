@@ -8,29 +8,81 @@ class UserController extends GetxController {
   final _userRepo = Get.put(UserRepository());
   final user = UserModel.empty().obs;
   final allUsers = <UserModel>[].obs;
+  final followingIds = <String>[].obs;
+  final followerIds = <String>[].obs;
   final isLoading = false.obs;
   final imageUploading = false.obs;
+
+  StreamSubscription? _followingSubscription;
+  StreamSubscription? _followerSubscription;
 
   @override
   void onInit() {
     super.onInit();
     _listenToAuthChanges();
+    
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      _bindFollowStreams(currentUser.uid);
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllUsers();
     });
   }
+
+  @override
+  void onClose() {
+    _followingSubscription?.cancel();
+    _followerSubscription?.cancel();
+    super.onClose();
+  }
+
   void _listenToAuthChanges() {
     FirebaseAuth.instance.authStateChanges().listen((User? firebaseUser) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (firebaseUser != null) {
           fetchUserRecord();
+          _bindFollowStreams(firebaseUser.uid);
         } else {
           user.value = UserModel.empty();
           allUsers.clear();
+          followingIds.clear();
+          followerIds.clear();
+          _followingSubscription?.cancel();
+          _followerSubscription?.cancel();
         }
       });
     });
   }
+
+  void _bindFollowStreams(String uid) {
+    _followingSubscription?.cancel();
+    _followerSubscription?.cancel();
+
+    // Stream following users IDs with error handling
+    _followingSubscription = _userRepo.getFollowingStream(uid).listen(
+      (ids) {
+        followingIds.assignAll(ids);
+        debugPrint('✅ Following IDs updated: ${ids.length} users');
+      },
+      onError: (error) {
+        debugPrint('❌ Error listening to following stream: $error');
+      },
+    );
+
+    // Stream follower users IDs with error handling
+    _followerSubscription = _userRepo.getFollowerStream(uid).listen(
+      (ids) {
+        followerIds.assignAll(ids);
+        debugPrint('✅ Follower IDs updated: ${ids.length} users');
+      },
+      onError: (error) {
+        debugPrint('❌ Error listening to follower stream: $error');
+      },
+    );
+  }
+
   Future<void> fetchUserRecord() async {
     try {
       isLoading.value = true;
@@ -73,8 +125,34 @@ class UserController extends GetxController {
     }
   }
 
-  void followUser(String userId) {
-    Get.snackbar("Thành công", "Đã gửi lời mời theo dõi!");
+  Future<void> toggleFollowUser(String otherUserId) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    final isFollowing = followingIds.contains(otherUserId);
+
+    // Optimistic Update
+    if (isFollowing) {
+      followingIds.remove(otherUserId);
+    } else {
+      followingIds.add(otherUserId);
+    }
+
+    try {
+      if (isFollowing) {
+        await _userRepo.unfollowUser(currentUser.uid, otherUserId);
+      } else {
+        await _userRepo.followUser(currentUser.uid, otherUserId);
+      }
+    } catch (e) {
+      // Rollback on error
+      if (isFollowing) {
+        followingIds.add(otherUserId);
+      } else {
+        followingIds.remove(otherUserId);
+      }
+      Get.snackbar("Lỗi", "Không thể thực hiện thao tác: $e", snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
   Future<String> uploadImage(XFile image) async {

@@ -74,6 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       ),
       centerTitle: true,
       actions: [
+        _buildTrackingButton(),
         _buildAddMenu(),
         IconButton(
           icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 28),
@@ -81,6 +82,15 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         ),
       ],
       bottom: _buildTabBar(),
+    );
+  }
+
+  /// Thêm button theo dõi real-time
+  Widget _buildTrackingButton() {
+    return IconButton(
+      icon: const Icon(Icons.trending_up, color: Colors.black, size: 28),
+      tooltip: 'Theo dõi real-time',
+      onPressed: () => Get.to(() => const FollowerTrackingDashboard()),
     );
   }
 

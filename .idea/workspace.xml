@@ -9,11 +9,21 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="record">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="toi uu code">
+      <change afterPath="$PROJECT_DIR$/lib/Component/FollowerTrackingWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/follower_tracking_dashboard.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/create_post_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/create_post_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/UserCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/UserCardComponent.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +36,7 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="7bfa347f-e377-4e1b-8879-2d412b289ef4" />
+        <option name="activeSessionId" value="437e031f-c2f9-4b11-82d0-26dd7cf7648e" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
@@ -59,6 +69,23 @@
             <option name="modeId" value="Agent" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="ba369af5-4457-4c88-9270-9abede0dc6a2" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="437e031f-c2f9-4b11-82d0-26dd7cf7648e" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Processing" />
             <option name="targetType" value="LOCAL" />
           </session>
         </option>
@@ -455,7 +482,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780934697195</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="toi uu code">
+      <option name="closed" value="true" />
+      <created>1781020178176</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1781020178176</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -470,7 +505,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="sign in - login username" />
     <MESSAGE value="Admin_Screen" />
     <MESSAGE value="loadding_screen &amp; build android" />
     <MESSAGE value="editprofile" />
@@ -495,7 +529,8 @@
     <MESSAGE value="fix comment" />
     <MESSAGE value="fix" />
     <MESSAGE value="record" />
-    <option name="LAST_COMMIT_MESSAGE" value="record" />
+    <MESSAGE value="toi uu code" />
+    <option name="LAST_COMMIT_MESSAGE" value="toi uu code" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
