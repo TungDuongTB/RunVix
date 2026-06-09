@@ -9,8 +9,14 @@ class UserRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   Future<void> createUser(UserModel user) async {
-    await _db.collection("Users").doc(user.id).set(user.toJson()).catchError((error) {
-      Get.snackbar("Lỗi", "Không thể lưu thông tin: $error", snackPosition: SnackPosition.BOTTOM);
+    await _db.collection("Users").doc(user.id).set(user.toJson()).catchError((
+      error,
+    ) {
+      Get.snackbar(
+        "Lỗi",
+        "Không thể lưu thông tin: $error",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     });
   }
 
@@ -39,7 +45,7 @@ class UserRepository extends GetxController {
           .where("Username", isEqualTo: username.trim().toLowerCase())
           .limit(1)
           .get();
-          
+
       if (snapshot.docs.isNotEmpty) {
         return UserModel.fromSnapshot(snapshot.docs.first);
       }
@@ -54,7 +60,9 @@ class UserRepository extends GetxController {
   Future<List<UserModel>> getAllUsers() async {
     try {
       final snapshot = await _db.collection("Users").get();
-      final allUsers = snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+      final allUsers = snapshot.docs
+          .map((doc) => UserModel.fromSnapshot(doc))
+          .toList();
       return allUsers;
     } catch (e) {
       throw 'Đã xảy ra lỗi khi lấy danh sách người dùng: $e';
@@ -80,7 +88,7 @@ class UserRepository extends GetxController {
           .where('uid', isEqualTo: currentUserId)
           .where('ortherid', isEqualTo: otherUserId)
           .get();
-      
+
       for (var doc in snapshot.docs) {
         await doc.reference.delete();
       }
@@ -91,7 +99,10 @@ class UserRepository extends GetxController {
 
   Future<List<String>> getFollowingIds(String uid) async {
     try {
-      final snapshot = await _db.collection("Followers").where('uid', isEqualTo: uid).get();
+      final snapshot = await _db
+          .collection("Followers")
+          .where('uid', isEqualTo: uid)
+          .get();
       return snapshot.docs
           .map((doc) => (doc.data()['ortherid'] ?? '') as String)
           .where((id) => id.isNotEmpty)
@@ -101,21 +112,28 @@ class UserRepository extends GetxController {
     }
   }
 
-   Stream<List<String>> getFollowingStream(String uid) {
-     return _db
-         .collection("Followers")
-         .where('uid', isEqualTo: uid)
-         .snapshots()
-         .map((snapshot) => snapshot.docs.map((doc) => (doc.data()['ortherid'] ?? "") as String).toList())
-         .handleError((error) {
-           debugPrint('❌ Error in following stream: $error');
-           return <String>[];
-         });
-   }
+  Stream<List<String>> getFollowingStream(String uid) {
+    return _db
+        .collection("Followers")
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => (doc.data()['ortherid'] ?? "") as String)
+              .toList(),
+        )
+        .handleError((error) {
+          debugPrint('❌ Error in following stream: $error');
+          return <String>[];
+        });
+  }
 
   Future<List<String>> getFollowerIds(String uid) async {
     try {
-      final snapshot = await _db.collection("Followers").where('ortherid', isEqualTo: uid).get();
+      final snapshot = await _db
+          .collection("Followers")
+          .where('ortherid', isEqualTo: uid)
+          .get();
       return snapshot.docs
           .map((doc) => (doc.data()['uid'] ?? '') as String)
           .where((id) => id.isNotEmpty)
@@ -125,17 +143,21 @@ class UserRepository extends GetxController {
     }
   }
 
-   Stream<List<String>> getFollowerStream(String uid) {
-     return _db
-         .collection("Followers")
-         .where('ortherid', isEqualTo: uid)
-         .snapshots()
-         .map((snapshot) => snapshot.docs.map((doc) => (doc.data()['uid'] ?? "") as String).toList())
-         .handleError((error) {
-           debugPrint('❌ Error in follower stream: $error');
-           return <String>[];
-         });
-   }
+  Stream<List<String>> getFollowerStream(String uid) {
+    return _db
+        .collection("Followers")
+        .where('ortherid', isEqualTo: uid)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => (doc.data()['uid'] ?? "") as String)
+              .toList(),
+        )
+        .handleError((error) {
+          debugPrint('❌ Error in follower stream: $error');
+          return <String>[];
+        });
+  }
 
   Future<bool> isFollowing(String currentUserId, String otherUserId) async {
     try {

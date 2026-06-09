@@ -12,6 +12,6 @@ class AppColors {
   static const Color disabled = Color(0xFF8E8E93);
 
   
-  static const Color buttonColor = Color(0xFF33FFFF);
+  static const Color buttonColor = Color(0xFF0062FF);
   static const Color textPrimary = white;
 }

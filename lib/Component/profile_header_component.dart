@@ -8,6 +8,8 @@ class ProfileHeaderComponent extends StatelessWidget {
   final int following;
   final int followers;
   final int likes;
+  final int streakCount;
+  final double totalDistance;
   final bool isFollowing;
   final bool isFollower;
   final VoidCallback? onFollowPressed;
@@ -22,6 +24,8 @@ class ProfileHeaderComponent extends StatelessWidget {
     required this.following,
     required this.followers,
     required this.likes,
+    this.streakCount = 0,
+    this.totalDistance = 0.0,
     this.isFollowing = false,
     this.isFollower = false,
     this.onFollowPressed,
@@ -32,124 +36,93 @@ class ProfileHeaderComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Header: Avatar + Name (Horizontal)
-        _buildHeaderSection(),
+        // 1. Avatar with active gradient ring
+        const SizedBox(height: 24),
+        _buildAvatarSection(),
 
         const SizedBox(height: 16),
+        // 2. Name & Bio
+        _buildNameAndBioSection(),
 
-        // Stats Row: Following | Followers | Likes
-        _buildStatsRow(),
+        const SizedBox(height: 24),
+        // 3. Stats Row: Followers | Following | Likes
+        ProfileStatsRow(
+          followers: followers,
+          following: following,
+          likes: likes,
+          onStatTap: onStatTap,
+        ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
+        // 4. Streak & Distance Cards
+        ProfileStreakDistanceCards(
+          streakCount: streakCount,
+          totalDistance: totalDistance,
+        ),
 
-        // Bio Section
-        _buildBioSection(),
-
-        const SizedBox(height: 16),
-
-        // Follow Button
+        const SizedBox(height: 12),
+        // 5. Follow Button
         _buildFollowButton(),
       ],
     );
   }
 
-  /// ===== Header: Avatar + Name (Horizontal) =====
-  Widget _buildHeaderSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          // Avatar
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(avatarUrl),
-            onBackgroundImageError: (exception, stackTrace) {},
-          ),
-          const SizedBox(width: 16),
-          // Name & Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  fullName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
+  /// ===== Header: Avatar with gradient border =====
+  Widget _buildAvatarSection() {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            Color.fromARGB(255, 0, 247, 255), // Primary Orange
+            Color(0xFF0262FF), // Secondary Blue
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        ),
+        child: CircleAvatar(
+          radius: 48,
+          backgroundImage: NetworkImage(avatarUrl),
+          onBackgroundImageError: (exception, stackTrace) {},
+        ),
       ),
     );
   }
 
-  /// ===== Stats Row: Following | Followers | Likes =====
-  Widget _buildStatsRow() {
+  /// ===== Name & Bio Section =====
+  Widget _buildNameAndBioSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Đang theo dõi', following.toString()),
-          Container(width: 1, height: 40, color: Colors.grey.shade300),
-          _buildStatItem('Người theo dõi', followers.toString()),
-          Container(width: 1, height: 40, color: Colors.grey.shade300),
-          _buildStatItem('Lượt thích', likes.toString()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(String label, String value) {
-    return GestureDetector(
-      onTap: onStatTap,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           Text(
-            value,
+            fullName,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF0B1C30),
+              fontFamily: 'Plus Jakarta Sans',
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Text(
-            label,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// ===== Bio Section =====
-  Widget _buildBioSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            bio,
+            bio.isNotEmpty ? bio : subtitle,
             style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-              height: 1.5,
+              fontSize: 15,
+              color: Color(0xFF5B4137),
+              height: 1.4,
+              fontFamily: 'Inter',
             ),
+            textAlign: TextAlign.center,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -157,6 +130,8 @@ class ProfileHeaderComponent extends StatelessWidget {
       ),
     );
   }
+
+
 
   /// ===== Follow Button =====
   Widget _buildFollowButton() {
@@ -167,39 +142,46 @@ class ProfileHeaderComponent extends StatelessWidget {
     // Determine button text
     final String buttonText = isFriend
         ? 'Bạn bè'
-        : (isFollowing ? 'Đã theo dõi' : (isFollower ? 'Theo dõi lại' : 'Theo dõi'));
+        : (isFollowing
+              ? 'Đã theo dõi'
+              : (isFollower ? 'Theo dõi lại' : 'Theo dõi'));
 
     // Determine colors based on state
     final Color buttonBgColor = isFriend
         ? Colors.green
-        : (isFollowing ? Colors.grey.shade200 : AppColors.buttonColor);
+        : (isFollowing ? const Color(0xFFEFF4FF) : AppColors.buttonColor);
 
     final Color buttonFgColor = isFriend
         ? Colors.white
-        : (isFollowing ? Colors.black87 : Colors.white);
+        : (isFollowing ? const Color(0xFF0B1C30) : Colors.white);
 
-    final BorderSide borderSide = isFriend
-        ? const BorderSide(color: Colors.green)
-        : (isFollowing ? BorderSide(color: Colors.grey.shade300) : BorderSide.none);
+    final BorderSide borderSide = isFollowing
+        ? const BorderSide(color: Color(0xFFE4BFB1))
+        : BorderSide.none;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: buttonBgColor,
             foregroundColor: buttonFgColor,
+            elevation: 0,
             side: borderSide,
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
           onPressed: onFollowPressed,
           child: Text(
             buttonText,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Plus Jakarta Sans',
+            ),
           ),
         ),
       ),

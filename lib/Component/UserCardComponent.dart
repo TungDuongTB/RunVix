@@ -1,4 +1,3 @@
-
 import 'package:runvix/export.dart';
 
 class UserFollowCard extends StatelessWidget {
@@ -19,23 +18,42 @@ class UserFollowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 180,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-          _buildAvatar(),
-          const SizedBox(height: 16),
-          _buildUserInfo(),
-          const Spacer(),
-          _buildActionButtons(),
-        ],
+    return GlassCard(
+      borderRadius: 16,
+      padding: EdgeInsets.zero,
+      child: Container(
+        width: 150,
+        height: 220,
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Close/Dismiss Button in Top-Right
+            if (onRemove != null)
+              Positioned(
+                top: -8,
+                right: -8,
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: onRemove,
+                ),
+              ),
+            
+            // Card Content
+            Column(
+              children: [
+                const SizedBox(height: 8),
+                _buildAvatar(),
+                const SizedBox(height: 12),
+                _buildUserInfo(),
+                const Spacer(),
+                _buildActionButtons(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -47,21 +65,22 @@ class UserFollowCard extends StatelessWidget {
           Get.to(() => ProfileHubScreen(userId: user.id));
         }
       },
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(40),
-            child: Image.network(
-              user.profilePicture.isNotEmpty ? user.profilePicture : 'https://picsum.photos/100',
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.account_circle, size: 70, color: Colors.grey),
-            ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Image.network(
+            user.profilePicture.isNotEmpty ? user.profilePicture : 'https://picsum.photos/100',
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.account_circle, size: 60, color: Colors.grey),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -77,15 +96,15 @@ class UserFollowCard extends StatelessWidget {
         children: [
           Text(
             user.fullName.isNotEmpty ? user.fullName : 'Người dùng RunVix',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             user.username.isNotEmpty ? "@${user.username}" : user.email,
-            style: const TextStyle(color: Colors.grey, fontSize: 11),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 10),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -99,44 +118,38 @@ class UserFollowCard extends StatelessWidget {
     final userController = UserController.instance;
 
     return Obx(() {
-      // Directly access observables trong Obx để nó lắng nghe changes
       final isFollowingNow = userController.followingIds.contains(user.id);
       final isFollowerNow = userController.followerIds.contains(user.id);
-      final isFriend = isFollowingNow && isFollowerNow; // Both follow each other
+      final isFriend = isFollowingNow && isFollowerNow;
 
-      // Determine button state and color
-      final buttonBgColor = isFriend ? Colors.green : (isFollowingNow ? Colors.grey.shade200 : AppColors.buttonColor);
-      final buttonFgColor = isFriend ? Colors.white : (isFollowingNow ? Colors.black87 : Colors.white);
-      final buttonBorderColor = isFriend ? Colors.green : (isFollowingNow ? Colors.grey.shade300 : null);
+      final buttonBgColor = isFriend 
+          ? Colors.green.shade600 
+          : (isFollowingNow ? Colors.white.withOpacity(0.3) : AppColors.buttonColor);
+      final buttonFgColor = isFriend 
+          ? Colors.white 
+          : (isFollowingNow ? Colors.grey.shade800 : Colors.white);
+      final buttonBorderColor = isFriend 
+          ? Colors.transparent 
+          : (isFollowingNow ? Colors.white.withOpacity(0.4) : Colors.transparent);
 
-      return Column(
-        children: [
-          ElevatedButton(
-            onPressed: onFollow,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttonBgColor,
-              foregroundColor: buttonFgColor,
-              elevation: 0,
-              side: buttonBorderColor != null ? BorderSide(color: buttonBorderColor) : null,
-              minimumSize: const Size(double.infinity, 32),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-            child: Text(
-              isFriend ? 'Bạn bè' : (isFollowingNow ? 'Đã theo dõi' : (isFollowerNow ? 'Theo dõi lại' : 'Theo dõi')),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-            ),
+      return SizedBox(
+        width: double.infinity,
+        height: 32,
+        child: ElevatedButton(
+          onPressed: onFollow,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: buttonBgColor,
+            foregroundColor: buttonFgColor,
+            elevation: 0,
+            side: BorderSide(color: buttonBorderColor),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
           ),
-          const SizedBox(height: 4),
-          OutlinedButton(
-            onPressed: onRemove,
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.grey.shade300),
-              minimumSize: const Size(double.infinity, 32),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-            child: const Text('Xóa', style: TextStyle(color: Colors.grey, fontSize: 11)),
+          child: Text(
+            isFriend ? 'Bạn bè' : (isFollowingNow ? 'Đã theo dõi' : (isFollowerNow ? 'Theo dõi lại' : 'Theo dõi')),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
           ),
-        ],
+        ),
       );
     });
   }

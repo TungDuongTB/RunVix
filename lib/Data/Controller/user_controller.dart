@@ -20,7 +20,7 @@ class UserController extends GetxController {
   void onInit() {
     super.onInit();
     _listenToAuthChanges();
-    
+
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       _bindFollowStreams(currentUser.uid);
@@ -61,26 +61,30 @@ class UserController extends GetxController {
     _followerSubscription?.cancel();
 
     // Stream following users IDs with error handling
-    _followingSubscription = _userRepo.getFollowingStream(uid).listen(
-      (ids) {
-        followingIds.assignAll(ids);
-        debugPrint('✅ Following IDs updated: ${ids.length} users');
-      },
-      onError: (error) {
-        debugPrint('❌ Error listening to following stream: $error');
-      },
-    );
+    _followingSubscription = _userRepo
+        .getFollowingStream(uid)
+        .listen(
+          (ids) {
+            followingIds.assignAll(ids);
+            debugPrint('✅ Following IDs updated: ${ids.length} users');
+          },
+          onError: (error) {
+            debugPrint('❌ Error listening to following stream: $error');
+          },
+        );
 
     // Stream follower users IDs with error handling
-    _followerSubscription = _userRepo.getFollowerStream(uid).listen(
-      (ids) {
-        followerIds.assignAll(ids);
-        debugPrint('✅ Follower IDs updated: ${ids.length} users');
-      },
-      onError: (error) {
-        debugPrint('❌ Error listening to follower stream: $error');
-      },
-    );
+    _followerSubscription = _userRepo
+        .getFollowerStream(uid)
+        .listen(
+          (ids) {
+            followerIds.assignAll(ids);
+            debugPrint('✅ Follower IDs updated: ${ids.length} users');
+          },
+          onError: (error) {
+            debugPrint('❌ Error listening to follower stream: $error');
+          },
+        );
   }
 
   Future<void> fetchUserRecord() async {
@@ -107,13 +111,41 @@ class UserController extends GetxController {
     try {
       isLoading.value = true;
       final users = await _userRepo.getAllUsers();
-      
+
       if (users.isEmpty) {
         allUsers.assignAll([
-          UserModel(id: "1", username: "vankien", fullName: "Nguyễn Văn Kiên", email: "kien@gmail.com", address: "Hà Nội", profilePicture: "https://i.pravatar.cc/150?u=1"),
-          UserModel(id: "2", username: "minhthu", fullName: "Trần Minh Thư", email: "thu@gmail.com", address: "HCM", profilePicture: "https://i.pravatar.cc/150?u=2"),
-          UserModel(id: "3", username: "hoangnam", fullName: "Lê Hoàng Nam", email: "nam@gmail.com", address: "Đà Nẵng", profilePicture: "https://i.pravatar.cc/150?u=3"),
-          UserModel(id: "4", username: "thuychi", fullName: "Phạm Thủy Chi", email: "chi@gmail.com", address: "Cần Thơ", profilePicture: "https://i.pravatar.cc/150?u=4"),
+          UserModel(
+            id: "1",
+            username: "vankien",
+            fullName: "Nguyễn Văn Kiên",
+            email: "kien@gmail.com",
+            address: "Hà Nội",
+            profilePicture: "https://i.pravatar.cc/150?u=1",
+          ),
+          UserModel(
+            id: "2",
+            username: "minhthu",
+            fullName: "Trần Minh Thư",
+            email: "thu@gmail.com",
+            address: "HCM",
+            profilePicture: "https://i.pravatar.cc/150?u=2",
+          ),
+          UserModel(
+            id: "3",
+            username: "hoangnam",
+            fullName: "Lê Hoàng Nam",
+            email: "nam@gmail.com",
+            address: "Đà Nẵng",
+            profilePicture: "https://i.pravatar.cc/150?u=3",
+          ),
+          UserModel(
+            id: "4",
+            username: "thuychi",
+            fullName: "Phạm Thủy Chi",
+            email: "chi@gmail.com",
+            address: "Cần Thơ",
+            profilePicture: "https://i.pravatar.cc/150?u=4",
+          ),
         ]);
       } else {
         allUsers.assignAll(users);
@@ -151,7 +183,11 @@ class UserController extends GetxController {
       } else {
         followingIds.remove(otherUserId);
       }
-      Get.snackbar("Lỗi", "Không thể thực hiện thao tác: $e", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Lỗi",
+        "Không thể thực hiện thao tác: $e",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -164,11 +200,9 @@ class UserController extends GetxController {
       );
       request.fields['upload_preset'] = 'RunVix';
       final bytes = await image.readAsBytes();
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: image.name,
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: image.name),
+      );
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
@@ -202,7 +236,12 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> saveUserRecord(UserCredential? userCredential, {required String username, required String name, required String address}) async {
+  Future<void> saveUserRecord(
+    UserCredential? userCredential, {
+    required String username,
+    required String name,
+    required String address,
+  }) async {
     try {
       if (userCredential != null) {
         final newUser = UserModel(
