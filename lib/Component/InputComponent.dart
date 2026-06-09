@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:runvix/export.dart';
 
-import 'package:flutter/material.dart';
 
 class Inputcomponent extends StatelessWidget {
   final String hintText;

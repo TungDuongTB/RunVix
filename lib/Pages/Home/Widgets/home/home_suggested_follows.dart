@@ -71,10 +71,6 @@ class HomeSuggestedFollows extends StatelessWidget {
             'Nên theo dõi',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          TextButton(
-            onPressed: () => userController.fetchAllUsers(),
-            child: const Text('Xem tất cả', style: TextStyle(color: AppColors.buttonColor)),
-          ),
         ],
       ),
     );
@@ -110,7 +106,7 @@ class HomeSuggestedFollows extends StatelessWidget {
                 isFollowing: userController.followingIds.contains(otherUser.id),
                 isFollower: userController.followerIds.contains(otherUser.id),
                 onFollow: () => userController.toggleFollowUser(otherUser.id ?? ""),
-                onRemove: () => Get.to(() => const LoadingScreen()),
+                onRemove: () => Get.to(() => ProfileHubScreen(userId: otherUser.id)),
               ),
             );
           },

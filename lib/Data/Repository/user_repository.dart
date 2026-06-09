@@ -92,7 +92,10 @@ class UserRepository extends GetxController {
   Future<List<String>> getFollowingIds(String uid) async {
     try {
       final snapshot = await _db.collection("Followers").where('uid', isEqualTo: uid).get();
-      return snapshot.docs.map((doc) => doc.data()['ortherid'] as String).toList();
+      return snapshot.docs
+          .map((doc) => (doc.data()['ortherid'] ?? '') as String)
+          .where((id) => id.isNotEmpty)
+          .toList();
     } catch (e) {
       throw 'Lỗi khi lấy danh sách đang theo dõi: $e';
     }
@@ -113,7 +116,10 @@ class UserRepository extends GetxController {
   Future<List<String>> getFollowerIds(String uid) async {
     try {
       final snapshot = await _db.collection("Followers").where('ortherid', isEqualTo: uid).get();
-      return snapshot.docs.map((doc) => doc.data()['uid'] as String).toList();
+      return snapshot.docs
+          .map((doc) => (doc.data()['uid'] ?? '') as String)
+          .where((id) => id.isNotEmpty)
+          .toList();
     } catch (e) {
       throw 'Lỗi khi lấy danh sách người theo dõi: $e';
     }

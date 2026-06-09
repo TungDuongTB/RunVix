@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
-import 'followers_list_screen.dart';
-import 'following_list_screen.dart';
+
 
 class ProfileDetailScreen extends StatelessWidget {
   const ProfileDetailScreen({super.key});

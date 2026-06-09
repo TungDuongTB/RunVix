@@ -88,6 +88,7 @@ export './Pages/Home/Widgets/Profile/ProfileScreen.dart';
 export './Pages/Home/Widgets/Profile/profile_progress_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_activities_tab.dart';
 export './Pages/Home/Widgets/Profile/profile_detail_screen.dart';
+export './Pages/Home/Widgets/Profile/profile_hub_screen.dart';
 export './Pages/Home/Widgets/Profile/followers_list_screen.dart';
 export './Pages/Home/Widgets/Profile/following_list_screen.dart';
 export './Pages/Home/Widgets/Profile/follower_tracking_dashboard.dart';
@@ -114,4 +115,6 @@ export './Component/action_dialog.dart';
 export './Component/FilterComponent.dart';
 export './Component/FollowerTrackingWidget.dart';
 export '../../../../Component/RouteCardComponent.dart';
+export './Component/profile_header_component.dart';
+export './Component/ProfilePostGridComponent.dart';
 

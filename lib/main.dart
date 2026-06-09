@@ -48,7 +48,8 @@ class MyApp extends StatelessWidget {
           page: () => const HomeScreen(),
           binding: MapBinding(),
         ),
-        GetPage(name: '/admin-dashboard', page: () => const AdminDashboardScreen())
+        GetPage(name: '/admin-dashboard', page: () => const AdminDashboardScreen()),
+        GetPage(name: '/profile-hub', page: () => const ProfileHubScreen()),
       ],
       theme: ThemeData(
         useMaterial3: true,
