@@ -9,21 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="toi uu code">
-      <change afterPath="$PROJECT_DIR$/lib/Component/FollowerTrackingWidget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/follower_tracking_dashboard.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="feat: add flower">
       <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Component/UserCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/UserCardComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/follower_tracking_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/follower_tracking_dashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +29,7 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="437e031f-c2f9-4b11-82d0-26dd7cf7648e" />
+        <option name="activeSessionId" value="3f37558c-466f-4564-a35f-8f67a51ddcc7" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
@@ -85,7 +78,16 @@
             <option name="modeId" value="Agent" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="auto" />
-            <option name="status" value="Processing" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="3f37558c-466f-4564-a35f-8f67a51ddcc7" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
             <option name="targetType" value="LOCAL" />
           </session>
         </option>
@@ -490,7 +492,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781020178176</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="feat: add flower">
+      <option name="closed" value="true" />
+      <created>1781023113825</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1781023113826</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,7 +515,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Admin_Screen" />
     <MESSAGE value="loadding_screen &amp; build android" />
     <MESSAGE value="editprofile" />
     <MESSAGE value="PostScreen" />
@@ -530,7 +539,8 @@
     <MESSAGE value="fix" />
     <MESSAGE value="record" />
     <MESSAGE value="toi uu code" />
-    <option name="LAST_COMMIT_MESSAGE" value="toi uu code" />
+    <MESSAGE value="feat: add flower" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add flower" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

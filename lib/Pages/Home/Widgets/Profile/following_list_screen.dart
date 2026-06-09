@@ -1,5 +1,4 @@
 import 'package:runvix/export.dart';
-import '../../../../Component/UserCardComponent.dart';
 
 class FollowingListScreen extends StatefulWidget {
   final String? userId;
@@ -106,6 +105,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
   Widget _buildFollowingTile(UserModel user) {
     return Obx(() {
       final isFollower = userController.followerIds.contains(user.id);
+      final isFriend = isFollower; // In following list, if they follow you back, you are friends
 
       return ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -129,9 +129,13 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
               style: const TextStyle(color: Colors.grey, fontSize: 13),
             ),
             if (isFollower)
-              const Text(
-                'Theo dõi bạn',
-                style: TextStyle(color: AppColors.buttonColor, fontSize: 11, fontWeight: FontWeight.w500),
+              Text(
+                isFriend ? 'Bạn bè' : 'Theo dõi bạn',
+                style: TextStyle(
+                  color: isFriend ? Colors.green : AppColors.buttonColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
           ],
         ),

@@ -75,6 +75,7 @@ class _FollowersTabState extends State<_FollowersTab> {
   void initState() {
     super.initState();
     _loadFollowers();
+    // Reload followers khi followerIds thay đổi
     ever(userController.followerIds, (_) {
       _loadFollowers();
     });

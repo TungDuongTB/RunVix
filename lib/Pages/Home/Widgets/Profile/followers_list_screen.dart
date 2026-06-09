@@ -1,5 +1,4 @@
 import 'package:runvix/export.dart';
-import '../../../../Component/UserCardComponent.dart';
 
 class FollowersListScreen extends StatefulWidget {
   final String? userId;
@@ -106,6 +105,7 @@ class _FollowersListScreenState extends State<FollowersListScreen> {
   Widget _buildFollowerTile(UserModel user) {
     return Obx(() {
       final isFollowingBack = userController.followingIds.contains(user.id);
+      final isFriend = isFollowingBack; // In followers list, if we follow them back, they are friends
 
       return ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -128,15 +128,15 @@ class _FollowersListScreenState extends State<FollowersListScreen> {
         trailing: ElevatedButton(
           onPressed: () => userController.toggleFollowUser(user.id ?? ""),
           style: ElevatedButton.styleFrom(
-            backgroundColor: isFollowingBack ? Colors.grey[300] : AppColors.buttonColor,
+            backgroundColor: isFriend ? Colors.green : (isFollowingBack ? Colors.grey[300] : AppColors.buttonColor),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           child: Text(
-            isFollowingBack ? 'Đang theo dõi' : 'Theo dõi lại',
+            isFriend ? 'Bạn bè' : (isFollowingBack ? 'Đang theo dõi' : 'Theo dõi lại'),
             style: TextStyle(
               fontSize: 12,
-              color: isFollowingBack ? Colors.black : Colors.white,
+              color: isFriend ? Colors.white : (isFollowingBack ? Colors.black : Colors.white),
             ),
           ),
         ),

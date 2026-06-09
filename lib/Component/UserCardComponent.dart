@@ -91,34 +91,49 @@ class UserFollowCard extends StatelessWidget {
   }
 
   Widget _buildActionButtons() {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: onFollow,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isFollowing ? Colors.grey.shade200 : AppColors.buttonColor,
-            foregroundColor: isFollowing ? Colors.black87 : Colors.white,
-            elevation: 0,
-            side: isFollowing ? BorderSide(color: Colors.grey.shade300) : null,
-            minimumSize: const Size(double.infinity, 32),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    final userController = UserController.instance;
+
+    return Obx(() {
+      // Directly access observables trong Obx để nó lắng nghe changes
+      final isFollowingNow = userController.followingIds.contains(user.id);
+      final isFollowerNow = userController.followerIds.contains(user.id);
+      final isFriend = isFollowingNow && isFollowerNow; // Both follow each other
+
+      // Determine button state and color
+      final isBgButtonDisabled = isFollowingNow || isFriend;
+      final buttonBgColor = isFriend ? Colors.green : (isFollowingNow ? Colors.grey.shade200 : AppColors.buttonColor);
+      final buttonFgColor = isFriend ? Colors.white : (isFollowingNow ? Colors.black87 : Colors.white);
+      final buttonBorderColor = isFriend ? Colors.green : (isFollowingNow ? Colors.grey.shade300 : null);
+
+      return Column(
+        children: [
+          ElevatedButton(
+            onPressed: onFollow,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: buttonBgColor,
+              foregroundColor: buttonFgColor,
+              elevation: 0,
+              side: buttonBorderColor != null ? BorderSide(color: buttonBorderColor) : null,
+              minimumSize: const Size(double.infinity, 32),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            child: Text(
+              isFriend ? 'Bạn bè' : (isFollowingNow ? 'Đã theo dõi' : (isFollowerNow ? 'Theo dõi lại' : 'Theo dõi')),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+            ),
           ),
-          child: Text(
-            isFollowing ? 'Đã theo dõi' : (isFollower ? 'Theo dõi lại' : 'Theo dõi'),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+          const SizedBox(height: 4),
+          OutlinedButton(
+            onPressed: onRemove,
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey.shade300),
+              minimumSize: const Size(double.infinity, 32),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            child: const Text('Xóa', style: TextStyle(color: Colors.grey, fontSize: 11)),
           ),
-        ),
-        const SizedBox(height: 4),
-        OutlinedButton(
-          onPressed: onRemove,
-          style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.grey.shade300),
-            minimumSize: const Size(double.infinity, 32),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-          child: const Text('Xóa', style: TextStyle(color: Colors.grey, fontSize: 11)),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
