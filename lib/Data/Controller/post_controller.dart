@@ -8,74 +8,84 @@ class PostController extends GetxController {
 
   final title = TextEditingController();
   final content = TextEditingController();
+  
+  // Variables for workout posts
+  var workoutDistance = 0.0.obs;
+  var workoutDuration = 0.obs;
+  var workoutPace = 0.0.obs;
+  var workoutImageUrl = "".obs;
+
   final isLoading = false.obs;
   final isLoadingMore = false.obs;
   final allPosts = <PostModel>[].obs;
-  
-  DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
   final int _limit = 10;
+  DocumentSnapshot? _lastDocument;
 
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchPosts();
-    });
+    fetchPosts();
   }
+
+  // Tiện ích lấy User ID hiện tại
+  String? get _currentUid => FirebaseAuth.instance.currentUser?.uid ?? userController.user.value.id;
+
+  // Clear workout data
+  void clearWorkoutData() {
+    workoutDistance.value = 0.0;
+    workoutDuration.value = 0;
+    workoutPace.value = 0.0;
+    workoutImageUrl.value = "";
+    title.clear();
+    content.clear();
+  }
+
+  // --- FETCHING LOGIC ---
 
   Future<void> fetchPosts() async {
     if (isLoading.value) return;
-    
-    try {
-      isLoading.value = true;
-      _hasMore = true;
+    _hasMore = true;
+    _lastDocument = null;
+    await _fetchPostsInternal(isLoadMore: false);
+  }
 
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null || uid.isEmpty) {
-        uid = userController.user.value.id;
-      }
-      final String? finalUid = (uid != null && uid.isNotEmpty) ? uid : null;
-      
-      final result = await postRepo.getPaginatedPosts(null, _limit, currentUserId: finalUid);
-      final posts = result["posts"] as List<PostModel>;
-      if (posts.isEmpty) {
-        allPosts.assignAll([
-          PostModel(
-            id: "m1",
-            userId: "1",
-            userName: "Nguyễn Văn Kiên",
-            userProfilePicture: "https://i.pravatar.cc/150?u=1",
-            title: "Buổi sáng tuyệt vời",
-            content: "Vừa hoàn thành 5km quanh Hồ Tây. Thời tiết thật mát mẻ!",
-            imageUrl: "https://picsum.photos/id/10/800/600",
-            createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-          ),
-          PostModel(
-            id: "m2",
-            userId: "2",
-            userName: "Trần Minh Thư",
-            userProfilePicture: "https://i.pravatar.cc/150?u=2",
-            title: "Thử thách 10km",
-            content: "Hôm nay mình đã phá kỷ lục cá nhân. Cố gắng lên mọi người!",
-            imageUrl: "https://picsum.photos/id/20/800/600",
-            createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          ),
-        ]);
-        _hasMore = false;
+  Future<void> loadMorePosts() async {
+    if (isLoadingMore.value || !_hasMore || isLoading.value) return;
+    await _fetchPostsInternal(isLoadMore: true);
+  }
+
+  Future<void> _fetchPostsInternal({required bool isLoadMore}) async {
+    try {
+      if (isLoadMore) {
+        isLoadingMore.value = true;
       } else {
-        _lastDocument = result["lastDocument"] as DocumentSnapshot?;
-        allPosts.assignAll(posts);
-        if (posts.length < _limit) {
-          _hasMore = false;
+        isLoading.value = true;
+      }
+
+      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit, currentUserId: _currentUid);
+      final List<PostModel> posts = result["posts"] ?? [];
+      _lastDocument = result["lastDocument"];
+
+      if (isLoadMore) {
+        allPosts.addAll(posts);
+      } else {
+        if (posts.isEmpty) {
+          _mockPosts();
+        } else {
+          allPosts.assignAll(posts);
         }
       }
+
+      if (posts.length < _limit) {
+        _hasMore = false;
+      }
     } catch (e) {
-      print("Fetch Error: $e");
-      // Fallback to mock on error
-      _mockPosts();
+      print("Error fetching posts: $e");
+      if (!isLoadMore) _mockPosts();
     } finally {
       isLoading.value = false;
+      isLoadingMore.value = false;
     }
   }
 
@@ -86,55 +96,23 @@ class PostController extends GetxController {
         userId: "1",
         userName: "Nguyễn Văn Kiên",
         userProfilePicture: "https://i.pravatar.cc/150?u=1",
-        title: "Chạy bộ buổi sáng",
-        content: "Khởi động ngày mới với 5km nhẹ nhàng.",
-        imageUrl: "https://picsum.photos/id/30/800/600",
-        createdAt: DateTime.now(),
+        title: "Buổi sáng tuyệt vời",
+        content: "Vừa hoàn thành 5km quanh Hồ Tây. Thời tiết thật mát mẻ!",
+        imageUrl: "https://picsum.photos/id/10/800/600",
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      PostModel(
+        id: "m2",
+        userId: "2",
+        userName: "Trần Minh Thư",
+        userProfilePicture: "https://i.pravatar.cc/150?u=2",
+        title: "Thử thách 10km",
+        content: "Hôm nay mình đã phá kỷ lục cá nhân. Cố gắng lên mọi người!",
+        imageUrl: "https://picsum.photos/id/20/800/600",
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
       ),
     ]);
   }
-
-  Future<void> loadMorePosts() async {
-    // Ngăn chặn gọi đồng thời hoặc khi đang tải trang đầu, hoặc khi đã hết dữ liệu
-    if (isLoading.value || isLoadingMore.value || !_hasMore || allPosts.isEmpty) return;
-
-    try {
-      isLoadingMore.value = true;
-      
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null || uid.isEmpty) {
-        uid = userController.user.value.id;
-      }
-      final String? finalUid = (uid != null && uid.isNotEmpty) ? uid : null;
-
-      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit, currentUserId: finalUid);
-      final posts = result["posts"] as List<PostModel>;
-      final newLastDoc = result["lastDocument"] as DocumentSnapshot?;
-      
-      if (posts.isEmpty) {
-        _hasMore = false;
-      } else {
-        // Lọc bỏ bài viết trùng lặp dựa trên ID để tránh hiện tượng "loop" dữ liệu
-        final existingIds = allPosts.map((p) => p.id).toSet();
-        final uniqueNewPosts = posts.where((p) => !existingIds.contains(p.id)).toList();
-        
-        if (uniqueNewPosts.isNotEmpty) {
-          allPosts.addAll(uniqueNewPosts);
-          _lastDocument = newLastDoc;
-        }
-
-        if (posts.length < _limit) {
-          _hasMore = false;
-        }
-      }
-    } catch (e) {
-      print("Error loading more: $e");
-    } finally {
-      isLoadingMore.value = false;
-    }
-  }
-
-  // Xóa hàm _getLastDocumentFromFirestore vì không còn cần thiết
 
 
   Future<void> createPost(XFile? imageFile) async {
@@ -145,19 +123,19 @@ class PostController extends GetxController {
         userId: userController.user.value.id ?? "",
         title: title.text.trim(),
         content: content.text.trim(),
-        imageUrl: "", 
+        imageUrl: workoutImageUrl.value,
+        distance: workoutDistance.value > 0 ? workoutDistance.value : null,
+        duration: workoutDuration.value > 0 ? workoutDuration.value : null,
+        averagePace: workoutPace.value > 0 ? workoutPace.value : null,
+        type: workoutDistance.value > 0 ? "Running" : null,
       );
 
       await postRepo.createPost(post, imageFile);
-
-      // Reset và tải lại dữ liệu mới nhất
       await fetchPosts();
+      clearWorkoutData();
 
       Get.back(); 
       Get.snackbar("Thành công", "Bài viết của bạn đã được đăng!");
-
-      title.clear();
-      content.clear();
     } catch (e) {
       Get.snackbar("Lỗi", e.toString());
     } finally {
@@ -196,7 +174,6 @@ class PostController extends GetxController {
       final updatedPost = post.copyWith(isLocked: !post.isLocked);
       await postRepo.updatePost(updatedPost);
 
-      // Cập nhật local list để UI phản hồi ngay lập tức
       int index = allPosts.indexWhere((p) => p.id == post.id);
       if (index != -1) {
         allPosts[index] = updatedPost;
@@ -208,35 +185,32 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> toggleLike(PostModel post) async {
-    String? uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null || uid.isEmpty) {
-      uid = userController.user.value.id;
-    }
 
+  Future<void> toggleLike(PostModel post) async {
+    final uid = _currentUid;
     if (post.id == null || uid == null || uid.isEmpty) {
       Get.snackbar("Thông báo", "Vui lòng đăng nhập để thực hiện tính năng này");
       return;
     }
 
-    final userId = uid;
     final postId = post.id!;
-
     int index = allPosts.indexWhere((p) => p.id == postId);
     if (index == -1) return;
+
     final oldPost = allPosts[index];
     final newIsLiked = !oldPost.isLiked;
     final newLikesCount = newIsLiked ? oldPost.likes + 1 : oldPost.likes - 1;
+
+    // Optimistic Update
     allPosts[index] = oldPost.copyWith(
       isLiked: newIsLiked,
       likes: newLikesCount < 0 ? 0 : newLikesCount,
     );
 
     try {
-      await postRepo.likePost(postId, userId);
+      await postRepo.likePost(postId, uid);
     } catch (e) {
-      // Hoàn tác nếu có lỗi xảy ra
-      allPosts[index] = oldPost;
+      allPosts[index] = oldPost; // Rollback nếu lỗi
       Get.snackbar("Lỗi", "Không thể thực hiện like: $e");
     }
   }

@@ -159,62 +159,50 @@ class RecordController extends GetxController {
       // 1. Luôn lưu vào Workouts
       await _workoutRepo.saveWorkout(workout);
 
-      // 2. Nếu isPublic = true, tạo bài đăng ở bảng Posts
-      if (isPublic.value) {
-        // Generate Static Map URL
-        String staticMapUrl = "";
-        if (polylinePoints.isNotEmpty) {
-          const apiKey = "AIzaSyBjd9_rTIEGk3sS0rE-7RdKq9WyAkKX-EI";
-          
-          // Tối ưu danh sách điểm (tối đa 80 điểm để URL không quá dài)
-          List<LatLng> points = List.from(polylinePoints);
-          if (points.length > 80) {
-            int step = points.length ~/ 80;
-            points = List.generate(80, (i) => points[i * step]);
-            if (!points.contains(polylinePoints.last)) points.add(polylinePoints.last);
-          }
-          
-          // Tạo chuỗi tọa độ cho path (định dạng: lat,lng)
-          String pathParams = "color:0xff4b2cff|weight:5";
-          for (var p in points) {
-            pathParams += "|${p.latitude.toStringAsFixed(6)},${p.longitude.toStringAsFixed(6)}";
-          }
-          
-          // Thêm Marker cho điểm bắt đầu (xanh) và kết thúc (đỏ)
-          String markers = "&markers=color:green|label:S|${polylinePoints.first.latitude},${polylinePoints.first.longitude}";
-          markers += "&markers=color:red|label:F|${polylinePoints.last.latitude},${polylinePoints.last.longitude}";
-
-          staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?"
-              "size=600x400"
-              "&scale=2"
-              "&maptype=roadmap"
-              "&path=$pathParams"
-              "$markers"
-              "&key=$apiKey";
-        }
-
-        final post = PostModel(
-          userId: _userController.user.value.id ?? "",
-          userName: _userController.user.value.fullName ?? "",
-          userProfilePicture: _userController.user.value.profilePicture ?? "",
-          title: title.text.trim().isNotEmpty ? title.text.trim() : "Chạy bộ",
-          content: description.text.trim().isNotEmpty 
-              ? description.text.trim() 
-              : "Tôi vừa hoàn thành ${(distance.value / 1000).toStringAsFixed(2)}km!",
-          imageUrl: staticMapUrl,
-          createdAt: DateTime.now(),
-          distance: distance.value / 1000,
-          duration: duration.value,
-          averagePace: pace.value,
-          type: "Running",
-        );
-        await _postRepo.createPost(post, null);
+      // 2. Chuẩn bị ảnh bản đồ tĩnh
+      String staticMapUrl = "";
+      if (polylinePoints.isNotEmpty) {
+        const apiKey = "AIzaSyBjd9_rTIEGk3sS0rE-7RdKq9WyAkKX-EI";
         
-        if (Get.isRegistered<PostController>()) {
-          PostController.instance.fetchPosts();
+        List<LatLng> points = List.from(polylinePoints);
+        if (points.length > 80) {
+          int step = points.length ~/ 80;
+          points = List.generate(80, (i) => points[i * step]);
+          if (!points.contains(polylinePoints.last)) points.add(polylinePoints.last);
         }
+        
+        String pathParams = "color:0xff4b2cff|weight:5";
+        for (var p in points) {
+          pathParams += "|${p.latitude.toStringAsFixed(6)},${p.longitude.toStringAsFixed(6)}";
+        }
+        
+        String markers = "&markers=color:green|label:S|${polylinePoints.first.latitude},${polylinePoints.first.longitude}";
+        markers += "&markers=color:red|label:F|${polylinePoints.last.latitude},${polylinePoints.last.longitude}";
+
+        staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?"
+            "size=600x400"
+            "&scale=2"
+            "&maptype=roadmap"
+            "&path=$pathParams"
+            "$markers"
+            "&key=$apiKey";
       }
-      Get.snackbar("Thành công", isPublic.value ? "Đã lưu và đăng hoạt động!" : "Đã lưu vào nhật ký!");
+
+      // 3. Chuyển sang màn hình đăng bài thủ công nếu isPublic = true
+      if (isPublic.value) {
+        final postController = PostController.instance;
+        postController.clearWorkoutData();
+        postController.workoutDistance.value = distance.value / 1000;
+        postController.workoutDuration.value = duration.value;
+        postController.workoutPace.value = pace.value;
+        postController.workoutImageUrl.value = staticMapUrl;
+        postController.title.text = title.text.trim().isNotEmpty ? title.text.trim() : "Chạy bộ";
+        postController.content.text = description.text.trim();
+
+        Get.to(() => const CreatePostScreen());
+      } else {
+        Get.snackbar("Thành công", "Đã lưu vào nhật ký!");
+      }
     } else {
       Get.snackbar("Thông báo", "Quãng đường quá ngắn để lưu.");
     }
