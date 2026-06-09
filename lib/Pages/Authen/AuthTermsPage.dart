@@ -76,7 +76,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
                         TextSpan(
                           text: 'Điều khoản Dịch vụ',
                           style: const TextStyle(
-                            color: Color(0xFFFF4500),
+                            color: AppColors.orangeRed,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer: _termsRecognizer,
@@ -85,7 +85,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
                         TextSpan(
                           text: 'Chính sách Quyền riêng tư',
                           style: const TextStyle(
-                            color: Color(0xFFFF4500),
+                            color: AppColors.orangeRed,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer: _privacyRecognizer,
@@ -94,7 +94,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
                         TextSpan(
                           text: 'Chính sách Cookie',
                           style: const TextStyle(
-                            color: Color(0xFFFF4500),
+                            color: AppColors.orangeRed,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer: _cookieRecognizer,
@@ -105,7 +105,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
                         TextSpan(
                           text: 'tại đây',
                           style: const TextStyle(
-                            color: Color(0xFFFF4500),
+                            color: AppColors.orangeRed,
                             decoration: TextDecoration.underline,
                           ),
                           recognizer: _hereRecognizer,
@@ -133,7 +133,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
               text: 'Đồng ý và Tiếp tục',
               width: double.infinity,
               height: 56,
-              color: const Color(0xFFFF4500),
+              color: AppColors.orangeRed,
               textColor: Colors.white,
               borderRadius: 8,
               onPressed: () {

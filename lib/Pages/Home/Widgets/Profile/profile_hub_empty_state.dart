@@ -16,7 +16,7 @@ class ProfileHubEmptyState extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: const LinearGradient(
-                colors: [Color(0xFFDCE9FF), Color(0xFFD3E4FE)],
+                colors: [AppColors.lightBlue, AppColors.lightBlue],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -58,7 +58,7 @@ class ProfileHubEmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF0B1C30),
+              color: AppColors.darkNavy,
               fontFamily: 'Plus Jakarta Sans',
             ),
           ),
@@ -68,7 +68,7 @@ class ProfileHubEmptyState extends StatelessWidget {
             'Tham gia các nhóm để bắt đầu chia sẻ hành trình của bạn.',
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xFF5B4137),
+              color: AppColors.darkBronze,
               fontFamily: 'Inter',
             ),
             textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ class ProfileHubEmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF0B1C30),
+                color: AppColors.darkNavy,
                 fontFamily: 'Plus Jakarta Sans',
               ),
             ),
@@ -133,7 +133,7 @@ class ProfileHubEmptyState extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF0B1C30),
+                          color: AppColors.darkNavy,
                           fontFamily: 'Plus Jakarta Sans',
                         ),
                       ),
@@ -142,7 +142,7 @@ class ProfileHubEmptyState extends StatelessWidget {
                         '1,240 members',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF5B4137),
+                          color: AppColors.darkBronze,
                           fontFamily: 'Inter',
                         ),
                       ),

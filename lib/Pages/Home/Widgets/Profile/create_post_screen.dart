@@ -149,7 +149,7 @@ class _PostBackground extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: const Color(0xFF1C1C1E),
+      color: AppColors.darkGrey,
       child: Stack(
         children: [
           if (imageWidget != null) Positioned.fill(child: imageWidget),

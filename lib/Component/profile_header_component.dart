@@ -75,8 +75,8 @@ class ProfileHeaderComponent extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            Color.fromARGB(255, 0, 247, 255), // Primary Orange
-            Color(0xFF0262FF), // Secondary Blue
+            AppColors.buttonColor, // Primary Orange
+            AppColors.secondaryBlue, // Secondary Blue
           ],
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
@@ -108,7 +108,7 @@ class ProfileHeaderComponent extends StatelessWidget {
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0B1C30),
+              color: AppColors.darkNavy,
               fontFamily: 'Plus Jakarta Sans',
             ),
             textAlign: TextAlign.center,
@@ -118,7 +118,7 @@ class ProfileHeaderComponent extends StatelessWidget {
             bio.isNotEmpty ? bio : subtitle,
             style: const TextStyle(
               fontSize: 15,
-              color: Color(0xFF5B4137),
+              color: AppColors.darkBronze,
               height: 1.4,
               fontFamily: 'Inter',
             ),
@@ -149,14 +149,14 @@ class ProfileHeaderComponent extends StatelessWidget {
     // Determine colors based on state
     final Color buttonBgColor = isFriend
         ? Colors.green
-        : (isFollowing ? const Color(0xFFEFF4FF) : AppColors.buttonColor);
+        : (isFollowing ? AppColors.lightBlue : AppColors.buttonColor);
 
     final Color buttonFgColor = isFriend
         ? Colors.white
-        : (isFollowing ? const Color(0xFF0B1C30) : Colors.white);
+        : (isFollowing ? AppColors.darkNavy : Colors.white);
 
     final BorderSide borderSide = isFollowing
-        ? const BorderSide(color: Color(0xFFE4BFB1))
+        ? const BorderSide(color: AppColors.peach)
         : BorderSide.none;
 
     return Padding(

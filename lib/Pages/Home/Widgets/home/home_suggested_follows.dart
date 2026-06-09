@@ -70,7 +70,7 @@ class _HomeSuggestedFollowsState extends State<HomeSuggestedFollows> {
                         )
                       : ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
-                            colors: [AppColors.buttonColor, Color(0xFF004CCB)],
+                            colors: [AppColors.buttonColor, AppColors.secondaryBlue],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ).createShader(bounds),
@@ -98,7 +98,11 @@ class _HomeSuggestedFollowsState extends State<HomeSuggestedFollows> {
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
         'Nên theo dõi',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          color: Colors.black87,
+        ),
       ),
     );
   }
@@ -112,9 +116,11 @@ class _HomeSuggestedFollowsState extends State<HomeSuggestedFollows> {
             child: CircularProgressIndicator(color: AppColors.buttonColor),
           );
         }
-        
+
         final displayUsers = userController.allUsers.where((u) {
-          if (u.id == currentUserId || u.isAdmin || _dismissedIds.contains(u.id)) {
+          if (u.id == currentUserId ||
+              u.isAdmin ||
+              _dismissedIds.contains(u.id)) {
             return false;
           }
           final isFollowing = userController.followingIds.contains(u.id);

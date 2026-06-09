@@ -20,7 +20,7 @@ class ProfileProgressTab extends StatelessWidget {
             _buildActivitySelector(),
             const SizedBox(height: 24),
             _buildThisWeekSection(controller),
-            const Divider(height: 40, thickness: 8, color: Color(0xFFF2F2F2)),
+            const Divider(height: 40, thickness: 8, color: AppColors.dividerGrey),
             _buildOverallStatsSection(controller),
             const SizedBox(height: 100),
           ],

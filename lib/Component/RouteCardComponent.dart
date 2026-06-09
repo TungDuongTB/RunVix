@@ -108,7 +108,7 @@ class RouteCard extends StatelessWidget {
   }
 
   Widget _buildTailoredTag() {
-    const orangeColor = Color(0xFFF57C00);
+    const orangeColor = AppColors.orangeRed;
     return const Row(
       children: [
         Icon(Icons.auto_awesome, size: 14, color: orangeColor),

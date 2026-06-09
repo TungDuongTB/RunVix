@@ -65,7 +65,7 @@ class ClubTabContent extends StatelessWidget {
             ),
           ),
           
-          const Divider(thickness: 8, color: Color(0xFFF2F2F7)),
+          const Divider(thickness: 8, color: AppColors.backgroundGrey),
           
           Padding(
             padding: const EdgeInsets.all(20.0),

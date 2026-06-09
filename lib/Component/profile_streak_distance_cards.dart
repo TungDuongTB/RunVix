@@ -21,7 +21,7 @@ class ProfileStreakDistanceCards extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFEFF4FF),
+                color: AppColors.lightBlue,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: const Color(0xFFE4BFB1).withOpacity(0.2),
@@ -44,7 +44,7 @@ class ProfileStreakDistanceCards extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF5B4137),
+                            color: AppColors.darkBronze,
                             letterSpacing: 1.0,
                             fontFamily: 'Geist',
                           ),
@@ -73,7 +73,7 @@ class ProfileStreakDistanceCards extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFEFF4FF),
+                color: AppColors.lightBlue,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: const Color(0xFFE4BFB1).withOpacity(0.2),
@@ -92,7 +92,7 @@ class ProfileStreakDistanceCards extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF5B4137),
+                            color: AppColors.darkBronze,
                             letterSpacing: 1.0,
                             fontFamily: 'Geist',
                           ),

@@ -85,7 +85,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7),
+      backgroundColor: AppColors.backgroundGrey,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -184,8 +184,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   controller: firstNameController,
                   decoration: const InputDecoration(
                     hintText: 'Tên',
-                    border: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFE5E5E5))),
-                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFE5E5E5))),
+                    border: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.dividerGrey)),
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.dividerGrey)),
                   ),
                 ),
                 TextField(

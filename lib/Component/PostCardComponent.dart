@@ -243,7 +243,7 @@ class PostCard extends StatelessWidget {
             fontSize: 13, 
             fontWeight: FontWeight.w900, 
             fontStyle: FontStyle.italic,
-            color: Color(0xFFEFF6FF)
+            color: AppColors.lightBlue
           )
         ),
       ],

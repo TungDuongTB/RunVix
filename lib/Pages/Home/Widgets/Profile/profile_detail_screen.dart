@@ -116,7 +116,7 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             ),
 
-            const Divider(height: 40, thickness: 1, color: Color(0xFFF2F2F2)),
+            const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
 
             // Stats Section: Tuần này
             Padding(
@@ -146,7 +146,7 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
             ),
 
-            const Divider(height: 40, thickness: 1, color: Color(0xFFF2F2F2)),
+            const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
 
             // List Options
             _buildListOption(Icons.grid_view, 'Hoạt động'),
@@ -157,7 +157,7 @@ class ProfileDetailScreen extends StatelessWidget {
             _buildListOption(Icons.article_outlined, 'Bài đăng'),
             _buildListOption(Icons.directions_bike_outlined, 'Thiết bị'),
 
-            const Divider(height: 40, thickness: 8, color: Color(0xFFF2F2F2)),
+            const Divider(height: 40, thickness: 8, color: AppColors.dividerGrey),
 
             // Section: Tủ trưng bày thành tích
             Padding(

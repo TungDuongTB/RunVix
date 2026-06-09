@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Obx(() => Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: AppColors.backgroundGrey,
       body: CustomPaint(
         painter: RadialGradientPainter(),
         child: Stack(

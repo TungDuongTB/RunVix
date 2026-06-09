@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ColorComponent.dart';
 
 class Textfieldcomponent extends StatefulWidget {
   const Textfieldcomponent({super.key});
@@ -11,8 +12,8 @@ class Textfieldcomponent extends StatefulWidget {
 class _TextfieldcomponentState extends State<Textfieldcomponent> {
   @override
   Widget build(BuildContext context) {
-    const borderColor = Color(0xFFBDBDBD);
-    const focusedBorderColor = Color(0xFF888888);
+    const borderColor = AppColors.dividerGrey;
+    const focusedBorderColor = AppColors.disabled;
 
     final minHeight =
         MediaQuery.of(context).size.height -
@@ -27,7 +28,7 @@ class _TextfieldcomponentState extends State<Textfieldcomponent> {
         decoration: InputDecoration(
           isDense: true,
           hintText: 'email@example.com',
-          hintStyle: const TextStyle(color: Color(0xFF9E9E9E)),
+          hintStyle: const TextStyle(color: AppColors.disabled),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 14,

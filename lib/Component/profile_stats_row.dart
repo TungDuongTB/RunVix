@@ -65,7 +65,7 @@ class ProfileStatsRow extends StatelessWidget {
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF5B4137),
+              color: AppColors.darkBronze,
               letterSpacing: 1.2,
               fontFamily: 'Geist',
             ),

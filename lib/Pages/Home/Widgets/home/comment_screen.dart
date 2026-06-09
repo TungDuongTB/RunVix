@@ -92,7 +92,7 @@ class CommentScreen extends StatelessWidget {
     final isLike = post.isLiked;
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFDF7FF), // Nhạt tím/hồng theo ảnh
+        color: AppColors.lightPurple, // Nhạt tím/hồng theo ảnh
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.all(16),
@@ -203,7 +203,7 @@ class CommentScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF2E7FE), // Màu tím nhạt cho bubble
+                    color: AppColors.lightPurple, // Màu tím nhạt cho bubble
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -259,7 +259,7 @@ class CommentScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF6A00F4), // Màu tím đậm cho nút gửi
+                  color: AppColors.primary, // Màu tím đậm cho nút gửi
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.send, color: Colors.white, size: 20),

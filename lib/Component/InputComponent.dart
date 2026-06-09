@@ -36,7 +36,7 @@ class Inputcomponent extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: const BorderSide(color: Color(0xFF33FFFF), width: 1.5), // AppColors.buttonColor
+          borderSide: const BorderSide(color: AppColors.buttonColor, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),

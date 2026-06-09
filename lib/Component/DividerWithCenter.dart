@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'ColorComponent.dart';
 
 class DividerWithCenter extends StatelessWidget {
   final String? centerText;
@@ -13,7 +14,7 @@ class DividerWithCenter extends StatelessWidget {
     this.centerText,
     this.center,
     this.thickness = 1.0,
-    this.color = const Color(0xFFBDBDBD),
+    this.color = AppColors.dividerGrey,
     this.horizontalPadding = 0.0,
     this.gap = 12.0,
   });

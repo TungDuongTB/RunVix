@@ -216,7 +216,7 @@ class _ProfileHubScreenState extends State<ProfileHubScreen> {
         widget.userId == FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FF),
+      backgroundColor: AppColors.backgroundGrey,
       appBar: _buildAppBar(),
       body: RefreshIndicator(
         onRefresh: _loadProfileData,
@@ -285,8 +285,6 @@ class _ProfileHubScreenState extends State<ProfileHubScreen> {
       ),
     );
   }
-
-
 
   /// ===== AppBar =====
   PreferredSizeWidget _buildAppBar() {
