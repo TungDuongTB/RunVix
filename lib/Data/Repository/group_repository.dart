@@ -86,4 +86,15 @@ class GroupRepository extends GetxController {
       throw 'Không thể tải danh sách nhóm.';
     }
   }
+
+  /// Tham gia vào một nhóm
+  Future<void> joinGroup(String groupId, String userId) async {
+    try {
+      await _db.collection('Groups').doc(groupId).update({
+        'MemberIds': FieldValue.arrayUnion([userId]),
+      });
+    } catch (e) {
+      throw 'Không thể tham gia nhóm: $e';
+    }
+  }
 }

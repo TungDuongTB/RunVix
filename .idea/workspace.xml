@@ -12,9 +12,8 @@
     <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: post card">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/group_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/group_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_image_selectors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_image_selectors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_tab_content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_tab_content.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
