@@ -73,7 +73,8 @@ export './Pages/Home/Widgets/map/map_distance_filter_sheet.dart';
 
 // Group Widgets
 export './Pages/Home/Widgets/Group/GroupScreen.dart';
-export './Pages/Home/Widgets/Group/club_tab_content.dart';
+export './Pages/Home/Widgets/Group/group_tab_content.dart';
+export './Pages/Home/Widgets/Group/create_group_screen.dart';
 
 // Record Widgets
 export './Pages/Home/Widgets/Record/RecordScreen.dart';
@@ -109,6 +110,7 @@ export './Component/GlassCardComponent.dart';
 export './Component/ButtonComponent.dart';
 export './Component/DividerWithCenter.dart';
 export './Component/TextFieldComponent.dart';
+export './Component/focusable_text_field.dart';
 export './Component/InputComponent.dart';
 export './Component/auth_social_buttons.dart';
 export './Component/auth_terms_agreement.dart';

@@ -46,7 +46,7 @@ class GroupScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Câu lạc bộ'),
+                    Text('Nhóm'),
                     SizedBox(width: 4),
                     CircleAvatar(backgroundColor: Colors.red, radius: 3),
                   ],
@@ -59,7 +59,7 @@ class GroupScreen extends StatelessWidget {
         body: const TabBarView(
           children: [
             ChallengeTabContent(),
-            ClubTabContent(), // Sử dụng widget đã tách ra
+            GroupTabContent(), // Sử dụng widget đã tách ra
           ],
         ),
       ),

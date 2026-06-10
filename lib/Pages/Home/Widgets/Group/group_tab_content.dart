@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
-class ClubTabContent extends StatelessWidget {
-  const ClubTabContent({super.key});
+class GroupTabContent extends StatelessWidget {
+  const GroupTabContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ClubTabContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Tạo câu lạc bộ RunVix của\nriêng bạn',
+                  'Tạo nhóm RunVix của\nriêng bạn',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, height: 1.2),
                 ),
                 const SizedBox(height: 12),
@@ -39,7 +39,7 @@ class ClubTabContent extends StatelessWidget {
                   width: double.infinity,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => Get.to(() => const CreateGroupScreen()),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -78,7 +78,7 @@ class ClubTabContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Tìm các buổi tập, sự kiện và câu lạc bộ gần bạn, rồi biến kế hoạch thành số dặm.',
+                  'Tìm các buổi tập, sự kiện và nhóm gần bạn, rồi biến kế hoạch thành số dặm.',
                   style: TextStyle(color: Colors.black87, fontSize: 15),
                 ),
                 const SizedBox(height: 24),
