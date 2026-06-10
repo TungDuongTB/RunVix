@@ -1,5 +1,4 @@
 import 'package:runvix/export.dart';
-
 import 'challenge_tab_content.dart';
 
 class GroupScreen extends StatelessWidget {
@@ -7,62 +6,166 @@ class GroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userController = UserController.instance;
     return DefaultTabController(
       length: 2,
-      initialIndex: 1, // Mặc định ở tab "Câu lạc bộ"
+      initialIndex: 1, // Mặc định ở tab "Nhóm"
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.search, color: Colors.black, size: 28),
-            onPressed: () {},
-          ),
-          title: const Text(
-            'Nhóm',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.chat_bubble_outline, color: Colors.black),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings_outlined, color: Colors.black),
-              onPressed: () {},
-            ),
-          ],
-          bottom: const TabBar(
-            indicatorColor: AppColors.buttonColor,
-            indicatorWeight: 3,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            tabs: [
-              Tab(text: 'Thử thách'),
-              Tab(
+        backgroundColor: AppColors.backgroundGrey,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              // Custom Top App Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Nhóm'),
-                    SizedBox(width: 4),
-                    CircleAvatar(backgroundColor: Colors.red, radius: 3),
+                    Row(
+                      children: [
+                        Obx(() {
+                          final user = userController.user.value;
+                          final profilePic = user.profilePicture;
+                          return Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.buttonColor,
+                                width: 2,
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.grey[200],
+                              backgroundImage: profilePic.isNotEmpty
+                                  ? NetworkImage(profilePic)
+                                  : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                              child: profilePic.isEmpty
+                                  ? const Icon(Icons.person, size: 20, color: Colors.grey)
+                                  : null,
+                            ),
+                          );
+                        }),
+                        const SizedBox(width: 8),
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [AppColors.primary, AppColors.buttonColor],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'RunVix',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        child: const Icon(
+                          Icons.search,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Custom Segmented Tab Bar
+              const TabBar(
+                indicator: GradientTabIndicator(
+                  indicatorHeight: 3,
+                  widthRatio: 0.5,
+                ),
+                labelColor: AppColors.primary,
+                unselectedLabelColor: Colors.grey,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontFamily: 'Hanken Grotesk',
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  fontFamily: 'Hanken Grotesk',
+                ),
+                tabs: [
+                  Tab(text: 'Thử thách'),
+                  Tab(text: 'Nhóm'),
+                ],
+              ),
+              const Expanded(
+                child: TabBarView(
+                  children: [
+                    ChallengeTabContent(),
+                    GroupTabContent(),
                   ],
                 ),
               ),
             ],
           ),
-
-        ),
-        body: const TabBarView(
-          children: [
-            ChallengeTabContent(),
-            GroupTabContent(), // Sử dụng widget đã tách ra
-          ],
         ),
       ),
+    );
+  }
+}
+
+class GradientTabIndicator extends Decoration {
+  final double indicatorHeight;
+  final double widthRatio;
+  final Gradient gradient;
+
+  const GradientTabIndicator({
+    this.indicatorHeight = 3.0,
+    this.widthRatio = 0.5,
+    this.gradient = const LinearGradient(
+      colors: [AppColors.primary, AppColors.buttonColor],
+    ),
+  });
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _GradientPainter(this, onChanged);
+  }
+}
+
+class _GradientPainter extends BoxPainter {
+  final GradientTabIndicator decoration;
+
+  _GradientPainter(this.decoration, VoidCallback? onChanged) : super(onChanged);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    assert(configuration.size != null);
+    final Rect rect = offset & configuration.size!;
+    final double width = rect.width * decoration.widthRatio;
+    final double left = rect.left + (rect.width - width) / 2;
+    final double top = rect.bottom - decoration.indicatorHeight;
+
+    final Paint paint = Paint()
+      ..shader = decoration.gradient.createShader(
+        Rect.fromLTWH(left, top, width, decoration.indicatorHeight),
+      )
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(left, top, width, decoration.indicatorHeight),
+        const Radius.circular(99),
+      ),
+      paint,
     );
   }
 }

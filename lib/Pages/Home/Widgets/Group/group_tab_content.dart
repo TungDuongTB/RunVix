@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
+import 'Widgets/saigon_runners_card.dart';
+import 'Widgets/hanoi_morning_pace_card.dart';
+import 'Widgets/elite_runners_dn_card.dart';
+import 'Widgets/create_group_banner.dart';
 
 class GroupTabContent extends StatelessWidget {
   const GroupTabContent({super.key});
@@ -7,105 +11,95 @@ class GroupTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Banner Image
-          Image.network(
-            'https://picsum.photos/id/10/600/300',
-            width: double.infinity,
-            height: 200,
-            fit: BoxFit.cover,
-          ),
-          
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            // Search Bar
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  hintText: 'Tìm kiếm nhóm...',
+                  hintStyle: TextStyle(color: Colors.grey, fontFamily: 'Hanken Grotesk'),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Section Title & Filter
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Tạo nhóm RunVix của\nriêng bạn',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, height: 1.2),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Mang đến cho cộng đồng của bạn một "điểm tựa" đầy động lực trên RunVix.',
-                  style: TextStyle(color: Colors.black87, fontSize: 15),
-                ),
-                const SizedBox(height: 24),
-                
-                // Nút Bắt đầu
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(() => const CreateGroupScreen()),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.buttonColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      elevation: 0,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Bắt đầu',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
+                  'Nhóm của bạn',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    fontFamily: 'Hanken Grotesk',
                   ),
                 ),
-                
-                const SizedBox(height: 16),
-                const Center(
-                  child: Text(
-                    'Tìm hiểu thêm',
-                    style: TextStyle(color: AppColors.buttonColor, fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {},
+                  child: Row(
+                    children: const [
+                      Text(
+                        'Xem tất cả ',
+                        style: TextStyle(
+                          color: AppColors.buttonColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          fontFamily: 'Hanken Grotesk',
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 16,
+                        color: AppColors.buttonColor,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-          
-          const Divider(thickness: 8, color: AppColors.backgroundGrey),
-          
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Khám phá sự kiện địa phương',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Tìm các buổi tập, sự kiện và nhóm gần bạn, rồi biến kế hoạch thành số dặm.',
-                  style: TextStyle(color: Colors.black87, fontSize: 15),
-                ),
-                const SizedBox(height: 24),
-                
-                // Nút Tìm nhóm
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.buttonColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      elevation: 0,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Tìm nhóm của bạn',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ),
+
+            const SizedBox(height: 16),
+
+            // Group List (Bento-style glass cards)
+            Column(
+              children: const [
+                // Card 1: Saigon Runners
+                SaigonRunnersCard(),
+                SizedBox(height: 16),
+
+                // Card 2: Hanoi Morning Pace
+                HanoiMorningPaceCard(),
+                SizedBox(height: 16),
+
+                // Card 3: Elite Runners Da Nang
+                EliteRunnersDnCard(),
               ],
             ),
-          ),
-        ],
+
+            const SizedBox(height: 24),
+
+            // Recommendation Banner
+            const CreateGroupBanner(),
+            const SizedBox(height: 100), // Prevent overlap with bottom nav bar
+          ],
+        ),
       ),
     );
   }
