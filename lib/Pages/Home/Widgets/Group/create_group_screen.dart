@@ -207,45 +207,77 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   Widget _buildCreateButton() {
-    return Container(
+    final controller = GroupController.instance;
+    return Obx(() => Container(
       width: double.infinity,
       height: 52,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.buttonColor],
+        gradient: LinearGradient(
+          colors: controller.isLoading.value
+              ? [Colors.grey.shade400, Colors.grey.shade500]
+              : [AppColors.primary, AppColors.buttonColor],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          )
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            if (_nameController.text.trim().isEmpty) {
-              Get.snackbar("Thông báo", "Vui lòng nhập tên nhóm");
-              return;
-            }
-            Get.back();
-            Get.snackbar(
-              "Thành công",
-              "Đã tạo nhóm '${_nameController.text.trim()}' thành công!",
-              backgroundColor: Colors.white.withOpacity(0.8),
-              colorText: Colors.black87,
-            );
-          },
-          child: const Center(
-            child: Text(
-              'Tạo Nhóm',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 0.5),
-            ),
+          onTap: controller.isLoading.value
+              ? null
+              : () {
+                  if (_nameController.text.trim().isEmpty) {
+                    Get.snackbar(
+                      'Thông báo',
+                      'Vui lòng nhập tên nhóm',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                    return;
+                  }
+                  controller.createGroup(
+                    name: _nameController.text.trim(),
+                    description: _descriptionController.text.trim(),
+                    location: _locationController.text.trim(),
+                    isPublic: _isPublic,
+                    hasRequirements: _hasRequirements,
+                    minPace: _paceController.text.trim(),
+                    minKm: _minKmController.text.trim(),
+                    minSessions: _minSessionsController.text.trim(),
+                    coverImageFile: _coverImage,
+                    logoImageFile: _logoImage,
+                  );
+                },
+          child: Center(
+            child: controller.isLoading.value
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  )
+                : const Text(
+                    'Tạo Nhóm',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
           ),
         ),
       ),
-    );
+    ));
   }
 }

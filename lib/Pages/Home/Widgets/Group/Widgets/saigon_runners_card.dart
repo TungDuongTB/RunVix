@@ -1,4 +1,4 @@
-import 'package:runvix/export.dart' ;
+import 'package:runvix/export.dart';
 
 class SaigonRunnersCard extends StatelessWidget {
   const SaigonRunnersCard({super.key});
@@ -11,136 +11,159 @@ class SaigonRunnersCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=200&auto=format&fit=crop',
-                      width: 48,
-                      height: 48,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Saigon Runners',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          fontFamily: 'Hanken Grotesk',
-                        ),
+              Expanded(
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=200&auto=format&fit=crop',
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: const [
-                          Icon(Icons.people_outline, size: 16, color: Colors.grey),
-                          SizedBox(width: 4),
-                          Text(
-                            '1,240 thành viên',
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Saigon Runners',
                             style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                               fontFamily: 'Hanken Grotesk',
+                              color: Colors.black87,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: const [
+                              Icon(Icons.people_outline, size: 16, color: Colors.black54),
+                              SizedBox(width: 4),
+                              Text(
+                                '1,240 thành viên',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 13,
+                                  fontFamily: 'Hanken Grotesk',
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.buttonColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.buttonColor.withOpacity(0.2)),
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'Hạng 1',
-                  style: TextStyle(
-                    color: AppColors.buttonColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    fontFamily: 'Hanken Grotesk',
+              ),
+              const SizedBox(width: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {},
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      child: Text(
+                        'Đã tham gia',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          fontFamily: 'Hanken Grotesk',
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.primary.withOpacity(0.1)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      'Tổng quãng đường',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 13,
-                        fontFamily: 'Hanken Grotesk',
-                      ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 72,
+                height: 28,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      child: _buildOverlapAvatar('https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60'),
                     ),
-                    Text(
-                      '12,450 km',
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        fontFamily: 'Hanken Grotesk',
+                    Positioned(
+                      left: 16,
+                      child: _buildOverlapAvatar('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop&q=60'),
+                    ),
+                    Positioned(
+                      left: 32,
+                      child: _buildOverlapAvatar('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&auto=format&fit=crop&q=60'),
+                    ),
+                    Positioned(
+                      left: 48,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '+45',
+                            style: TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  height: 6,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: 0.75,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.buttonColor],
-                        ),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                  ),
+              ),
+              const Text(
+                '12,450 km tuần này',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 13,
+                  fontFamily: 'Hanken Grotesk',
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Tuần này • +12% so với tuần trước',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 11,
-                    fontFamily: 'Hanken Grotesk',
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildOverlapAvatar(String url) {
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2),
+        image: DecorationImage(
+          image: NetworkImage(url),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

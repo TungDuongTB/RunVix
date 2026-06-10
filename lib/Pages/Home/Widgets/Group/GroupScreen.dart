@@ -17,69 +17,87 @@ class GroupScreen extends StatelessWidget {
           child: Column(
             children: [
               // Custom Top App Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Obx(() {
-                          final user = userController.user.value;
-                          final profilePic = user.profilePicture;
-                          return Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppColors.buttonColor,
-                                width: 2,
-                              ),
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey[200],
-                              backgroundImage: profilePic.isNotEmpty
-                                  ? NetworkImage(profilePic)
-                                  : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
-                              child: profilePic.isEmpty
-                                  ? const Icon(Icons.person, size: 20, color: Colors.grey)
-                                  : null,
-                            ),
-                          );
-                        }),
-                        const SizedBox(width: 8),
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [AppColors.primary, AppColors.buttonColor],
-                          ).createShader(bounds),
-                          child: const Text(
-                            'RunVix',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white.withOpacity(0.2),
+                      width: 1,
                     ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        child: const Icon(
-                          Icons.search,
-                          color: AppColors.primary,
-                        ),
-                      ),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF00C3FF).withOpacity(0.1),
+                      blurRadius: 32,
+                      offset: const Offset(0, 8),
                     ),
                   ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Obx(() {
+                            final user = userController.user.value;
+                            final profilePic = user.profilePicture;
+                            return Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.buttonColor,
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey[200],
+                                backgroundImage: profilePic.isNotEmpty
+                                    ? NetworkImage(profilePic)
+                                    : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                                child: profilePic.isEmpty
+                                    ? const Icon(Icons.person, size: 20, color: Colors.grey)
+                                    : null,
+                              ),
+                            );
+                          }),
+                          const SizedBox(width: 8),
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [AppColors.primary, AppColors.buttonColor],
+                            ).createShader(bounds),
+                            child: const Text(
+                              'RunVix',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                          child: const Icon(
+                            Icons.search,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

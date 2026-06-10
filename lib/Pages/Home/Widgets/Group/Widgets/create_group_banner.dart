@@ -1,4 +1,3 @@
-
 import 'package:runvix/export.dart';
 
 class CreateGroupBanner extends StatelessWidget {
@@ -8,62 +7,75 @@ class CreateGroupBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.buttonColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        color: const Color(0xFFF8F1FF), // surface-container-low from HTML
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          const Text(
-            'Xây dựng cộng đồng riêng?',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Hanken Grotesk',
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'XÂY DỰNG CỘNG ĐỒNG RIÊNG?',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    letterSpacing: 0.7,
+                    fontFamily: 'Hanken Grotesk',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Bắt đầu nhóm chạy của bạn và mời bạn bè tham gia ngay hôm nay.',
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.6),
+                    fontSize: 12,
+                    fontFamily: 'Hanken Grotesk',
+                    height: 1.3,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Bắt đầu nhóm chạy của bạn và mời bạn bè tham gia ngay hôm nay.',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
-              fontSize: 14,
-              height: 1.4,
-              fontFamily: 'Hanken Grotesk',
-            ),
-          ),
-          const SizedBox(height: 18),
-          ElevatedButton(
-            onPressed: () => Get.to(() => const CreateGroupScreen()),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppColors.primary,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+          const SizedBox(width: 12),
+          Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.primary, AppColors.buttonColor],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.15),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: const Text(
-              'Tạo nhóm mới',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                fontFamily: 'Hanken Grotesk',
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => Get.to(() => const CreateGroupScreen()),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  child: Text(
+                    'Tạo nhóm mới',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      fontFamily: 'Hanken Grotesk',
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

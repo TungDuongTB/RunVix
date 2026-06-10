@@ -10,6 +10,7 @@ class InitialBinding extends Bindings {
     Get.put(PostRepository(), permanent: true);
     Get.put(WorkoutRepository(), permanent: true);
     Get.put(NotificationRepository(), permanent: true);
+    Get.put(GroupRepository(), permanent: true);
     
     // Các Controller
     Get.put(UserController(), permanent: true);
@@ -18,6 +19,7 @@ class InitialBinding extends Bindings {
     Get.put(CalendarController(), permanent: true);
     Get.put(NavigationController(), permanent: true);
     Get.put(NotificationController(), permanent: true);
+    Get.put(GroupController(), permanent: true);
     
     // Strava - Khởi tạo ngay lập tức để tránh lỗi undefined trên Web
     Get.put(StravaRepository(), permanent: true);

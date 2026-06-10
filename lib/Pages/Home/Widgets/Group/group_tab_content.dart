@@ -22,8 +22,7 @@ class GroupTabContent extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: const TextField(
                 decoration: InputDecoration(
@@ -35,6 +34,11 @@ class GroupTabContent extends StatelessWidget {
                 ),
               ),
             ),
+
+            const SizedBox(height: 16),
+
+            // Recommendation Banner
+            const CreateGroupBanner(),
 
             const SizedBox(height: 24),
 
@@ -49,27 +53,6 @@ class GroupTabContent extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                     fontFamily: 'Hanken Grotesk',
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Row(
-                    children: const [
-                      Text(
-                        'Xem tất cả ',
-                        style: TextStyle(
-                          color: AppColors.buttonColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          fontFamily: 'Hanken Grotesk',
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        size: 16,
-                        color: AppColors.buttonColor,
-                      ),
-                    ],
                   ),
                 ),
               ],
@@ -93,10 +76,6 @@ class GroupTabContent extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 24),
-
-            // Recommendation Banner
-            const CreateGroupBanner(),
             const SizedBox(height: 100), // Prevent overlap with bottom nav bar
           ],
         ),
