@@ -135,6 +135,9 @@ class PostRepository extends GetxController {
           .where("UserId", isEqualTo: userId)
           .get();
 
+      final postDoc = await _db.collection("Posts").doc(postId).get();
+      final postAuthorId = postDoc.exists ? (postDoc.data()?["UserId"] ?? "") as String : "";
+
       if (likeQuery.docs.isEmpty) {
         final newLike = LikeModel(postId: postId, userId: userId);
         await _db.collection("Likes").add(newLike.toJson());
@@ -142,11 +145,23 @@ class PostRepository extends GetxController {
         await _db.collection("Posts").doc(postId).update({
           "Likes": FieldValue.increment(1)
         });
+
+        // Trigger notification
+        if (postAuthorId.isNotEmpty && postAuthorId != userId) {
+          await NotificationRepository.instance.createOrUpdateLikeNotification(
+            postAuthorId, userId, postId);
+        }
       } else {
         await _db.collection("Likes").doc(likeQuery.docs.first.id).delete();
         await _db.collection("Posts").doc(postId).update({
           "Likes": FieldValue.increment(-1)
         });
+
+        // Remove like from notification
+        if (postAuthorId.isNotEmpty && postAuthorId != userId) {
+          await NotificationRepository.instance.removeLikeNotification(
+            postAuthorId, userId, postId);
+        }
       }
     } catch (e) {
       throw "Lỗi khi thực hiện Like";
@@ -156,10 +171,18 @@ class PostRepository extends GetxController {
   // --- Comment Methods ---
   Future<void> addComment(CommentModel comment) async {
     try {
-      await _db.collection("Comments").add(comment.toJson());
+      final ref = await _db.collection("Comments").add(comment.toJson());
       await _db.collection("Posts").doc(comment.postId).update({
         "Comments": FieldValue.increment(1)
       });
+
+      // Trigger comment notification
+      final postDoc = await _db.collection("Posts").doc(comment.postId).get();
+      final postAuthorId = postDoc.exists ? (postDoc.data()?["UserId"] ?? "") as String : "";
+      if (postAuthorId.isNotEmpty && postAuthorId != comment.userId) {
+        await NotificationRepository.instance.createOrUpdateCommentNotification(
+          postAuthorId, comment.userId, comment.postId, ref.id);
+      }
     } catch (e) {
       throw "Lỗi khi gửi bình luận";
     }

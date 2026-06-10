@@ -2,15 +2,65 @@ import 'package:runvix/export.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:runvix/Data/Controller/comment_controller.dart';
 
-class CommentScreen extends StatelessWidget {
+class CommentScreen extends StatefulWidget {
   final PostModel post;
-  const CommentScreen({super.key, required this.post});
+  final String? focusCommentId;
+  
+  const CommentScreen({super.key, required this.post, this.focusCommentId});
+
+  @override
+  State<CommentScreen> createState() => _CommentScreenState();
+}
+
+class _CommentScreenState extends State<CommentScreen> {
+  final Map<String, GlobalKey> commentKeys = {};
+  late CommentController controller;
+  final userController = UserController.instance;
+  final ScrollController _scrollController = ScrollController();
+  Worker? _scrollWorker;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(CommentController(postId: widget.post.id!));
+
+    // Listen to changes in isLoading to scroll to focused comment
+    _scrollWorker = ever(controller.isLoading, (bool loading) {
+      if (!loading && widget.focusCommentId != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToFocusedComment();
+        });
+      }
+    });
+
+    // Initial check if comments are already loaded
+    if (!controller.isLoading.value && widget.focusCommentId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToFocusedComment();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollWorker?.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToFocusedComment() {
+    final key = commentKeys[widget.focusCommentId];
+    if (key != null && key.currentContext != null) {
+      Scrollable.ensureVisible(
+        key.currentContext!,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CommentController(postId: post.id!));
-    final userController = UserController.instance;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,6 +76,7 @@ class CommentScreen extends StatelessWidget {
         children: [
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +123,12 @@ class CommentScreen extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.comments.length,
                       itemBuilder: (context, index) {
-                        return _buildCommentItem(controller.comments[index]);
+                        final comment = controller.comments[index];
+                        final key = commentKeys.putIfAbsent(comment.id ?? index.toString(), () => GlobalKey());
+                        return Container(
+                          key: key,
+                          child: _buildCommentItem(comment),
+                        );
                       },
                     );
                   }),
@@ -89,7 +145,7 @@ class CommentScreen extends StatelessWidget {
   }
 
   Widget _buildPostCard() {
-    final isLike = post.isLiked;
+    final isLike = widget.post.isLiked;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.lightPurple, // Nhạt tím/hồng theo ảnh
@@ -103,20 +159,20 @@ class CommentScreen extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  if (post.userId.isNotEmpty) {
+                  if (widget.post.userId.isNotEmpty) {
                     final currentUid = FirebaseAuth.instance.currentUser?.uid;
-                    if (post.userId == currentUid) {
+                    if (widget.post.userId == currentUid) {
                       NavigationController.instance.changeIndex(4);
                       Get.back();
                     } else {
-                      Get.to(() => ProfileHubScreen(userId: post.userId));
+                      Get.to(() => ProfileHubScreen(userId: widget.post.userId));
                     }
                   }
                 },
                 child: CircleAvatar(
                   radius: 20,
-                  backgroundImage: post.userProfilePicture.isNotEmpty
-                      ? NetworkImage(post.userProfilePicture)
+                  backgroundImage: widget.post.userProfilePicture.isNotEmpty
+                      ? NetworkImage(widget.post.userProfilePicture)
                       : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
                 ),
               ),
@@ -126,24 +182,24 @@ class CommentScreen extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      if (post.userId.isNotEmpty) {
+                      if (widget.post.userId.isNotEmpty) {
                         final currentUid = FirebaseAuth.instance.currentUser?.uid;
-                        if (post.userId == currentUid) {
+                        if (widget.post.userId == currentUid) {
                           NavigationController.instance.changeIndex(4);
                           Get.back();
                         } else {
-                          Get.to(() => ProfileHubScreen(userId: post.userId));
+                          Get.to(() => ProfileHubScreen(userId: widget.post.userId));
                         }
                       }
                     },
                     child: Text(
-                      post.userName,
+                      widget.post.userName,
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ),
                   Text(
-                    post.createdAt != null 
-                        ? "${intl.DateFormat('dd/MM/yyyy HH:mm').format(post.createdAt!)}"
+                    widget.post.createdAt != null 
+                        ? "${intl.DateFormat('dd/MM/yyyy HH:mm').format(widget.post.createdAt!)}"
                         : "Just now",
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                   ),
@@ -152,24 +208,24 @@ class CommentScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          if (post.title.isNotEmpty)
+          if (widget.post.title.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
-                post.title,
+                widget.post.title,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
           Text(
-            post.content,
+            widget.post.content,
             style: TextStyle(color: Colors.grey.shade800, fontSize: 14, height: 1.4),
           ),
           const SizedBox(height: 12),
-          if (post.imageUrl.isNotEmpty)
+          if (widget.post.imageUrl.isNotEmpty)
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                post.imageUrl,
+                widget.post.imageUrl,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -183,11 +239,11 @@ class CommentScreen extends StatelessWidget {
                   color: isLike ? Colors.red : Colors.grey
               ),
               const SizedBox(width: 4),
-              Text("${post.likes}", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+              Text("${widget.post.likes}", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
               const SizedBox(width: 16),
               Icon(Icons.chat_bubble_outline, size: 20, color: Colors.grey.shade600),
               const SizedBox(width: 4),
-              Text("${post.comments}", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+              Text("${widget.post.comments}", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
             ],
           ),
         ],
@@ -196,6 +252,7 @@ class CommentScreen extends StatelessWidget {
   }
 
   Widget _buildCommentItem(CommentModel comment) {
+    final isFocused = widget.focusCommentId != null && comment.id == widget.focusCommentId;
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Row(
@@ -246,7 +303,9 @@ class CommentScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}", // Mock time for UI
+                      comment.createdAt != null
+                          ? "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}"
+                          : "",
                       style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
                     ),
                   ],
@@ -257,6 +316,7 @@ class CommentScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.lightPurple, // Màu tím nhạt cho bubble
                     borderRadius: BorderRadius.circular(12),
+                    border: isFocused ? Border.all(color: AppColors.buttonColor, width: 1.5) : null,
                   ),
                   child: Text(
                     comment.comment,
@@ -288,8 +348,8 @@ class CommentScreen extends StatelessWidget {
           children: [
             Obx(() => CircleAvatar(
               radius: 18,
-              backgroundImage: userController.user.value.profilePicture?.isNotEmpty == true
-                  ? NetworkImage(userController.user.value.profilePicture!)
+              backgroundImage: userController.user.value.profilePicture.isNotEmpty == true
+                  ? NetworkImage(userController.user.value.profilePicture)
                   : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
             )),
             const SizedBox(width: 12),

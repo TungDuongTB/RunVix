@@ -18,7 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
         postController.loadMorePosts();
       }
     });
@@ -40,28 +41,30 @@ class _HomeScreenState extends State<HomeScreen> {
       const ProfileScreen(),
     ];
 
-    return Obx(() => Scaffold(
-      backgroundColor: AppColors.backgroundGrey,
-      body: CustomPaint(
-        painter: RadialGradientPainter(),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: IndexedStack(
-                index: navigationController.selectedIndex.value,
-                children: pagesWithScroll,
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.backgroundGrey,
+        body: CustomPaint(
+          painter: RadialGradientPainter(),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: IndexedStack(
+                  index: navigationController.selectedIndex.value,
+                  children: pagesWithScroll,
+                ),
               ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: _buildCustomBottomNavBar(),
-            ),
-          ],
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: _buildCustomBottomNavBar(),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildCustomBottomNavBar() {
@@ -77,7 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       height: 72,
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF).withOpacity(0.4), // soft translucent blue tint
+        color: const Color(
+          0xFFEFF6FF,
+        ).withOpacity(0.4), // soft translucent blue tint
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.0),
         boxShadow: [
@@ -97,7 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(5, (index) {
-                final isSelected = navigationController.selectedIndex.value == index;
+                final isSelected =
+                    navigationController.selectedIndex.value == index;
                 if (index == 2) {
                   // Ghi lại (Record) - Circular floating button
                   return GestureDetector(
@@ -113,14 +119,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: BoxDecoration(
                               color: AppColors.buttonColor,
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white.withOpacity(0.4), width: 3),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.4),
+                                width: 3,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColors.buttonColor.withOpacity(0.3),
                                   blurRadius: 10,
                                   offset: const Offset(0, 5),
-                                )
-                              ]
+                                ),
+                              ],
                             ),
                             child: const Icon(
                               Icons.fiber_manual_record,
@@ -135,8 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             tabs[index]['label'] as String,
                             style: TextStyle(
                               fontSize: 10,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                              color: isSelected ? AppColors.buttonColor : Colors.grey.shade600,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? AppColors.buttonColor
+                                  : Colors.grey.shade600,
                             ),
                           ),
                         ),
@@ -148,7 +161,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return GestureDetector(
                   onTap: () => navigationController.changeIndex(index),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 12,
+                    ),
                     decoration: isSelected
                         ? BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
@@ -160,7 +176,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Icon(
                           tabs[index]['icon'] as IconData,
-                          color: isSelected ? AppColors.buttonColor : Colors.grey.shade600,
+                          color: isSelected
+                              ? AppColors.buttonColor
+                              : Colors.grey.shade600,
                           size: 22,
                         ),
                         const SizedBox(height: 2),
@@ -168,8 +186,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           tabs[index]['label'] as String,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            color: isSelected ? AppColors.buttonColor : Colors.grey.shade600,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? AppColors.buttonColor
+                                : Colors.grey.shade600,
                           ),
                         ),
                       ],
@@ -192,7 +214,7 @@ class HomeContentBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = UserController.instance;
-    
+
     return RefreshIndicator(
       onRefresh: () => PostController.instance.fetchPosts(),
       child: CustomScrollView(
@@ -217,16 +239,20 @@ class HomeContentBody extends StatelessWidget {
                 return Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.buttonColor.withOpacity(0.2), width: 1.5),
+                    border: Border.all(
+                      color: AppColors.buttonColor.withOpacity(0.2),
+                      width: 1.5,
+                    ),
                   ),
                   child: CircleAvatar(
                     radius: 14,
                     backgroundColor: Colors.grey.shade200,
-                    backgroundImage: networkImage.isNotEmpty 
-                        ? NetworkImage(networkImage) 
-                        : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                    backgroundImage: networkImage.isNotEmpty
+                        ? NetworkImage(networkImage)
+                        : const AssetImage('assets/images/default_avatar.png')
+                              as ImageProvider,
                     child: networkImage.isEmpty
-                        ? const Icon(Icons.person, size: 18, color: Colors.grey) 
+                        ? const Icon(Icons.person, size: 18, color: Colors.grey)
                         : null,
                   ),
                 );
@@ -236,18 +262,13 @@ class HomeContentBody extends StatelessWidget {
             title: const Text(
               'RUNVIX',
               style: TextStyle(
-                color: AppColors.buttonColor, 
+                color: AppColors.buttonColor,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
               ),
             ),
             centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none_outlined, color: AppColors.buttonColor),
-                onPressed: () {},
-              ),
-            ],
+            actions: const [NotificationBellWidget()],
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -256,7 +277,9 @@ class HomeContentBody extends StatelessWidget {
                 HomeStreakSection(),
                 HomeSuggestedFollows(),
                 HomeSuggestedChallenges(),
-                SizedBox(height: 100), // padding to prevent content overlap with floating bottom nav
+                SizedBox(
+                  height: 100,
+                ), // padding to prevent content overlap with floating bottom nav
               ],
             ),
           ),

@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import '../Model/user_model.dart';
+import 'package:runvix/export.dart';
 
 class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
@@ -76,6 +73,21 @@ class UserRepository extends GetxController {
         'ortherid': otherUserId,
         'timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Trigger notification
+      final isOtherFollowingCurrent = await isFollowing(otherUserId, currentUserId);
+      final notifRepo = NotificationRepository.instance;
+
+      if (isOtherFollowingCurrent) {
+        // Current user follows back, triggering follow_back notification for otherUserId
+        await notifRepo.createFollowNotification(otherUserId, currentUserId, "follow_back");
+        // Both users follow each other now, triggering friend notifications for both
+        await notifRepo.createFollowNotification(otherUserId, currentUserId, "friend");
+        await notifRepo.createFollowNotification(currentUserId, otherUserId, "friend");
+      } else {
+        // Standard follow notification
+        await notifRepo.createFollowNotification(otherUserId, currentUserId, "follow");
+      }
     } catch (e) {
       throw 'Lỗi khi theo dõi người dùng: $e';
     }
@@ -92,6 +104,9 @@ class UserRepository extends GetxController {
       for (var doc in snapshot.docs) {
         await doc.reference.delete();
       }
+
+      // Clean up follow/friend notifications
+      await NotificationRepository.instance.deleteFollowNotifications(otherUserId, currentUserId);
     } catch (e) {
       throw 'Lỗi khi hủy theo dõi: $e';
     }

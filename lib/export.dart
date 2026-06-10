@@ -120,3 +120,10 @@ export './Component/profile_header_component.dart';
 export './Component/profile_stats_row.dart';
 export './Component/profile_streak_distance_cards.dart';
 export './Component/ProfilePostGridComponent.dart';
+
+// Notification System
+export './Data/Model/notification_model.dart';
+export './Data/Repository/notification_repository.dart';
+export './Data/Controller/notification_controller.dart';
+export './Component/notification_bell_widget.dart';
+export './Component/notification_dialog.dart';
