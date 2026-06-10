@@ -75,6 +75,8 @@ export './Pages/Home/Widgets/map/map_distance_filter_sheet.dart';
 export './Pages/Home/Widgets/Group/GroupScreen.dart';
 export './Pages/Home/Widgets/Group/group_tab_content.dart';
 export './Pages/Home/Widgets/Group/create_group_screen.dart';
+export './Pages/Home/Widgets/Group/Widgets/group_image_selectors.dart';
+export './Pages/Home/Widgets/Group/Widgets/privacy_option_card.dart';
 
 // Record Widgets
 export './Pages/Home/Widgets/Record/RecordScreen.dart';

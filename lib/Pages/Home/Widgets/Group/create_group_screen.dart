@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
@@ -27,20 +26,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Future<void> _pickCover() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _coverImage = pickedFile;
-      });
-    }
+    if (pickedFile != null) setState(() => _coverImage = pickedFile);
   }
 
   Future<void> _pickLogo() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _logoImage = pickedFile;
-      });
-    }
+    if (pickedFile != null) setState(() => _logoImage = pickedFile);
   }
 
   @override
@@ -73,11 +64,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         ),
         title: const Text(
           'Tạo Nhóm Mới',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
       ),
@@ -88,18 +75,24 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Cover & Logo Picker Container
-              _buildImageSelectors(),
+              GroupImageSelectors(
+                coverImage: _coverImage,
+                logoImage: _logoImage,
+                onPickCover: _pickCover,
+                onPickLogo: _pickLogo,
+              ),
               const SizedBox(height: 24),
 
-              // Form fields bọc trong GlassCard
               GlassCard(
                 borderRadius: 20.0,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('Thông tin nhóm'),
+                    const Text(
+                      'Thông tin nhóm',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
                     const SizedBox(height: 16),
                     FocusableTextField(
                       controller: _nameController,
@@ -121,20 +114,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       children: [
                         const Text(
                           'ĐIỀU KIỆN THAM GIA',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.buttonColor,
-                          ),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.buttonColor),
                         ),
                         Switch(
                           value: _hasRequirements,
                           activeColor: AppColors.buttonColor,
-                          onChanged: (value) {
-                            setState(() {
-                              _hasRequirements = value;
-                            });
-                          },
+                          onChanged: (value) => setState(() => _hasRequirements = value),
                         ),
                       ],
                     ),
@@ -173,19 +158,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Quyền riêng tư
               GlassCard(
                 borderRadius: 20.0,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('Quyền tham gia'),
+                    const Text(
+                      'Quyền tham gia',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildPrivacyOption(
+                          child: PrivacyOptionCard(
                             title: 'Công khai',
                             subtitle: 'Ai cũng có thể tham gia',
                             isSelected: _isPublic,
@@ -195,7 +182,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildPrivacyOption(
+                          child: PrivacyOptionCard(
                             title: 'Riêng tư',
                             subtitle: 'Cần duyệt thành viên',
                             isSelected: !_isPublic,
@@ -210,178 +197,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Nút Tạo nhóm
               _buildCreateButton(),
               const SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildImageSelectors() {
-    return Stack(
-      children: [
-        // Cover Photo Picker
-        GestureDetector(
-          onTap: _pickCover,
-          child: Container(
-            height: 180,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.0),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.buttonColor.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              ],
-              image: _coverImage != null
-                  ? DecorationImage(
-                      image: FileImage(File(_coverImage!.path)),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-            ),
-            child: _coverImage == null
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_photo_alternate_outlined, color: Colors.grey.shade600, size: 40),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Tải lên ảnh bìa nhóm',
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  )
-                : const Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black45,
-                        radius: 14,
-                        child: Icon(Icons.edit, color: Colors.white, size: 14),
-                      ),
-                    ),
-                  ),
-          ),
-        ),
-
-        // Logo Picker
-        Positioned(
-          left: 20,
-          bottom: 10,
-          child: GestureDetector(
-            onTap: _pickLogo,
-            child: Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.shade100,
-                border: Border.all(color: Colors.white, width: 3.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  )
-                ],
-                image: _logoImage != null
-                    ? DecorationImage(
-                        image: FileImage(File(_logoImage!.path)),
-                        fit: BoxFit.cover,
-                    )
-                    : null,
-              ),
-              child: _logoImage == null
-                  ? Icon(Icons.camera_alt_outlined, color: Colors.grey.shade600, size: 24)
-                  : const Align(
-                      alignment: Alignment.bottomRight,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.buttonColor,
-                        radius: 10,
-                        child: Icon(Icons.edit, color: Colors.white, size: 10),
-                      ),
-                    ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPrivacyOption({
-    required String title,
-    required String subtitle,
-    required bool isSelected,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.buttonColor.withOpacity(0.08)
-              : Colors.white.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.buttonColor
-                : Colors.white.withOpacity(0.5),
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? AppColors.buttonColor : Colors.grey.shade600,
-              size: 24,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? AppColors.buttonColor : Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
-                color: isSelected ? AppColors.buttonColor.withOpacity(0.8) : Colors.grey.shade600,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -393,20 +212,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       height: 52,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [
-            AppColors.primary,
-            AppColors.buttonColor,
-          ],
+          colors: [AppColors.primary, AppColors.buttonColor],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          )
+          BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))
         ],
       ),
       child: Material(
@@ -429,12 +241,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           child: const Center(
             child: Text(
               'Tạo Nhóm',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                letterSpacing: 0.5,
-              ),
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 0.5),
             ),
           ),
         ),
