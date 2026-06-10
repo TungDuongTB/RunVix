@@ -25,4 +25,21 @@ class AppColors {
   static const Color dividerGrey = Color(0xFFE5E5E5);
   static const Color backgroundGrey = Color(0xFFF2F2F7);
   static const Color lightPurple = Color(0xFFF2E7FE);
+
+  // Material-style surface tokens
+  static const Color groupBackground = Color(0xFFFEF7FF);
+  static const Color onSurface = Color(0xFF1D1A25);
+  static const Color onSurfaceVariant = Color(0xFF4A4456);
+  static const Color outline = Color(0xFF7B7488);
+  static const Color secondary = Color(0xFF006687);
+  static const Color secondaryContainer = Color(0xFF00BEF9);
+  static const Color surfaceContainer = Color(0xFFF3EBFB);
+
+  static const List<Color> groupCoverGradient = [
+    Color(0xFF070B19),
+    Color(0xFF0F172A),
+    Color(0xFFD97706),
+    Color(0xFF2563EB),
+    Color(0xFF0F172A),
+  ];
 }

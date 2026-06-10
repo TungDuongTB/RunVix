@@ -24,6 +24,7 @@ export './Data/Model/report_model.dart';
 export './Data/Model/admin_stats_model.dart';
 export './Data/Model/group_model.dart';
 export './Data/Model/group_event_model.dart';
+export './Data/Model/group_workout_stats.dart';
 
 // Data - Repository
 export './Data/Repository/authentication_repository.dart';

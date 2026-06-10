@@ -189,21 +189,20 @@ class GroupController extends GetxController {
   }
 
   /// Tham gia nhóm
-  Future<void> joinGroup(GroupModel group) async {
+  Future<bool> joinGroup(GroupModel group) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       Get.snackbar('Lỗi', 'Vui lòng đăng nhập để tham gia nhóm.',
           snackPosition: SnackPosition.BOTTOM);
-      return;
+      return false;
     }
     
-    if (group.id == null || group.id!.isEmpty) return;
+    if (group.id == null || group.id!.isEmpty) return false;
 
     try {
       isLoading.value = true;
       await _groupRepo.joinGroup(group.id!, currentUser.uid);
       
-      // Tải lại danh sách
       await fetchMyGroups();
       await fetchSuggestedGroups();
       
@@ -214,6 +213,7 @@ class GroupController extends GetxController {
         colorText: const Color(0xFF2E7D32),
         snackPosition: SnackPosition.BOTTOM,
       );
+      return true;
     } catch (e) {
       Get.snackbar(
         'Lỗi',
@@ -222,6 +222,7 @@ class GroupController extends GetxController {
         colorText: const Color(0xFFC62828),
         snackPosition: SnackPosition.BOTTOM,
       );
+      return false;
     } finally {
       isLoading.value = false;
     }

@@ -9,10 +9,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="detail_group">
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="detail">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Component/ColorComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/ColorComponent.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/workout_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/workout_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -539,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781116712568</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="detail">
+      <option name="closed" value="true" />
+      <created>1781117236379</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1781117236379</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -554,7 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="mapScreen" />
     <MESSAGE value="position" />
     <MESSAGE value="CleanCode" />
     <MESSAGE value="ShowCungDuong" />
@@ -579,7 +588,8 @@
     <MESSAGE value="fix: notifi" />
     <MESSAGE value="fix: post card" />
     <MESSAGE value="detail_group" />
-    <option name="LAST_COMMIT_MESSAGE" value="detail_group" />
+    <MESSAGE value="detail" />
+    <option name="LAST_COMMIT_MESSAGE" value="detail" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
