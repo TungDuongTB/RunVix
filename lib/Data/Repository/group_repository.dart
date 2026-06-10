@@ -65,9 +65,14 @@ class GroupRepository extends GetxController {
       final snapshot = await _db
           .collection('Groups')
           .where('MemberIds', arrayContains: userId)
-          .orderBy('CreatedAt', descending: true)
           .get();
-      return snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+      list.sort((a, b) {
+        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+      return list;
     } catch (e) {
       throw 'Không thể tải danh sách nhóm.';
     }
@@ -79,11 +84,35 @@ class GroupRepository extends GetxController {
       final snapshot = await _db
           .collection('Groups')
           .where('IsPublic', isEqualTo: true)
-          .orderBy('CreatedAt', descending: true)
           .get();
-      return snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+      list.sort((a, b) {
+        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+      return list;
     } catch (e) {
       throw 'Không thể tải danh sách nhóm.';
+    }
+  }
+
+  /// Lấy danh sách nhóm do một user tạo ra
+  Future<List<GroupModel>> getGroupsCreatedByUser(String userId) async {
+    try {
+      final snapshot = await _db
+          .collection('Groups')
+          .where('CreatorId', isEqualTo: userId)
+          .get();
+      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+      list.sort((a, b) {
+        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+      return list;
+    } catch (e) {
+      throw 'Không thể tải danh sách nhóm do bạn tạo.';
     }
   }
 

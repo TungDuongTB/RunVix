@@ -176,21 +176,6 @@ class GroupCard extends StatelessWidget {
                     color: const Color(0xFFE8F5E9),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.image_outlined, size: 12, color: Color(0xFF2E7D32)),
-                      SizedBox(width: 4),
-                      Text(
-                        'Có ảnh bìa',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2E7D32),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
             ],
           ),

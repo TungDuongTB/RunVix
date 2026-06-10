@@ -25,9 +25,7 @@ class GroupController extends GetxController {
     if (currentUser == null) return;
     try {
       isLoadingGroups.value = true;
-      print(currentUser.uid);
-      final result = await _groupRepo.getGroupsByUser(currentUser.uid);
-      print(result);
+      final result = await _groupRepo.getGroupsCreatedByUser(currentUser.uid);
       groups.assignAll(result);
     } catch (e) {
       debugPrint('❌ fetchMyGroups error: $e');

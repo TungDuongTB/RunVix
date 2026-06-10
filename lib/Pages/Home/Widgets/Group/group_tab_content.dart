@@ -86,7 +86,7 @@ class GroupTabContent extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Bạn chưa tham gia nhóm nào',
+                            'Bạn chưa tạo nhóm nào',
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 14,
