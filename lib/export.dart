@@ -23,6 +23,7 @@ export './Data/Model/like_model.dart';
 export './Data/Model/report_model.dart';
 export './Data/Model/admin_stats_model.dart';
 export './Data/Model/group_model.dart';
+export './Data/Model/group_event_model.dart';
 
 // Data - Repository
 export './Data/Repository/authentication_repository.dart';
@@ -79,6 +80,7 @@ export './Pages/Home/Widgets/Group/GroupScreen.dart';
 export './Pages/Home/Widgets/Group/group_tab_content.dart';
 export './Pages/Home/Widgets/Group/create_group_screen.dart';
 export './Pages/Home/Widgets/Group/group_detail_screen.dart';
+export './Pages/Home/Widgets/Group/create_group_event_screen.dart';
 export './Pages/Home/Widgets/Group/Widgets/group_image_selectors.dart';
 export './Pages/Home/Widgets/Group/Widgets/privacy_option_card.dart';
 
