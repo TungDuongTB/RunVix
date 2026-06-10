@@ -10,11 +10,20 @@ class NotificationRepository extends GetxController {
   Stream<List<NotificationModel>> getNotificationsStream(String userId) {
     return _db.collection("Notifications")
         .where("ReceiverId", isEqualTo: userId)
-        .orderBy("CreatedAt", descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => NotificationModel.fromSnapshot(doc))
-            .toList());
+        .map((snapshot) {
+          final list = snapshot.docs
+              .map((doc) => NotificationModel.fromSnapshot(doc))
+              .toList();
+          // Sort in-memory descending by CreatedAt to avoid composite index requirement
+          list.sort((a, b) {
+            if (a.createdAt == null && b.createdAt == null) return 0;
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+            return b.createdAt!.compareTo(a.createdAt!);
+          });
+          return list;
+        });
   }
 
   // Create or Update Like Notification (Grouped)

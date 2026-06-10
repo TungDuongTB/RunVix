@@ -9,18 +9,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: follower">
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_graph.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_graph.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: notifi">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/post_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/comment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/comment_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -522,7 +514,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781024608944</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="fix: notifi">
+      <option name="closed" value="true" />
+      <created>1781096199283</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1781096199283</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -537,7 +537,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="editprofile" />
     <MESSAGE value="PostScreen" />
     <MESSAGE value="EditProfile" />
     <MESSAGE value="mapScreen" />
@@ -562,7 +561,8 @@
     <MESSAGE value="toi uu code" />
     <MESSAGE value="feat: add flower" />
     <MESSAGE value="fix: follower" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: follower" />
+    <MESSAGE value="fix: notifi" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: notifi" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

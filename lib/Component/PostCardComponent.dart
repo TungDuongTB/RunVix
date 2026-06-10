@@ -13,26 +13,27 @@ class PostCard extends StatelessWidget {
     final postController = PostController.instance;
     final userController = UserController.instance;
 
-    final hasImage = post.imageUrl.isNotEmpty;
+    final hasImage = post.imageUrl.isNotEmpty && post.imageUrl.startsWith('http');
     final hasStats = post.distance != null && post.distance! > 0;
 
     return GlassCard(
+      borderRadius: 24.0,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _buildBody(),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           if (hasStats && !hasImage) ...[
             _buildStats(),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
           ],
           if (hasImage) ...[
             _buildImageAndStats(hasStats),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
           ],
           const SizedBox(height: 4),
           Divider(height: 1, color: Colors.white.withOpacity(0.3)),
@@ -58,18 +59,19 @@ class PostCard extends StatelessWidget {
             }
           },
           child: Container(
+            padding: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
+              border: Border.all(color: AppColors.buttonColor.withOpacity(0.3), width: 1.5),
             ),
             child: CircleAvatar(
-              radius: 20,
+              radius: 18,
               backgroundColor: Colors.grey.shade200,
               backgroundImage: post.userProfilePicture.isNotEmpty 
                   ? NetworkImage(post.userProfilePicture) 
                   : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
               child: post.userProfilePicture.isEmpty
-                  ? const Icon(Icons.person, color: Colors.grey)
+                  ? const Icon(Icons.person, color: Colors.grey, size: 20)
                   : null,
             ),
           ),
@@ -95,11 +97,27 @@ class PostCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87),
                 ),
               ),
-              if (post.createdAt != null)
-                Text(
-                  intl.DateFormat('dd/MM/yyyy HH:mm').format(post.createdAt!),
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
-                ),
+              const SizedBox(height: 2),
+              Row(
+                children: [
+                  if (post.createdAt != null) ...[
+                    Text(
+                      intl.DateFormat('dd/MM/yyyy HH:mm').format(post.createdAt!),
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                    ),
+                    if (post.type != null && post.type!.isNotEmpty) ...[
+                      Text(
+                        " • ",
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                      ),
+                      Text(
+                        post.type == "Running" ? "Chạy bộ" : post.type!,
+                        style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ],
+                ],
+              ),
             ],
           ),
         ),
@@ -113,15 +131,15 @@ class PostCard extends StatelessWidget {
       children: [
         if (post.title.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 6),
             child: Text(
               post.title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black87),
             ),
           ),
         Text(
           post.content,
-          style: const TextStyle(fontSize: 14, height: 1.4, color: Colors.black87),
+          style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
         ),
       ],
     );
@@ -129,20 +147,37 @@ class PostCard extends StatelessWidget {
 
   Widget _buildStats() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.0),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withOpacity(0.08),
+            AppColors.buttonColor.withOpacity(0.12),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primary.withOpacity(0.15), width: 1.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem("Quãng đường", "${post.distance?.toStringAsFixed(2)} km", Icons.straighten),
+          _buildStatItem("Quãng đường", "${post.distance?.toStringAsFixed(2)} km", Icons.speed),
+          _buildVerticalDivider(),
           _buildStatItem("Thời gian", _formatDuration(post.duration ?? 0), Icons.timer_outlined),
-          _buildStatItem("Nhịp độ", "${post.averagePace?.toStringAsFixed(2)} /km", Icons.speed),
+          _buildVerticalDivider(),
+          _buildStatItem("Nhịp độ", "${post.averagePace?.toStringAsFixed(2)} /km", Icons.insights),
         ],
       ),
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return Container(
+      width: 1,
+      height: 28,
+      color: AppColors.primary.withOpacity(0.2),
     );
   }
 
@@ -150,12 +185,13 @@ class PostCard extends StatelessWidget {
     return Column(
       children: [
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 12, color: Colors.grey.shade600),
+            Icon(icon, size: 14, color: AppColors.primary),
             const SizedBox(width: 4),
             Text(
-              label, 
-              style: TextStyle(fontSize: 10, color: Colors.grey.shade600, fontWeight: FontWeight.w600)
+              label.toUpperCase(), 
+              style: TextStyle(fontSize: 9, color: Colors.grey.shade700, fontWeight: FontWeight.bold, letterSpacing: 0.5)
             ),
           ],
         ),
@@ -163,10 +199,10 @@ class PostCard extends StatelessWidget {
         Text(
           value, 
           style: const TextStyle(
-            fontSize: 14, 
+            fontSize: 16, 
             fontWeight: FontWeight.w900, 
             fontStyle: FontStyle.italic,
-            color: AppColors.buttonColor
+            color: AppColors.primary
           )
         ),
       ],
@@ -189,7 +225,7 @@ class PostCard extends StatelessWidget {
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(20),
       child: AspectRatio(
         aspectRatio: 16 / 9,
         child: Stack(
@@ -226,13 +262,13 @@ class PostCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                    filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.white.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.0),
+                        border: Border.all(color: Colors.white.withOpacity(0.25), width: 1.0),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -285,11 +321,15 @@ class PostCard extends StatelessWidget {
           icon: Icon(
             isLiked ? Icons.favorite : Icons.favorite_border, 
             size: 20, 
-            color: isLiked ? Colors.red : Colors.grey.shade600
+            color: isLiked ? AppColors.danger : Colors.grey.shade600
           ),
           label: Text(
             "${post.likes} Thích",
-            style: TextStyle(color: isLiked ? Colors.red : Colors.grey.shade600, fontSize: 13),
+            style: TextStyle(
+              color: isLiked ? AppColors.danger : Colors.grey.shade600, 
+              fontSize: 13,
+              fontWeight: isLiked ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
         TextButton.icon(

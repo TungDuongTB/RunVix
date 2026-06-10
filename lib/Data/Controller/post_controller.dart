@@ -8,7 +8,7 @@ class PostController extends GetxController {
 
   final title = TextEditingController();
   final content = TextEditingController();
-  
+
   // Variables for workout posts
   var workoutDistance = 0.0.obs;
   var workoutDuration = 0.obs;
@@ -22,14 +22,76 @@ class PostController extends GetxController {
   final int _limit = 10;
   DocumentSnapshot? _lastDocument;
 
+  // Real-time Firestore subscriptions for loaded posts
+  final Map<String, StreamSubscription> _postSubscriptions = {};
+
   @override
   void onInit() {
     super.onInit();
     fetchPosts();
   }
 
+  @override
+  void onClose() {
+    _clearPostSubscriptions();
+    super.onClose();
+  }
+
+  // --- REAL-TIME LISTENERS ---
+
+  void _subscribeToPostChanges(String postId) {
+    if (_postSubscriptions.containsKey(postId)) return;
+
+    final sub = FirebaseFirestore.instance
+        .collection("Posts")
+        .doc(postId)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data();
+        if (data != null) {
+          int index = allPosts.indexWhere((p) => p.id == postId);
+          if (index != -1) {
+            final oldPost = allPosts[index];
+            allPosts[index] = oldPost.copyWith(
+              likes: data["Likes"] ?? 0,
+              comments: data["Comments"] ?? 0,
+              title: data["Title"] ?? "",
+              content: data["Content"] ?? "",
+              imageUrl: data["ImageUrl"] ?? "",
+              isLocked: data["IsLocked"] ?? false,
+              // Keep oldPost user details and current isLiked status
+              userName: oldPost.userName,
+              userProfilePicture: oldPost.userProfilePicture,
+              isLiked: oldPost.isLiked, // Fix race condition: preserve local like status
+            );
+          }
+        }
+      } else {
+        // If post deleted on Firestore, remove it from local list
+        allPosts.removeWhere((p) => p.id == postId);
+        _unsubscribeFromPost(postId);
+      }
+    });
+
+    _postSubscriptions[postId] = sub;
+  }
+
+  void _unsubscribeFromPost(String postId) {
+    _postSubscriptions[postId]?.cancel();
+    _postSubscriptions.remove(postId);
+  }
+
+  void _clearPostSubscriptions() {
+    for (var sub in _postSubscriptions.values) {
+      sub.cancel();
+    }
+    _postSubscriptions.clear();
+  }
+
   // Tiện ích lấy User ID hiện tại
-  String? get _currentUid => FirebaseAuth.instance.currentUser?.uid ?? userController.user.value.id;
+  String? get _currentUid =>
+      FirebaseAuth.instance.currentUser?.uid ?? userController.user.value.id;
 
   // Clear workout data
   void clearWorkoutData() {
@@ -63,17 +125,29 @@ class PostController extends GetxController {
         isLoading.value = true;
       }
 
-      final result = await postRepo.getPaginatedPosts(_lastDocument, _limit, currentUserId: _currentUid);
+      final result = await postRepo.getPaginatedPosts(
+        _lastDocument,
+        _limit,
+        currentUserId: _currentUid,
+      );
       final List<PostModel> posts = result["posts"] ?? [];
       _lastDocument = result["lastDocument"];
 
       if (isLoadMore) {
         allPosts.addAll(posts);
       } else {
+        _clearPostSubscriptions();
         if (posts.isEmpty) {
           _mockPosts();
         } else {
           allPosts.assignAll(posts);
+        }
+      }
+
+      // Start listening to real-time changes on loaded posts
+      for (var post in posts) {
+        if (post.id != null && post.id!.isNotEmpty) {
+          _subscribeToPostChanges(post.id!);
         }
       }
 
@@ -114,7 +188,6 @@ class PostController extends GetxController {
     ]);
   }
 
-
   Future<void> createPost(XFile? imageFile) async {
     try {
       isLoading.value = true;
@@ -134,7 +207,7 @@ class PostController extends GetxController {
       await fetchPosts();
       clearWorkoutData();
 
-      Get.back(); 
+      Get.back();
       Get.snackbar("Thành công", "Bài viết của bạn đã được đăng!");
     } catch (e) {
       Get.snackbar("Lỗi", e.toString());
@@ -148,6 +221,7 @@ class PostController extends GetxController {
       isLoading.value = true;
       await postRepo.deletePost(postId);
       allPosts.removeWhere((p) => p.id == postId);
+      _unsubscribeFromPost(postId);
       Get.snackbar("Thành công", "Đã xóa bài viết");
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể xóa bài viết: $e");
@@ -179,17 +253,22 @@ class PostController extends GetxController {
         allPosts[index] = updatedPost;
       }
 
-      Get.snackbar("Thành công", updatedPost.isLocked ? "Đã khóa bài viết" : "Đã mở khóa bài viết");
+      Get.snackbar(
+        "Thành công",
+        updatedPost.isLocked ? "Đã khóa bài viết" : "Đã mở khóa bài viết",
+      );
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể thay đổi trạng thái bài viết: $e");
     }
   }
 
-
   Future<void> toggleLike(PostModel post) async {
     final uid = _currentUid;
     if (post.id == null || uid == null || uid.isEmpty) {
-      Get.snackbar("Thông báo", "Vui lòng đăng nhập để thực hiện tính năng này");
+      Get.snackbar(
+        "Thông báo",
+        "Vui lòng đăng nhập để thực hiện tính năng này",
+      );
       return;
     }
 
