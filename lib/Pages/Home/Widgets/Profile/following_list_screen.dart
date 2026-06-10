@@ -108,6 +108,17 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
       final isFriend = isFollower; // In following list, if they follow you back, you are friends
 
       return ListTile(
+        onTap: () {
+          if (user.id != null && user.id!.isNotEmpty) {
+            final currentUid = FirebaseAuth.instance.currentUser?.uid;
+            if (user.id == currentUid) {
+              NavigationController.instance.changeIndex(4);
+              Get.back();
+            } else {
+              Get.to(() => ProfileHubScreen(userId: user.id));
+            }
+          }
+        },
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           radius: 28,

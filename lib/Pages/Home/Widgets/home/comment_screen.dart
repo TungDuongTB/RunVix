@@ -101,19 +101,45 @@ class CommentScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: post.userProfilePicture.isNotEmpty
-                    ? NetworkImage(post.userProfilePicture)
-                    : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
+              GestureDetector(
+                onTap: () {
+                  if (post.userId.isNotEmpty) {
+                    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                    if (post.userId == currentUid) {
+                      NavigationController.instance.changeIndex(4);
+                      Get.back();
+                    } else {
+                      Get.to(() => ProfileHubScreen(userId: post.userId));
+                    }
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: post.userProfilePicture.isNotEmpty
+                      ? NetworkImage(post.userProfilePicture)
+                      : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
+                ),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    post.userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  GestureDetector(
+                    onTap: () {
+                      if (post.userId.isNotEmpty) {
+                        final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                        if (post.userId == currentUid) {
+                          NavigationController.instance.changeIndex(4);
+                          Get.back();
+                        } else {
+                          Get.to(() => ProfileHubScreen(userId: post.userId));
+                        }
+                      }
+                    },
+                    child: Text(
+                      post.userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
                   ),
                   Text(
                     post.createdAt != null 
@@ -175,11 +201,24 @@ class CommentScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundImage: comment.userProfilePicture.isNotEmpty
-                ? NetworkImage(comment.userProfilePicture)
-                : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
+          GestureDetector(
+            onTap: () {
+              if (comment.userId.isNotEmpty) {
+                final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                if (comment.userId == currentUid) {
+                  NavigationController.instance.changeIndex(4);
+                  Get.back();
+                } else {
+                  Get.to(() => ProfileHubScreen(userId: comment.userId));
+                }
+              }
+            },
+            child: CircleAvatar(
+              radius: 18,
+              backgroundImage: comment.userProfilePicture.isNotEmpty
+                  ? NetworkImage(comment.userProfilePicture)
+                  : const AssetImage('assets/Images/default_avatar.png') as ImageProvider,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -189,9 +228,22 @@ class CommentScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      comment.userName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    GestureDetector(
+                      onTap: () {
+                        if (comment.userId.isNotEmpty) {
+                          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                          if (comment.userId == currentUid) {
+                            NavigationController.instance.changeIndex(4);
+                            Get.back();
+                          } else {
+                            Get.to(() => ProfileHubScreen(userId: comment.userId));
+                          }
+                        }
+                      },
+                      child: Text(
+                        comment.userName,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
                     ),
                     Text(
                       "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}", // Mock time for UI

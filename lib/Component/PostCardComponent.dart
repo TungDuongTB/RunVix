@@ -46,20 +46,32 @@ class PostCard extends StatelessWidget {
   Widget _buildHeader() {
     return Row(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
-          ),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey.shade200,
-            backgroundImage: post.userProfilePicture.isNotEmpty 
-                ? NetworkImage(post.userProfilePicture) 
-                : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
-            child: post.userProfilePicture.isEmpty
-                ? const Icon(Icons.person, color: Colors.grey)
-                : null,
+        GestureDetector(
+          onTap: () {
+            if (post.userId.isNotEmpty) {
+              final currentUid = FirebaseAuth.instance.currentUser?.uid;
+              if (post.userId == currentUid) {
+                NavigationController.instance.changeIndex(4);
+              } else {
+                Get.to(() => ProfileHubScreen(userId: post.userId));
+              }
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
+            ),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey.shade200,
+              backgroundImage: post.userProfilePicture.isNotEmpty 
+                  ? NetworkImage(post.userProfilePicture) 
+                  : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+              child: post.userProfilePicture.isEmpty
+                  ? const Icon(Icons.person, color: Colors.grey)
+                  : null,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -67,9 +79,21 @@ class PostCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                post.userName.isNotEmpty ? post.userName : "Người dùng RunVix",
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87),
+              GestureDetector(
+                onTap: () {
+                  if (post.userId.isNotEmpty) {
+                    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                    if (post.userId == currentUid) {
+                      NavigationController.instance.changeIndex(4);
+                    } else {
+                      Get.to(() => ProfileHubScreen(userId: post.userId));
+                    }
+                  }
+                },
+                child: Text(
+                  post.userName.isNotEmpty ? post.userName : "Người dùng RunVix",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87),
+                ),
               ),
               if (post.createdAt != null)
                 Text(

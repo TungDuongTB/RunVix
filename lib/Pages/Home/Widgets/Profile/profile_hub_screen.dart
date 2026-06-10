@@ -42,10 +42,13 @@ class _ProfileHubScreenState extends State<ProfileHubScreen> {
       });
       final String? targetUid =
           widget.userId ?? FirebaseAuth.instance.currentUser?.uid;
-      if (targetUid == null || targetUid.isEmpty) {
-        setState(() {
-          isLoading = false;
-        });
+      final currentUid = FirebaseAuth.instance.currentUser?.uid;
+
+      if (targetUid == null || targetUid.isEmpty || targetUid == currentUid) {
+        NavigationController.instance.changeIndex(4);
+        if (mounted) {
+          Get.back();
+        }
         return;
       }
 

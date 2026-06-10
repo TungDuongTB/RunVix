@@ -62,7 +62,12 @@ class UserFollowCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (user.id != null && user.id!.isNotEmpty) {
-          Get.to(() => ProfileHubScreen(userId: user.id));
+          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+          if (user.id == currentUid) {
+            NavigationController.instance.changeIndex(4);
+          } else {
+            Get.to(() => ProfileHubScreen(userId: user.id));
+          }
         }
       },
       child: Container(
@@ -89,7 +94,12 @@ class UserFollowCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (user.id != null && user.id!.isNotEmpty) {
-          Get.to(() => ProfileHubScreen(userId: user.id));
+          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+          if (user.id == currentUid) {
+            NavigationController.instance.changeIndex(4);
+          } else {
+            Get.to(() => ProfileHubScreen(userId: user.id));
+          }
         }
       },
       child: Column(
