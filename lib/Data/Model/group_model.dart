@@ -36,6 +36,7 @@ class GroupModel {
   Map<String, dynamic> toJson() {
     return {
       'Name': name,
+      'NameLower': name.trim().toLowerCase(), // dùng để kiểm tra trùng tên (không phân biệt hoa thường)
       'Description': description,
       'Location': location,
       'CoverImageUrl': coverImageUrl,

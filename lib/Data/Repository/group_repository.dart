@@ -7,6 +7,22 @@ class GroupRepository extends GetxController {
 
   final _db = FirebaseFirestore.instance;
 
+  /// Kiểm tra xem tên nhóm đã tồn tại chưa (không phân biệt hoa thường)
+  Future<bool> isGroupNameTaken(String name) async {
+    try {
+      final nameLower = name.trim().toLowerCase();
+      final snapshot = await _db
+          .collection('Groups')
+          .where('NameLower', isEqualTo: nameLower)
+          .limit(1)
+          .get();
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      // Nếu lỗi query (ví dụ chưa có index), fallback về false để không chặn người dùng
+      return false;
+    }
+  }
+
   /// Tạo nhóm mới trên Firestore
   Future<String> createGroup(GroupModel group) async {
     try {

@@ -31,6 +31,21 @@ class GroupController extends GetxController {
         return;
       }
 
+      // Kiểm tra trùng tên nhóm trên Firebase
+      final isTaken = await _groupRepo.isGroupNameTaken(name);
+      if (isTaken) {
+        Get.snackbar(
+          'Tên nhóm đã tồn tại',
+          'Nhóm "$name" đã có người sử dụng. Vui lòng chọn tên khác.',
+          backgroundColor: const Color(0xFFFFF3E0),
+          colorText: const Color(0xFFE65100),
+          snackPosition: SnackPosition.BOTTOM,
+          icon: const Icon(Icons.group_off_outlined, color: Color(0xFFE65100)),
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
+
       // Upload ảnh cover nếu có
       String coverImageUrl = '';
       if (coverImageFile != null) {

@@ -1,8 +1,8 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
 
-class GroupImageSelectors extends StatelessWidget {
+class GroupImageSelectors extends StatefulWidget {
   final XFile? coverImage;
   final XFile? logoImage;
   final VoidCallback onPickCover;
@@ -17,12 +17,75 @@ class GroupImageSelectors extends StatelessWidget {
   });
 
   @override
+  State<GroupImageSelectors> createState() => _GroupImageSelectorsState();
+}
+
+class _GroupImageSelectorsState extends State<GroupImageSelectors> {
+  // Cache bytes để tránh đọc lại mỗi lần rebuild
+  ImageProvider? _coverProvider;
+  ImageProvider? _logoProvider;
+  String? _lastCoverPath;
+  String? _lastLogoPath;
+
+  @override
+  void didUpdateWidget(GroupImageSelectors oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.coverImage?.path != _lastCoverPath) {
+      _coverProvider = null;
+      _lastCoverPath = widget.coverImage?.path;
+      if (widget.coverImage != null) _loadCover();
+    }
+    if (widget.logoImage?.path != _lastLogoPath) {
+      _logoProvider = null;
+      _lastLogoPath = widget.logoImage?.path;
+      if (widget.logoImage != null) _loadLogo();
+    }
+  }
+
+  Future<void> _loadCover() async {
+    if (widget.coverImage == null) return;
+    if (kIsWeb) {
+      final bytes = await widget.coverImage!.readAsBytes();
+      if (mounted) {
+        setState(() => _coverProvider = MemoryImage(bytes));
+      }
+    } else {
+      // ignore: avoid_slow_async_io
+      final bytes = await widget.coverImage!.readAsBytes();
+      if (mounted) {
+        setState(() => _coverProvider = MemoryImage(bytes));
+      }
+    }
+  }
+
+  Future<void> _loadLogo() async {
+    if (widget.logoImage == null) return;
+    final bytes = await widget.logoImage!.readAsBytes();
+    if (mounted) {
+      setState(() => _logoProvider = MemoryImage(bytes));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.coverImage != null) {
+      _lastCoverPath = widget.coverImage!.path;
+      _loadCover();
+    }
+    if (widget.logoImage != null) {
+      _lastLogoPath = widget.logoImage!.path;
+      _loadLogo();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         // Cover Photo Picker
         GestureDetector(
-          onTap: onPickCover,
+          onTap: widget.onPickCover,
           child: Container(
             height: 180,
             width: double.infinity,
@@ -37,14 +100,14 @@ class GroupImageSelectors extends StatelessWidget {
                   offset: const Offset(0, 4),
                 )
               ],
-              image: coverImage != null
+              image: _coverProvider != null
                   ? DecorationImage(
-                      image: FileImage(File(coverImage!.path)),
+                      image: _coverProvider!,
                       fit: BoxFit.cover,
                     )
                   : null,
             ),
-            child: coverImage == null
+            child: widget.coverImage == null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -60,17 +123,20 @@ class GroupImageSelectors extends StatelessWidget {
                       ),
                     ],
                   )
-                : const Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black45,
-                        radius: 14,
-                        child: Icon(Icons.edit, color: Colors.white, size: 14),
+                : _coverProvider == null
+                    // Đang tải bytes
+                    ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black45,
+                            radius: 14,
+                            child: Icon(Icons.edit, color: Colors.white, size: 14),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
           ),
         ),
 
@@ -79,7 +145,7 @@ class GroupImageSelectors extends StatelessWidget {
           left: 20,
           bottom: 10,
           child: GestureDetector(
-            onTap: onPickLogo,
+            onTap: widget.onPickLogo,
             child: Container(
               width: 72,
               height: 72,
@@ -94,23 +160,26 @@ class GroupImageSelectors extends StatelessWidget {
                     offset: const Offset(0, 2),
                   )
                 ],
-                image: logoImage != null
+                image: _logoProvider != null
                     ? DecorationImage(
-                        image: FileImage(File(logoImage!.path)),
+                        image: _logoProvider!,
                         fit: BoxFit.cover,
                       )
                     : null,
               ),
-              child: logoImage == null
+              child: widget.logoImage == null
                   ? Icon(Icons.camera_alt_outlined, color: Colors.grey.shade600, size: 24)
-                  : const Align(
-                      alignment: Alignment.bottomRight,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.buttonColor,
-                        radius: 10,
-                        child: Icon(Icons.edit, color: Colors.white, size: 10),
-                      ),
-                    ),
+                  : _logoProvider == null
+                      // Đang tải bytes
+                      ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Align(
+                          alignment: Alignment.bottomRight,
+                          child: CircleAvatar(
+                            backgroundColor: AppColors.buttonColor,
+                            radius: 10,
+                            child: Icon(Icons.edit, color: Colors.white, size: 10),
+                          ),
+                        ),
             ),
           ),
         ),
