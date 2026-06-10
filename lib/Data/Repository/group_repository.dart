@@ -10,10 +10,9 @@ class GroupRepository extends GetxController {
   /// Kiểm tra xem tên nhóm đã tồn tại chưa (không phân biệt hoa thường)
   Future<bool> isGroupNameTaken(String name) async {
     try {
-      final nameLower = name.trim().toLowerCase();
       final snapshot = await _db
           .collection('Groups')
-          .where('NameLower', isEqualTo: nameLower)
+          .where('Name', isEqualTo: name.trim().toLowerCase())
           .limit(1)
           .get();
       return snapshot.docs.isNotEmpty;
@@ -42,11 +41,9 @@ class GroupRepository extends GetxController {
       );
       request.fields['upload_preset'] = 'RunVix';
       final bytes = await image.readAsBytes();
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: image.name,
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: image.name),
+      );
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
@@ -70,9 +67,7 @@ class GroupRepository extends GetxController {
           .where('MemberIds', arrayContains: userId)
           .orderBy('CreatedAt', descending: true)
           .get();
-      return snapshot.docs
-          .map((doc) => GroupModel.fromSnapshot(doc))
-          .toList();
+      return snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
     } catch (e) {
       throw 'Không thể tải danh sách nhóm.';
     }
@@ -86,9 +81,7 @@ class GroupRepository extends GetxController {
           .where('IsPublic', isEqualTo: true)
           .orderBy('CreatedAt', descending: true)
           .get();
-      return snapshot.docs
-          .map((doc) => GroupModel.fromSnapshot(doc))
-          .toList();
+      return snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
     } catch (e) {
       throw 'Không thể tải danh sách nhóm.';
     }

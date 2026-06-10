@@ -36,7 +36,6 @@ class GroupModel {
   Map<String, dynamic> toJson() {
     return {
       'Name': name,
-      'NameLower': name.trim().toLowerCase(), // dùng để kiểm tra trùng tên (không phân biệt hoa thường)
       'Description': description,
       'Location': location,
       'CoverImageUrl': coverImageUrl,
@@ -48,7 +47,9 @@ class GroupModel {
       'MinSessions': minSessions,
       'CreatorId': creatorId,
       'MemberIds': memberIds,
-      'CreatedAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'CreatedAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 
