@@ -31,15 +31,12 @@ class RecordScreen extends GetView<RecordController> {
                 zoomControlsEnabled: false,
                 mapType: MapType.normal,
                 polylines: polylinesSet,
-                padding: const EdgeInsets.only(bottom: 150),
+                padding: const EdgeInsets.only(bottom: 360),
               );
             }),
           ),
 
-          // 2. Overlay: Thông số chạy
-          const RecordStatsCard(),
-
-          // 3. Overlay: Nút chức năng bản đồ
+          // 2. Overlay: Nút chức năng bản đồ
           Positioned(
             right: 16,
             top: MediaQuery.of(context).size.height * 0.2,
@@ -47,18 +44,7 @@ class RecordScreen extends GetView<RecordController> {
               children: [
                 _buildMapButton(
                   icon: Icons.my_location,
-                  onPressed: () {
-                    if (controller.currentPosition.value != null) {
-                      controller.mapController?.animateCamera(
-                        CameraUpdate.newLatLng(
-                          LatLng(
-                            controller.currentPosition.value!.latitude,
-                            controller.currentPosition.value!.longitude,
-                          ),
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: () => controller.focusCurrentLocation(),
                 ),
                 const SizedBox(height: 12),
                 _buildMapButton(
@@ -70,9 +56,8 @@ class RecordScreen extends GetView<RecordController> {
               ],
             ),
           ),
-
-          // 4. Overlay: Bảng điều khiển (Draggable Sheet)
-          _buildDraggableSheet(),
+          // 3. Overlay: Bảng điều khiển & Thông số chạy (Đặt cố định phía trên bottomnav)
+          _buildBottomPanel(),
         ],
       ),
     );
@@ -98,50 +83,32 @@ class RecordScreen extends GetView<RecordController> {
     );
   }
 
-  Widget _buildDraggableSheet() {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.22,
-      minChildSize: 0.22,
-      maxChildSize: 0.85,
-      snap: true,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: ListView(
-            controller: scrollController,
-            padding: EdgeInsets.zero,
-            children: [
-              const SizedBox(height: 12),
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+  Widget _buildBottomPanel() {
+    return Positioned(
+      left: 16,
+      right: 16,
+      bottom: 96, // Hiển thị phía trên bottomnav (height 72 + margin 16 = 88)
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const RecordStatsCard(),
+          const SizedBox(height: 12),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, -4),
                 ),
-              ),
-              const RecordControls(),
-              const Divider(height: 1, indent: 20, endIndent: 20),
-              const RecordAdvancedSettings(),
-            ],
+              ],
+            ),
+            child: const RecordControls(),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

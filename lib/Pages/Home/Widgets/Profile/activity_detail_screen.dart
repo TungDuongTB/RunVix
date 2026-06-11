@@ -37,7 +37,7 @@ class ActivityDetailScreen extends StatelessWidget {
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: points.isNotEmpty ? points.first : const LatLng(0, 0),
-                  zoom: 17,
+                  zoom: 15,
                 ),
                 polylines: {
                   Polyline(
@@ -49,13 +49,11 @@ class ActivityDetailScreen extends StatelessWidget {
                 },
                 onMapCreated: (controller) {
                   if (points.isNotEmpty) {
-                    // Tính tâm route để camera nhìn vào giữa, không phải điểm đầu
-                    LatLng center = _getCenter(points);
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      controller.animateCamera(
-                        CameraUpdate.newLatLngZoom(center, 17),
-                      );
-                    });
+                    // Zoom to fit polyline
+                    LatLngBounds bounds = _getBounds(points);
+                    controller.animateCamera(
+                      CameraUpdate.newLatLngBounds(bounds, 500),
+                    );
                   }
                 },
               ),
@@ -115,13 +113,7 @@ class ActivityDetailScreen extends StatelessWidget {
       northeast: LatLng(north, east),
     );
   }
-  LatLng _getCenter(List<LatLng> points) {
-    LatLngBounds bounds = _getBounds(points);
-    return LatLng(
-      (bounds.southwest.latitude + bounds.northeast.latitude) / 2,
-      (bounds.southwest.longitude + bounds.northeast.longitude) / 2,
-    );
-  }
+
   Widget _buildStatItem(String value, String label) {
     return Column(
       children: [

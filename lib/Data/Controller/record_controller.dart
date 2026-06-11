@@ -56,10 +56,42 @@ class RecordController extends GetxController {
 
     final position = await Geolocator.getCurrentPosition();
     currentPosition.value = position;
+
+    // Tự động căn chỉnh vị trí camera nếu bản đồ đã sẵn sàng
+    if (mapController != null) {
+      mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(position.latitude, position.longitude),
+          16.0,
+        ),
+      );
+    }
   }
 
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    // Tự động căn chỉnh vị trí camera nếu GPS đã lấy được vị trí trước đó
+    if (currentPosition.value != null) {
+      controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(currentPosition.value!.latitude, currentPosition.value!.longitude),
+          16.0,
+        ),
+      );
+    }
+  }
+
+  Future<void> focusCurrentLocation() async {
+    if (currentPosition.value != null) {
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(currentPosition.value!.latitude, currentPosition.value!.longitude),
+          16.0,
+        ),
+      );
+    } else {
+      await _determinePosition();
+    }
   }
 
   void startRecording() async {

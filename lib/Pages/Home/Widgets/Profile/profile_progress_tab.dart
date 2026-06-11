@@ -28,11 +28,7 @@ class ProfileProgressTab extends StatelessWidget {
                 color: AppColors.dividerGrey,
               ),
               _buildOverallStatsSection(controller),
-              const Divider(
-                height: 40,
-                thickness: 8,
-                color: AppColors.dividerGrey,
-              ),
+              const SizedBox(height: 24),
               _buildRouteMapSection(controller),
               const SizedBox(height: 100),
             ],
@@ -156,7 +152,6 @@ class ProfileProgressTab extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildRouteMapSection(ProfileController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -165,7 +160,7 @@ class ProfileProgressTab extends StatelessWidget {
         children: [
           const Text(
             'Bản đồ tuyến đường',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Obx(() {
@@ -250,14 +245,9 @@ class ProfileProgressTab extends StatelessWidget {
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: firstPoint,
-                    zoom: 13,
+                    zoom: 200,
                   ),
                   polylines: polylines,
-                  myLocationEnabled: false,
-                  zoomControlsEnabled: false,
-                  mapToolbarEnabled: false,
-                  scrollGesturesEnabled: false,
-                  zoomGesturesEnabled: false,
                 ),
               ),
             );

@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final postController = Get.put(PostController());
   final ScrollController _scrollController = ScrollController();
   bool _isBottomNavBarVisible = true;
+  Timer? _hideTimer;
 
   @override
   void initState() {
@@ -27,9 +28,31 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  bool _onScroll(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification && notification.scrollDelta != null) {
+      // Đang vuốt -> chỉ ẩn/hiện theo hướng, KHÔNG set timer hiện lại ở đây
+      if (notification.scrollDelta! > 3.0 && _isBottomNavBarVisible) {
+        setState(() => _isBottomNavBarVisible = false);
+      } else if (notification.scrollDelta! < -3.0 && !_isBottomNavBarVisible) {
+        setState(() => _isBottomNavBarVisible = true);
+      }
+      // Hủy timer cũ vì người dùng vẫn đang cuộn
+      _hideTimer?.cancel();
+    } else if (notification is ScrollEndNotification) {
+      // Dừng cuộn -> đợi 1s rồi hiện lại nếu đang ẩn
+      _hideTimer = Timer(const Duration(microseconds: 100), () {
+        if (mounted && !_isBottomNavBarVisible) {
+          setState(() => _isBottomNavBarVisible = true);
+        }
+      });
+    }
+    return false;
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
+    _hideTimer?.cancel();
     super.dispose();
   }
 
@@ -52,28 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Positioned.fill(
                 child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification notification) {
-                    if (notification is ScrollUpdateNotification) {
-                      if (notification.scrollDelta != null) {
-                        if (notification.scrollDelta! > 3.0) {
-                          // Vuốt lên (nội dung đi lên) -> Ẩn
-                          if (_isBottomNavBarVisible) {
-                            setState(() {
-                              _isBottomNavBarVisible = false;
-                            });
-                          }
-                        } else if (notification.scrollDelta! < -3.0) {
-                          // Vuốt xuống (nội dung đi xuống) -> Hiện
-                          if (!_isBottomNavBarVisible) {
-                            setState(() {
-                              _isBottomNavBarVisible = true;
-                            });
-                          }
-                        }
-                      }
-                    }
-                    return false;
-                  },
+                  onNotification: _onScroll,
                   child: IndexedStack(
                     index: navigationController.selectedIndex.value,
                     children: pagesWithScroll,

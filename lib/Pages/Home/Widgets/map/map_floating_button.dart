@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:runvix/export.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapFloatingButtons extends GetView<StravaController> {
   const MapFloatingButtons({super.key});
@@ -11,12 +9,15 @@ class MapFloatingButtons extends GetView<StravaController> {
       children: [
         _buildSideButton(
           const Text('B', style: TextStyle(fontWeight: FontWeight.bold)),
-          onTap: () {},
+          onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
         ),
         const SizedBox(height: 12),
         Stack(
           children: [
-            _buildSideButton(const Icon(Icons.layers_outlined), onTap: () {}),
+            _buildSideButton(
+              const Icon(Icons.layers_outlined),
+              onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+            ),
             Positioned(
               right: 0,
               top: 0,
@@ -40,7 +41,7 @@ class MapFloatingButtons extends GetView<StravaController> {
             '3D',
             style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
           ),
-          onTap: () {},
+          onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
         ),
         const SizedBox(height: 12),
         _buildSideButton(
@@ -57,7 +58,10 @@ class MapFloatingButtons extends GetView<StravaController> {
           },
         ),
         const SizedBox(height: 12),
-        _buildSideButton(const Icon(Icons.edit_outlined), onTap: () {}),
+        _buildSideButton(
+          const Icon(Icons.edit_outlined),
+          onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+        ),
       ],
     );
   }
