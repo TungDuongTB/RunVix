@@ -5,6 +5,8 @@ import 'package:intl/intl.dart' as intl;
 import 'package:runvix/export.dart';
 import '../Data/Controller/notification_controller.dart';
 import '../Data/Model/notification_model.dart';
+import '../Data/Repository/group_repository.dart';
+import '../Data/Controller/group_controller.dart';
 
 class NotificationDialog extends StatelessWidget {
   const NotificationDialog({super.key});
@@ -254,6 +256,11 @@ class NotificationDialog extends StatelessWidget {
             icon = Icons.chat_bubble_outline;
             iconColor = Colors.amber;
             break;
+          case "group_invite":
+            text = "đã mời bạn tham gia nhóm ${item.title ?? ''}.";
+            icon = Icons.group_add_outlined;
+            iconColor = AppColors.buttonColor;
+            break;
           case "system":
             text = item.body ?? "";
             icon = Icons.info_outline;
@@ -351,6 +358,48 @@ class NotificationDialog extends StatelessWidget {
                           color: Colors.grey.shade500,
                         ),
                       ),
+                      if (item.type == "group_invite")
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.buttonColor,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  minimumSize: const Size(0, 32),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                ),
+                                onPressed: () async {
+                                  if (item.groupId != null && item.id != null) {
+                                    final groupRepo = Get.put(GroupRepository());
+                                    await groupRepo.joinGroup(item.groupId!, item.receiverId);
+                                    await NotificationRepository.instance.deleteNotification(item.id!);
+                                    GroupController.instance.fetchMyGroups();
+                                    GroupController.instance.fetchSuggestedGroups();
+                                  }
+                                },
+                                child: const Text("Tham gia", style: TextStyle(fontSize: 12)),
+                              ),
+                              const SizedBox(width: 8),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.grey.shade700,
+                                  minimumSize: const Size(0, 32),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  side: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                onPressed: () async {
+                                  if (item.id != null) {
+                                    await NotificationRepository.instance.deleteNotification(item.id!);
+                                  }
+                                },
+                                child: const Text("Từ chối", style: TextStyle(fontSize: 12)),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),

@@ -7,6 +7,7 @@ class NotificationModel {
   final List<String> senderIds; // List of user IDs triggering this notification (for grouping)
   final String? postId;
   final String? commentId;
+  final String? groupId;
   final String? title;
   final String? body;
   final bool isRead;
@@ -19,6 +20,7 @@ class NotificationModel {
     required this.senderIds,
     this.postId,
     this.commentId,
+    this.groupId,
     this.title,
     this.body,
     this.isRead = false,
@@ -32,6 +34,7 @@ class NotificationModel {
       "SenderIds": senderIds,
       "PostId": postId,
       "CommentId": commentId,
+      "GroupId": groupId,
       "Title": title,
       "Body": body,
       "IsRead": isRead,
@@ -48,6 +51,7 @@ class NotificationModel {
       senderIds: List<String>.from(data["SenderIds"] ?? []),
       postId: data["PostId"],
       commentId: data["CommentId"],
+      groupId: data["GroupId"],
       title: data["Title"],
       body: data["Body"],
       isRead: data["IsRead"] ?? false,
@@ -62,6 +66,7 @@ class NotificationModel {
     List<String>? senderIds,
     String? postId,
     String? commentId,
+    String? groupId,
     String? title,
     String? body,
     bool? isRead,
@@ -74,6 +79,7 @@ class NotificationModel {
       senderIds: senderIds ?? this.senderIds,
       postId: postId ?? this.postId,
       commentId: commentId ?? this.commentId,
+      groupId: groupId ?? this.groupId,
       title: title ?? this.title,
       body: body ?? this.body,
       isRead: isRead ?? this.isRead,

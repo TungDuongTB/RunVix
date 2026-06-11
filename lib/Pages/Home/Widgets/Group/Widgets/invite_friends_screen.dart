@@ -17,6 +17,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
 
   final followingUsers = <UserModel>[].obs;
   final isLoading = false.obs;
+  final invitedIds = <String>{}.obs;
 
   @override
   void initState() {
@@ -36,6 +37,16 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
         }
       }
       followingUsers.assignAll(users);
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null && widget.group.id != null) {
+        final notificationRepo = Get.put(NotificationRepository());
+        final pending = await notificationRepo.getPendingInvites(
+          currentUser.uid,
+          widget.group.id!,
+        );
+        invitedIds.addAll(pending);
+      }
     } catch (e) {
       debugPrint('Lỗi tải danh sách bạn bè: $e');
     } finally {
@@ -61,13 +72,19 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black87,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
       body: Obx(() {
         if (isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.buttonColor),
+          );
         }
 
         if (followingUsers.isEmpty) {
@@ -91,6 +108,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
           itemBuilder: (context, index) {
             final user = followingUsers[index];
             final isMember = currentGroup.memberIds.contains(user.id);
+            final isInvited = invitedIds.contains(user.id);
 
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -106,7 +124,10 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                 ],
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 leading: CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.grey.shade200,
@@ -119,22 +140,66 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                 ),
                 title: Text(
                   user.fullName.isNotEmpty ? user.fullName : user.username,
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
                 subtitle: Text(
                   '@${user.username}',
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                 ),
-                trailing: isMember
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(20),
+                trailing: Obx(() {
+                  final isInvited = invitedIds.contains(user.id);
+                  return isMember
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'Đã tham gia',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        )
+                      : isInvited
+                    ? OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                          side: BorderSide(color: Colors.blue.shade200),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 0,
+                          ),
                         ),
+                        onPressed: () async {
+                          invitedIds.remove(user.id);
+                          final success = await groupController
+                              .revokeGroupInvite(
+                                currentGroup,
+                                user.id.toString(),
+                              );
+                          if (!success) {
+                            invitedIds.add(user.id.toString());
+                          }
+                        },
                         child: const Text(
-                          'Đã tham gia',
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600, fontSize: 13),
+                          'Đã mời',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
                         ),
                       )
                     : ElevatedButton(
@@ -145,16 +210,30 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 0,
+                          ),
                         ),
-                        onPressed: groupController.isLoading.value
-                            ? null
-                            : () => groupController.addMemberToGroup(currentGroup, user.id.toString()),
+                        onPressed: () async {
+                          invitedIds.add(user.id.toString());
+                          final success = await groupController.sendGroupInvite(
+                            currentGroup,
+                            user.id.toString(),
+                          );
+                          if (!success) {
+                            invitedIds.remove(user.id.toString());
+                          }
+                        },
                         child: const Text(
-                          'Thêm',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          'Mời',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
+                      );
+                }),
               ),
             );
           },

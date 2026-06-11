@@ -233,4 +233,89 @@ class NotificationRepository extends GetxController {
       print("Error marking all notifications as read: $e");
     }
   }
+
+  // Create Group Invite Notification
+  Future<void> createGroupInviteNotification(
+      String receiverId, String senderId, String groupId, String groupName) async {
+    if (receiverId == senderId) return;
+    try {
+      // Check if already invited and not read
+      final querySnapshot = await _db.collection("Notifications")
+          .where("ReceiverId", isEqualTo: receiverId)
+          .where("Type", isEqualTo: "group_invite")
+          .where("GroupId", isEqualTo: groupId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return; // Already invited
+      }
+
+      final newNotification = NotificationModel(
+        receiverId: receiverId,
+        type: "group_invite",
+        senderIds: [senderId],
+        groupId: groupId,
+        title: groupName, // Using Title to store group name temporarily
+        isRead: false,
+        createdAt: DateTime.now(),
+      );
+      await _db.collection("Notifications").add(newNotification.toJson());
+    } catch (e) {
+      print("Error triggering group invite notification: $e");
+    }
+  }
+
+  // Delete notification by ID
+  Future<void> deleteNotification(String notificationId) async {
+    try {
+      await _db.collection("Notifications").doc(notificationId).delete();
+    } catch (e) {
+      print("Error deleting notification: $e");
+    }
+  }
+
+  // Revoke Group Invite Notification
+  Future<void> deleteGroupInviteNotification(
+      String receiverId, String senderId, String groupId) async {
+    try {
+      final querySnapshot = await _db.collection("Notifications")
+          .where("ReceiverId", isEqualTo: receiverId)
+          .where("Type", isEqualTo: "group_invite")
+          .where("GroupId", isEqualTo: groupId)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        final n = NotificationModel.fromSnapshot(doc);
+        if (n.senderIds.contains(senderId)) {
+          await doc.reference.delete();
+        }
+      }
+    } catch (e) {
+      print("Error revoking group invite notification: $e");
+    }
+  }
+
+  // Get pending invites for a group sent by a specific user
+  Future<List<String>> getPendingInvites(String senderId, String groupId) async {
+    try {
+      // Note: In Firestore, we can't do array-contains AND multiple where easily without composite indexes if we also want to filter by ReceiverId.
+      // Since we just want all invites for a group, we can query by GroupId and Type, then filter by sender in memory.
+      final querySnapshot = await _db.collection("Notifications")
+          .where("Type", isEqualTo: "group_invite")
+          .where("GroupId", isEqualTo: groupId)
+          .get();
+
+      List<String> receiverIds = [];
+      for (var doc in querySnapshot.docs) {
+        final n = NotificationModel.fromSnapshot(doc);
+        if (n.senderIds.contains(senderId)) {
+          receiverIds.add(n.receiverId);
+        }
+      }
+      return receiverIds;
+    } catch (e) {
+      print("Error fetching pending invites: $e");
+      return [];
+    }
+  }
 }

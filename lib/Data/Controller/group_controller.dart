@@ -276,16 +276,51 @@ class GroupController extends GetxController {
     }
   }
 
-  /// Thêm bạn bè vào nhóm (bởi người tạo)
-  Future<bool> addMemberToGroup(GroupModel group, String userId) async {
+  /// Gửi lời mời bạn bè vào nhóm (bởi người tạo)
+  Future<bool> sendGroupInvite(GroupModel group, String userId) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return false;
     if (group.id == null || group.id!.isEmpty) return false;
 
     try {
       isLoading.value = true;
-      await _groupRepo.joinGroup(group.id!, userId);
+      final notificationRepo = Get.put(NotificationRepository());
+      await notificationRepo.createGroupInviteNotification(
+          userId, currentUser.uid, group.id!, group.name);
       
-      await fetchMyGroups();
-      await fetchSuggestedGroups();
+      Get.snackbar(
+        'Đã gửi lời mời',
+        'Đã gửi lời mời tham gia nhóm.',
+        backgroundColor: const Color(0xFFE8F5E9),
+        colorText: const Color(0xFF2E7D32),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return true;
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Thu hồi lời mời bạn bè vào nhóm
+  Future<bool> revokeGroupInvite(GroupModel group, String userId) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return false;
+    if (group.id == null || group.id!.isEmpty) return false;
+
+    try {
+      isLoading.value = true;
+      final notificationRepo = Get.put(NotificationRepository());
+      await notificationRepo.deleteGroupInviteNotification(
+          userId, currentUser.uid, group.id!);
       
       return true;
     } catch (e) {
