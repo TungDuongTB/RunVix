@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:runvix/export.dart';
 
 class ButtonComponent extends StatelessWidget {
   final String text;
@@ -18,8 +19,8 @@ class ButtonComponent extends StatelessWidget {
     this.width,
     this.height,
     this.textColor,
-    this.color = CupertinoColors.systemPurple,
-    this.borderColor = CupertinoColors.systemPurple,
+    this.color = AppColors.buttonColor,
+    this.borderColor = AppColors.buttonColor,
     this.borderWidth = 0.0,
     this.borderRadius = 8.0,
     this.textWeight = FontWeight.bold,

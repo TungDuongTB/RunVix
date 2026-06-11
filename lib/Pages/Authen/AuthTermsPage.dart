@@ -133,7 +133,7 @@ class _AuthTermsPageState extends State<AuthTermsPage> {
               text: 'Đồng ý và Tiếp tục',
               width: double.infinity,
               height: 56,
-              color: AppColors.orangeRed,
+              color: AppColors.buttonColor,
               textColor: Colors.white,
               borderRadius: 8,
               onPressed: () {

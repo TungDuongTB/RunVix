@@ -371,7 +371,7 @@ class _CommentScreenState extends State<CommentScreen> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  color: AppColors.primary, // Màu tím đậm cho nút gửi
+                  color: AppColors.buttonColor, // Màu nút gửi của app
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.send, color: Colors.white, size: 20),
