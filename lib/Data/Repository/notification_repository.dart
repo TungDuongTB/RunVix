@@ -329,6 +329,23 @@ class NotificationRepository extends GetxController {
     }
   }
 
+  // Create System Notification (e.g. post locked)
+  Future<void> createSystemNotification(String receiverId, String message) async {
+    try {
+      final newNotification = NotificationModel(
+        receiverId: receiverId,
+        type: "system",
+        senderIds: [], // System notifications might not have a specific sender, or you can pass admin ID
+        body: message,
+        isRead: false,
+        createdAt: DateTime.now(),
+      );
+      await _db.collection("Notifications").add(newNotification.toJson());
+    } catch (e) {
+      print("Error creating system notification: $e");
+    }
+  }
+
   // Delete notification by ID
   Future<void> deleteNotification(String notificationId) async {
     try {

@@ -32,7 +32,9 @@ class HomeSuggestedChallenges extends StatelessWidget {
               ));
             }
 
-            if (postController.allPosts.isEmpty) {
+            final visiblePosts = postController.allPosts.where((p) => !p.isLocked).toList();
+
+            if (visiblePosts.isEmpty) {
               return Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -51,10 +53,10 @@ class HomeSuggestedChallenges extends StatelessWidget {
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: postController.allPosts.length + (postController.isLoadingMore.value ? 1 : 0),
+              itemCount: visiblePosts.length + (postController.isLoadingMore.value ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index < postController.allPosts.length) {
-                  return PostCard(post: postController.allPosts[index]);
+                if (index < visiblePosts.length) {
+                  return PostCard(post: visiblePosts[index]);
                 } else {
                   return const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),

@@ -254,6 +254,13 @@ class PostController extends GetxController {
         allPosts[index] = updatedPost;
       }
 
+      if (updatedPost.isLocked) {
+        await NotificationRepository.instance.createSystemNotification(
+          post.userId, 
+          "Bài viết bạn vi phạm đã bị khóa"
+        );
+      }
+
       Get.snackbar(
         "Thành công",
         updatedPost.isLocked ? "Đã khóa bài viết" : "Đã mở khóa bài viết",

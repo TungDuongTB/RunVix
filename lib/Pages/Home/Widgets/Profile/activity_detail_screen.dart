@@ -10,7 +10,16 @@ class ActivityDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<LatLng> points = workout.route.map((e) => LatLng(e.latitude, e.longitude)).toList();
+    final List<LatLng> points = workout.route
+        .map((e) => LatLng(e.latitude, e.longitude))
+        .toList();
+
+    debugPrint('🗺️ Route points count: ${workout.route.length}');
+    debugPrint('🗺️ LatLng points count: ${points.length}');
+    if (points.isNotEmpty) {
+      debugPrint('🗺️ First point: ${points.first}');
+      debugPrint('🗺️ Last point: ${points.last}');
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -28,26 +37,30 @@ class ActivityDetailScreen extends StatelessWidget {
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: points.isNotEmpty ? points.first : const LatLng(0, 0),
-                  zoom: 15,
+                  zoom: 17,
                 ),
                 polylines: {
                   Polyline(
                     polylineId: const PolylineId('route'),
                     points: points,
-                    color: AppColors.buttonColor,
+                    color: Colors.blue,
                     width: 5,
                   ),
                 },
                 onMapCreated: (controller) {
                   if (points.isNotEmpty) {
-                    // Zoom to fit polyline
-                    LatLngBounds bounds = _getBounds(points);
-                    controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+                    // Tính tâm route để camera nhìn vào giữa, không phải điểm đầu
+                    LatLng center = _getCenter(points);
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      controller.animateCamera(
+                        CameraUpdate.newLatLngZoom(center, 17),
+                      );
+                    });
                   }
                 },
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -55,9 +68,18 @@ class ActivityDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatItem("${(workout.distance / 1000).toStringAsFixed(2)}", "km"),
-                      _buildStatItem("${workout.duration ~/ 60}:${(workout.duration % 60).toString().padLeft(2, '0')}", "thời gian"),
-                      _buildStatItem("${workout.averagePace.toStringAsFixed(2)}", "/km"),
+                      _buildStatItem(
+                        "${(workout.distance / 1000).toStringAsFixed(2)}",
+                        "km",
+                      ),
+                      _buildStatItem(
+                        "${workout.duration ~/ 60}:${(workout.duration % 60).toString().padLeft(2, '0')}",
+                        "thời gian",
+                      ),
+                      _buildStatItem(
+                        "${workout.averagePace.toStringAsFixed(2)}",
+                        "/km",
+                      ),
                     ],
                   ),
                   const Divider(height: 40),
@@ -93,11 +115,24 @@ class ActivityDetailScreen extends StatelessWidget {
       northeast: LatLng(north, east),
     );
   }
-
+  LatLng _getCenter(List<LatLng> points) {
+    LatLngBounds bounds = _getBounds(points);
+    return LatLng(
+      (bounds.southwest.latitude + bounds.northeast.latitude) / 2,
+      (bounds.southwest.longitude + bounds.northeast.longitude) / 2,
+    );
+  }
   Widget _buildStatItem(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.buttonColor)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppColors.buttonColor,
+          ),
+        ),
         Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
       ],
     );

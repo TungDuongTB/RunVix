@@ -11,22 +11,12 @@
   <component name="ChangeListManager">
     <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="add_friends">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/map_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/map_binding.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/post_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/strava_repository.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/create_post_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/create_post_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/MapScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/MapScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_distance_filter_sheet.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_bottom_sheet.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_segment_detail_card.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/workout_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/activity_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/activity_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_challenges.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_challenges.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

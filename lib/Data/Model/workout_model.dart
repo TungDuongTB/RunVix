@@ -34,7 +34,9 @@ class WorkoutModel {
       "Distance": distance,
       "Duration": duration,
       "AveragePace": averagePace,
-      "Timestamp": timestamp != null ? Timestamp.fromDate(timestamp) : FieldValue.serverTimestamp(),
+      "Timestamp": timestamp != null
+          ? Timestamp.fromDate(timestamp)
+          : FieldValue.serverTimestamp(),
       "Route": route,
       "Title": title,
       "Description": description,
@@ -42,7 +44,9 @@ class WorkoutModel {
     };
   }
 
-  factory WorkoutModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory WorkoutModel.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     final data = document.data()!;
     return WorkoutModel(
       id: document.id,
@@ -51,7 +55,9 @@ class WorkoutModel {
       distance: (data["Distance"] ?? 0).toDouble(),
       duration: data["Duration"] ?? 0,
       averagePace: (data["AveragePace"] ?? 0).toDouble(),
-      timestamp: data["Timestamp"] != null ? (data["Timestamp"] as Timestamp).toDate() : DateTime.now(),
+      timestamp: data["Timestamp"] != null
+          ? (data["Timestamp"] as Timestamp).toDate()
+          : DateTime.now(),
       route: List<GeoPoint>.from(data["Route"] ?? []),
       title: data["Title"] ?? "",
       description: data["Description"] ?? "",

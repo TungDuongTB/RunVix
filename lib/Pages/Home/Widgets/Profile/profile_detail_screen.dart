@@ -20,11 +20,19 @@ class ProfileDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.ios_share, color: Colors.black),
-            onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+            onPressed: () => Get.snackbar(
+              'Thông báo',
+              'Chức năng đang được phát triển',
+              snackPosition: SnackPosition.BOTTOM,
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+            onPressed: () => Get.snackbar(
+              'Thông báo',
+              'Chức năng đang được phát triển',
+              snackPosition: SnackPosition.BOTTOM,
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: Colors.black),
@@ -129,7 +137,11 @@ class ProfileDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+                        onPressed: () => Get.snackbar(
+                          'Thông báo',
+                          'Chức năng đang được phát triển',
+                          snackPosition: SnackPosition.BOTTOM,
+                        ),
                         icon: const Icon(Icons.qr_code_scanner, size: 18),
                         label: const Text(
                           'Chia sẻ mã QR của tôi',
@@ -191,13 +203,18 @@ class ProfileDetailScreen extends StatelessWidget {
                     Obx(() {
                       if (profileController.isLoading.value) {
                         return const Center(
-                          child: CircularProgressIndicator(color: AppColors.buttonColor),
+                          child: CircularProgressIndicator(
+                            color: AppColors.buttonColor,
+                          ),
                         );
                       }
-                      
-                      final distanceKm = (profileController.totalDistance.value / 1000).toStringAsFixed(2);
-                      
-                      final totalDurationSecs = profileController.totalDuration.value;
+
+                      final distanceKm =
+                          (profileController.totalDistance.value / 1000)
+                              .toStringAsFixed(2);
+
+                      final totalDurationSecs =
+                          profileController.totalDuration.value;
                       final hours = totalDurationSecs ~/ 3600;
                       final minutes = (totalDurationSecs % 3600) ~/ 60;
                       String timeStr = '';
@@ -207,7 +224,8 @@ class ProfileDetailScreen extends StatelessWidget {
                         timeStr = '${minutes}m';
                       }
 
-                      final count = profileController.workoutCount.value.toString();
+                      final count = profileController.workoutCount.value
+                          .toString();
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -420,7 +438,11 @@ class ProfileDetailScreen extends StatelessWidget {
         size: 16,
         color: Colors.grey,
       ),
-      onTap: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+      onTap: () => Get.snackbar(
+        'Thông báo',
+        'Chức năng đang được phát triển',
+        snackPosition: SnackPosition.BOTTOM,
+      ),
     );
   }
 
