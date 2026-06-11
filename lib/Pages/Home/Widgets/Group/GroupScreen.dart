@@ -35,7 +35,10 @@ class GroupScreen extends StatelessWidget {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -58,9 +61,16 @@ class GroupScreen extends StatelessWidget {
                                 backgroundColor: Colors.grey[200],
                                 backgroundImage: profilePic.isNotEmpty
                                     ? NetworkImage(profilePic)
-                                    : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                                    : const AssetImage(
+                                            'assets/images/default_avatar.png',
+                                          )
+                                          as ImageProvider,
                                 child: profilePic.isEmpty
-                                    ? const Icon(Icons.person, size: 20, color: Colors.grey)
+                                    ? const Icon(
+                                        Icons.person,
+                                        size: 20,
+                                        color: Colors.grey,
+                                      )
                                     : null,
                               ),
                             );
@@ -68,7 +78,10 @@ class GroupScreen extends StatelessWidget {
                           const SizedBox(width: 8),
                           ShaderMask(
                             shaderCallback: (bounds) => const LinearGradient(
-                              colors: [AppColors.primary, AppColors.buttonColor],
+                              colors: [
+                                AppColors.primary,
+                                AppColors.buttonColor,
+                              ],
                             ).createShader(bounds),
                             child: const Text(
                               'RunVix',
@@ -80,21 +93,6 @@ class GroupScreen extends StatelessWidget {
                             ),
                           ),
                         ],
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          child: const Icon(
-                            Icons.search,
-                            color: AppColors.primary,
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -126,10 +124,7 @@ class GroupScreen extends StatelessWidget {
               ),
               const Expanded(
                 child: TabBarView(
-                  children: [
-                    ChallengeTabContent(),
-                    GroupTabContent(),
-                  ],
+                  children: [ChallengeTabContent(), GroupTabContent()],
                 ),
               ),
             ],

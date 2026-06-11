@@ -24,9 +24,36 @@ class _HomeSuggestedFollowsState extends State<HomeSuggestedFollows> {
         children: [
           _buildQuickCalendar(calendarController),
           const SizedBox(height: 16),
-          _buildHeader(),
-          const SizedBox(height: 12),
-          _buildUserList(userController, currentUserId),
+          Obx(() {
+            if (userController.isLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(color: AppColors.buttonColor),
+              );
+            }
+
+            final displayUsers = userController.allUsers.where((u) {
+              if (u.id == currentUserId ||
+                  u.isAdmin ||
+                  _dismissedIds.contains(u.id)) {
+                return false;
+              }
+              final isFollowing = userController.followingIds.contains(u.id);
+              return !isFollowing;
+            }).toList();
+
+            if (displayUsers.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 12),
+                _buildUserListWidget(userController, displayUsers),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -107,63 +134,34 @@ class _HomeSuggestedFollowsState extends State<HomeSuggestedFollows> {
     );
   }
 
-  Widget _buildUserList(UserController userController, String? currentUserId) {
+  Widget _buildUserListWidget(UserController userController, List<UserModel> displayUsers) {
     return SizedBox(
       height: 236,
-      child: Obx(() {
-        if (userController.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.buttonColor),
-          );
-        }
-
-        final displayUsers = userController.allUsers.where((u) {
-          if (u.id == currentUserId ||
-              u.isAdmin ||
-              _dismissedIds.contains(u.id)) {
-            return false;
-          }
-          final isFollowing = userController.followingIds.contains(u.id);
-          final isFollower = userController.followerIds.contains(u.id);
-          final isFriend = isFollowing && isFollower;
-          return !isFriend;
-        }).toList();
-
-        if (displayUsers.isEmpty) {
-          return const Center(
-            child: Text(
-              "Không có người dùng gợi ý",
-              style: TextStyle(color: Colors.grey),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: displayUsers.length,
+        itemBuilder: (context, index) {
+          final otherUser = displayUsers[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: UserFollowCard(
+              user: otherUser,
+              isFollowing: userController.followingIds.contains(otherUser.id),
+              isFollower: userController.followerIds.contains(otherUser.id),
+              onFollow: () =>
+                  userController.toggleFollowUser(otherUser.id ?? ""),
+              onRemove: () {
+                if (otherUser.id != null) {
+                  setState(() {
+                    _dismissedIds.add(otherUser.id!);
+                  });
+                }
+              },
             ),
           );
-        }
-
-        return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: displayUsers.length,
-          itemBuilder: (context, index) {
-            final otherUser = displayUsers[index];
-            return Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: UserFollowCard(
-                user: otherUser,
-                isFollowing: userController.followingIds.contains(otherUser.id),
-                isFollower: userController.followerIds.contains(otherUser.id),
-                onFollow: () =>
-                    userController.toggleFollowUser(otherUser.id ?? ""),
-                onRemove: () {
-                  if (otherUser.id != null) {
-                    setState(() {
-                      _dismissedIds.add(otherUser.id!);
-                    });
-                  }
-                },
-              ),
-            );
-          },
-        );
-      }),
+        },
+      ),
     );
   }
 }

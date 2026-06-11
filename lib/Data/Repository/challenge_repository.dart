@@ -78,4 +78,22 @@ class ChallengeRepository extends GetxController {
       throw 'Đã xảy ra lỗi khi xóa thử thách.';
     }
   }
+
+  /// Xóa tất cả thử thách của một nhóm (dùng khi nhóm bị giải tán)
+  Future<void> deleteChallengesByGroupId(String groupId) async {
+    try {
+      final snapshot = await _db
+          .collection('Challenges')
+          .where('GroupId', isEqualTo: groupId)
+          .get();
+          
+      final batch = _db.batch();
+      for (var doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    } catch (e) {
+      print('Lỗi khi xóa sự kiện của nhóm: $e');
+    }
+  }
 }

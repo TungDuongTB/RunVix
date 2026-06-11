@@ -8,7 +8,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final userController = UserController.instance;
   final navigationController = NavigationController.instance;
@@ -54,10 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       appBar: _buildAppBar(),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          ProfileProgressTab(),
-          ProfileActivitiesTab(),
-        ],
+        children: const [ProfileProgressTab(), ProfileActivitiesTab()],
       ),
     );
   }
@@ -70,27 +68,25 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       leading: _buildProfileAvatar(),
       title: const Text(
         'Bạn',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
       ),
       centerTitle: true,
       actions: [
-        _buildTrackingButton(),
         _buildAddMenu(),
         IconButton(
-          icon: const Icon(Icons.settings_outlined, color: Colors.black, size: 28),
-          onPressed: () => Get.to(() =>  SettingsScreen()),
+          icon: const Icon(
+            Icons.settings_outlined,
+            color: Colors.black,
+            size: 28,
+          ),
+          onPressed: () => Get.to(() => SettingsScreen()),
         ),
       ],
       bottom: _buildTabBar(),
-    );
-  }
-
-  /// Thêm button theo dõi real-time
-  Widget _buildTrackingButton() {
-    return IconButton(
-      icon: const Icon(Icons.trending_up, color: Colors.black, size: 28),
-      tooltip: 'Theo dõi real-time',
-      onPressed: () => Get.to(() => const FollowerTrackingDashboard()),
     );
   }
 
@@ -104,7 +100,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           final networkImage = userController.user.value.profilePicture;
           return CircleAvatar(
             backgroundImage: NetworkImage(
-              networkImage.isNotEmpty ? networkImage : 'https://picsum.photos/200',
+              networkImage.isNotEmpty
+                  ? networkImage
+                  : 'https://picsum.photos/200',
             ),
           );
         }),
@@ -116,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   Widget _buildAddMenu() {
     return PopupMenuButton<int>(
       icon: const Icon(Icons.add_circle_outline, color: Colors.black, size: 28),
-      offset: const Offset(0, 50), 
+      offset: const Offset(0, 50),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: Colors.white,
       elevation: 4,
@@ -126,7 +124,6 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         } else if (value == 2) {
           Get.to(() => const AddManualActivityScreen());
         }
-
       },
       itemBuilder: (context) => [
         _buildPopupMenuItem(0, 'Đăng', Icons.article_outlined),
@@ -137,17 +134,18 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   }
 
   /// Helper tạo item cho PopupMenu với Icon bên phải
-  PopupMenuItem<int> _buildPopupMenuItem(int value, String text, IconData icon) {
+  PopupMenuItem<int> _buildPopupMenuItem(
+    int value,
+    String text,
+    IconData icon,
+  ) {
     return PopupMenuItem<int>(
       value: value,
       height: 40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            text,
-            style: const TextStyle(color: Colors.black, fontSize: 15),
-          ),
+          Text(text, style: const TextStyle(color: Colors.black, fontSize: 15)),
           const SizedBox(width: 12),
           Icon(icon, color: Colors.black54, size: 22),
         ],

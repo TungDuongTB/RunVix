@@ -154,6 +154,10 @@ class GroupController extends GetxController {
         await notificationRepo.createGroupDeletedNotification(membersToNotify, group.name);
       }
 
+      // Xóa các sự kiện/thử thách thuộc về nhóm này
+      final challengeRepo = Get.put(ChallengeRepository());
+      await challengeRepo.deleteChallengesByGroupId(group.id!);
+
       await _groupRepo.deleteGroup(group.id!);
       await fetchMyGroups();
       await fetchSuggestedGroups();

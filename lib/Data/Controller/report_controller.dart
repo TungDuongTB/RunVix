@@ -65,4 +65,17 @@ class ReportController extends GetxController {
       Get.snackbar("Lỗi", "Không thể xử lý báo cáo: $e");
     }
   }
+
+  // Tạo báo cáo mới
+  Future<void> createReport(ReportModel report) async {
+    try {
+      isLoading.value = true;
+      await reportRepo.createReport(report);
+      Get.snackbar("Thành công", "Đã gửi báo cáo. Cảm ơn bạn!");
+    } catch (e) {
+      Get.snackbar("Lỗi", "Không thể gửi báo cáo: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

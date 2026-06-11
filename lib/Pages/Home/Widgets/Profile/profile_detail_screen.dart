@@ -1,12 +1,12 @@
 import 'package:runvix/export.dart';
 
-
 class ProfileDetailScreen extends StatelessWidget {
   const ProfileDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(UserController());
+    final profileController = Get.put(ProfileController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -18,17 +18,26 @@ class ProfileDetailScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.ios_share, color: Colors.black), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.search, color: Colors.black), onPressed: () {}),
           IconButton(
-              icon: const Icon(Icons.settings_outlined, color: Colors.black),
-              onPressed: () => Get.to(() =>  SettingsScreen())),
+            icon: const Icon(Icons.ios_share, color: Colors.black),
+            onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+          ),
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.black),
+            onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: Colors.black),
+            onPressed: () => Get.to(() => SettingsScreen()),
+          ),
         ],
       ),
 
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.buttonColor));
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.buttonColor),
+          );
         }
 
         final user = controller.user.value;
@@ -44,147 +53,235 @@ class ProfileDetailScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(user.profilePicture.isNotEmpty 
-                          ? user.profilePicture 
-                          : 'https://picsum.photos/200'),
+                      backgroundImage: NetworkImage(
+                        user.profilePicture.isNotEmpty
+                            ? user.profilePicture
+                            : 'https://picsum.photos/200',
+                      ),
                     ),
                     const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(user.fullName.isEmpty ? 'Người dùng RunVix' : user.fullName,
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                        Text(user.address.isEmpty ? 'Trái Đất' : user.address,
-                            style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                        Text(
+                          user.fullName.isEmpty
+                              ? 'Người dùng RunVix'
+                              : user.fullName,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          user.address.isEmpty ? 'Trái Đất' : user.address,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
 
-            // Followers Stats - Real-time
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Obx(() => Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.to(() => const FollowingListScreen()),
-                    child: _buildFollowStat('Đang theo dõi', controller.followingIds.length.toString()),
-                  ),
-                  const SizedBox(width: 40),
-                  GestureDetector(
-                    onTap: () => Get.to(() => const FollowersListScreen()),
-                    child: _buildFollowStat('Người theo dõi', controller.followerIds.length.toString()),
-                  ),
-                ],
-              )),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Buttons: QR & Edit
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.buttonColor,
-                        side: BorderSide(color: AppColors.buttonColor.withOpacity(0.5)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () {},
-                      icon: const Icon(Icons.qr_code_scanner, size: 18),
-                      label: const Text('Chia sẻ mã QR của tôi', style: TextStyle(fontSize: 12)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.buttonColor,
-                        side: BorderSide(color: AppColors.buttonColor.withOpacity(0.5)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () => Get.to(() => const EditProfileScreen()),
-                      icon: const Icon(Icons.edit_outlined, size: 18),
-                      label: const Text('Chỉnh sửa', style: TextStyle(fontSize: 12)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
-
-            // Stats Section: Tuần này
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: const [
-                      Icon(Icons.directions_run, size: 20),
-                      SizedBox(width: 8),
-                      Text('Tuần này', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Followers Stats - Real-time
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Obx(
+                  () => Row(
                     children: [
-                      _buildMiniStat('Quãng đường', '0.00 km'),
-                      _buildMiniStat('Thời gian', '0 giờ'),
-                      _buildMiniStat('Độ cao', '0 m'),
+                      GestureDetector(
+                        onTap: () => Get.to(() => const FollowingListScreen()),
+                        child: _buildFollowStat(
+                          'Đang theo dõi',
+                          controller.followingIds.length.toString(),
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      GestureDetector(
+                        onTap: () => Get.to(() => const FollowersListScreen()),
+                        child: _buildFollowStat(
+                          'Người theo dõi',
+                          controller.followerIds.length.toString(),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  _buildLineChartMockup(),
-                ],
+                ),
               ),
-            ),
 
-            const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
+              const SizedBox(height: 20),
 
-            // List Options
-            _buildListOption(Icons.grid_view, 'Hoạt động'),
-            _buildListOption(Icons.bar_chart, 'Số liệu thống kê'),
-            _buildListOption(Icons.route_outlined, 'Lộ trình'),
-            _buildListOption(Icons.location_on_outlined, 'Đoạn'),
-            _buildListOption(Icons.emoji_events_outlined, 'Thành tích tốt nhất', subtitle: 'Xem tất cả'),
-            _buildListOption(Icons.article_outlined, 'Bài đăng'),
-            _buildListOption(Icons.directions_bike_outlined, 'Thiết bị'),
-
-            const Divider(height: 40, thickness: 8, color: AppColors.dividerGrey),
-
-            // Section: Tủ trưng bày thành tích
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Tủ trưng bày thành tích', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildAchievementIcon('Hoạt động\nđầu tiên'),
-                      _buildAchievementIcon('Hoạt động\nthứ 3'),
-                      _buildAchievementIcon('Hoạt động\nthứ 5'),
-                      _buildAchievementIcon('Hoạt động\nthứ 10'),
-                    ],
-                  ),
-                ],
+              // Buttons: QR & Edit
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.buttonColor,
+                          side: BorderSide(
+                            color: AppColors.buttonColor.withOpacity(0.5),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
+                        icon: const Icon(Icons.qr_code_scanner, size: 18),
+                        label: const Text(
+                          'Chia sẻ mã QR của tôi',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.buttonColor,
+                          side: BorderSide(
+                            color: AppColors.buttonColor.withOpacity(0.5),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () =>
+                            Get.to(() => const EditProfileScreen()),
+                        icon: const Icon(Icons.edit_outlined, size: 18),
+                        label: const Text(
+                          'Chỉnh sửa',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            
-            _buildListOption(null, 'Tất cả cúp thành tích', isSmall: true),
 
-            const SizedBox(height: 60),
-          ],
-        ),);
+              const Divider(
+                height: 40,
+                thickness: 1,
+                color: AppColors.dividerGrey,
+              ),
+
+              // Stats Section: Tuần này
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(Icons.directions_run, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Tuần này',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Obx(() {
+                      if (profileController.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(color: AppColors.buttonColor),
+                        );
+                      }
+                      
+                      final distanceKm = (profileController.totalDistance.value / 1000).toStringAsFixed(2);
+                      
+                      final totalDurationSecs = profileController.totalDuration.value;
+                      final hours = totalDurationSecs ~/ 3600;
+                      final minutes = (totalDurationSecs % 3600) ~/ 60;
+                      String timeStr = '';
+                      if (hours > 0) {
+                        timeStr = '${hours}h ${minutes}m';
+                      } else {
+                        timeStr = '${minutes}m';
+                      }
+
+                      final count = profileController.workoutCount.value.toString();
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildMiniStat('Quãng đường', '$distanceKm km'),
+                          _buildMiniStat('Thời gian', timeStr),
+                          _buildMiniStat('Hoạt động', count),
+                        ],
+                      );
+                    }),
+                    const SizedBox(height: 20),
+                    _buildLineChartMockup(),
+                  ],
+                ),
+              ),
+
+              const Divider(
+                height: 40,
+                thickness: 1,
+                color: AppColors.dividerGrey,
+              ),
+
+              // List Options
+              _buildListOption(Icons.grid_view, 'Hoạt động'),
+              _buildListOption(Icons.bar_chart, 'Số liệu thống kê'),
+              _buildListOption(Icons.route_outlined, 'Lộ trình'),
+              _buildListOption(Icons.location_on_outlined, 'Đoạn'),
+              _buildListOption(
+                Icons.emoji_events_outlined,
+                'Thành tích tốt nhất',
+                subtitle: 'Xem tất cả',
+              ),
+              _buildListOption(Icons.article_outlined, 'Bài đăng'),
+              _buildListOption(Icons.directions_bike_outlined, 'Thiết bị'),
+
+              const Divider(
+                height: 40,
+                thickness: 8,
+                color: AppColors.dividerGrey,
+              ),
+
+              // Section: Tủ trưng bày thành tích
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Tủ trưng bày thành tích',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildAchievementIcon('Hoạt động\nđầu tiên'),
+                        _buildAchievementIcon('Hoạt động\nthứ 3'),
+                        _buildAchievementIcon('Hoạt động\nthứ 5'),
+                        _buildAchievementIcon('Hoạt động\nthứ 10'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              _buildListOption(null, 'Tất cả cúp thành tích', isSmall: true),
+
+              const SizedBox(height: 60),
+            ],
+          ),
+        );
       }),
     );
   }
@@ -194,7 +291,10 @@ class ProfileDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(count, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(
+          count,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -204,7 +304,10 @@ class ProfileDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -216,8 +319,21 @@ class ProfileDetailScreen extends StatelessWidget {
           height: 120,
           child: Stack(
             children: [
-              Positioned(right: 0, child: const Text('0.00 km', style: TextStyle(fontSize: 10, color: Colors.grey))),
-              Positioned(bottom: 20, right: 0, child: const Text('0.00 km', style: TextStyle(fontSize: 10, color: Colors.grey))),
+              Positioned(
+                right: 0,
+                child: const Text(
+                  '0.00 km',
+                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                ),
+              ),
+              Positioned(
+                bottom: 20,
+                right: 0,
+                child: const Text(
+                  '0.00 km',
+                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                ),
+              ),
               Positioned(
                 bottom: 20,
                 left: 0,
@@ -226,22 +342,34 @@ class ProfileDetailScreen extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(12, (index) => Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(width: 1, height: 80, color: Colors.grey.shade100),
-                    const SizedBox(height: 4),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: index == 11 ? AppColors.buttonColor : Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.buttonColor, width: 2),
+                children: List.generate(
+                  12,
+                  (index) => Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 1,
+                        height: 80,
+                        color: Colors.grey.shade100,
                       ),
-                    ),
-                  ],
-                )),
+                      const SizedBox(height: 4),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: index == 11
+                              ? AppColors.buttonColor
+                              : Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.buttonColor,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -254,22 +382,45 @@ class ProfileDetailScreen extends StatelessWidget {
             Text('THÁNG 3', style: TextStyle(fontSize: 10, color: Colors.grey)),
             Text('THÁNG 4', style: TextStyle(fontSize: 10, color: Colors.grey)),
           ],
-        )
+        ),
       ],
     );
   }
 
-  Widget _buildListOption(IconData? icon, String title, {String subtitle = '—', bool isSmall = false}) {
+  Widget _buildListOption(
+    IconData? icon,
+    String title, {
+    String subtitle = '—',
+    bool isSmall = false,
+  }) {
     return ListTile(
-      leading: icon != null ? Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-        child: Icon(icon, color: Colors.black87, size: 24),
-      ) : null,
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: isSmall ? 15 : 16)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-      onTap: () {},
+      leading: icon != null
+          ? Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: Colors.black87, size: 24),
+            )
+          : null,
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: isSmall ? 15 : 16,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(color: Colors.grey, fontSize: 13),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.grey,
+      ),
+      onTap: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển', snackPosition: SnackPosition.BOTTOM),
     );
   }
 
@@ -285,14 +436,22 @@ class ProfileDetailScreen extends StatelessWidget {
             border: Border.all(color: Colors.grey.shade200, width: 1),
           ),
           child: Center(
-            child: Icon(Icons.lock_outline, color: Colors.grey.shade400, size: 20),
+            child: Icon(
+              Icons.lock_outline,
+              color: Colors.grey.shade400,
+              size: 20,
+            ),
           ),
         ),
         const SizedBox(height: 12),
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, height: 1.2),
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            height: 1.2,
+          ),
         ),
       ],
     );

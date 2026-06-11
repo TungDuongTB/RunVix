@@ -121,7 +121,171 @@ class PostCard extends StatelessWidget {
             ],
           ),
         ),
+        Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.grey),
+              onPressed: () => _showPostOptions(context),
+            );
+          }
+        ),
       ],
+    );
+  }
+
+  void _showPostOptions(BuildContext context) {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isMyPost = post.userId == currentUid;
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (isMyPost) ...[
+              ListTile(
+                leading: const Icon(Icons.edit, color: AppColors.primary),
+                title: const Text('Chỉnh sửa bài viết'),
+                onTap: () {
+                  Get.back();
+                  _showEditPostDialog(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Xóa bài viết', style: TextStyle(color: Colors.red)),
+                onTap: () {
+                  Get.back();
+                  Get.defaultDialog(
+                    title: "Xác nhận",
+                    middleText: "Bạn có chắc chắn muốn xóa bài viết này không?",
+                    textConfirm: "Xóa",
+                    textCancel: "Hủy",
+                    confirmTextColor: Colors.white,
+                    buttonColor: Colors.red,
+                    cancelTextColor: Colors.black,
+                    onConfirm: () {
+                      PostController.instance.deletePost(post.id ?? '');
+                      Get.back(); // Close dialog
+                    },
+                  );
+                },
+              ),
+            ] else ...[
+              ListTile(
+                leading: const Icon(Icons.report, color: Colors.red),
+                title: const Text('Báo cáo bài viết', style: TextStyle(color: Colors.red)),
+                onTap: () {
+                  Get.back();
+                  _showReportPostDialog(context);
+                },
+              ),
+            ],
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditPostDialog(BuildContext context) {
+    final titleController = TextEditingController(text: post.title);
+    final contentController = TextEditingController(text: post.content);
+
+    Get.defaultDialog(
+      title: "Chỉnh sửa bài viết",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: titleController,
+            decoration: const InputDecoration(labelText: "Tiêu đề", border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: contentController,
+            maxLines: 3,
+            decoration: const InputDecoration(labelText: "Nội dung", border: OutlineInputBorder()),
+          ),
+        ],
+      ),
+      textConfirm: "Lưu",
+      textCancel: "Hủy",
+      confirmTextColor: Colors.white,
+      buttonColor: AppColors.buttonColor,
+      cancelTextColor: Colors.black,
+      onConfirm: () {
+        if (contentController.text.trim().isEmpty) {
+          Get.snackbar("Lỗi", "Nội dung không được để trống");
+          return;
+        }
+        final updatedPost = post.copyWith(
+          title: titleController.text.trim(),
+          content: contentController.text.trim(),
+        );
+        PostController.instance.updatePost(updatedPost);
+        Get.back(); // Close dialog
+      },
+    );
+  }
+
+  void _showReportPostDialog(BuildContext context) {
+    final reasonController = TextEditingController();
+
+    Get.defaultDialog(
+      title: "Báo cáo bài viết",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text("Vui lòng cho biết lý do bạn báo cáo bài viết này:", style: TextStyle(fontSize: 14)),
+          const SizedBox(height: 10),
+          TextField(
+            controller: reasonController,
+            maxLines: 3,
+            decoration: const InputDecoration(
+              hintText: "Nhập lý do...",
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+      textConfirm: "Gửi báo cáo",
+      textCancel: "Hủy",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      cancelTextColor: Colors.black,
+      onConfirm: () {
+        if (reasonController.text.trim().isEmpty) {
+          Get.snackbar("Lỗi", "Vui lòng nhập lý do");
+          return;
+        }
+        final reportController = Get.put(ReportController());
+        final currentUid = FirebaseAuth.instance.currentUser?.uid ?? "";
+        final userName = UserController.instance.user.value.fullName ?? "Người dùng";
+        
+        final report = ReportModel(
+          postId: post.id ?? "",
+          reporterId: currentUid,
+          reporterName: userName,
+          reason: reasonController.text.trim(),
+        );
+        reportController.createReport(report);
+        Get.back(); // Close dialog
+      },
     );
   }
 
