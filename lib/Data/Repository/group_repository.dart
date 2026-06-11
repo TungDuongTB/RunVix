@@ -59,62 +59,65 @@ class GroupRepository extends GetxController {
     }
   }
 
-  /// Lấy danh sách nhóm của một user
-  Future<List<GroupModel>> getGroupsByUser(String userId) async {
-    try {
-      final snapshot = await _db
-          .collection('Groups')
-          .where('MemberIds', arrayContains: userId)
-          .get();
-      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
-      list.sort((a, b) {
-        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        return dateB.compareTo(dateA);
-      });
-      return list;
-    } catch (e) {
-      throw 'Không thể tải danh sách nhóm.';
-    }
-  }
+   /// Lấy danh sách nhóm của một user
+   Future<List<GroupModel>> getGroupsByUser(String userId) async {
+     try {
+       final snapshot = await _db
+           .collection('Groups')
+           .where('MemberIds', arrayContains: userId)
+           .get();
+       final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+       list.sort((a, b) {
+         final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         return dateB.compareTo(dateA);
+       });
+       return list;
+     } catch (e) {
+       print('❌ getGroupsByUser error: $e');
+       throw 'Không thể tải danh sách nhóm: $e';
+     }
+   }
 
-  /// Lấy tất cả nhóm công khai
-  Future<List<GroupModel>> getPublicGroups() async {
-    try {
-      final snapshot = await _db
-          .collection('Groups')
-          .where('IsPublic', isEqualTo: true)
-          .get();
-      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
-      list.sort((a, b) {
-        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        return dateB.compareTo(dateA);
-      });
-      return list;
-    } catch (e) {
-      throw 'Không thể tải danh sách nhóm.';
-    }
-  }
+   /// Lấy tất cả nhóm công khai
+   Future<List<GroupModel>> getPublicGroups() async {
+     try {
+       final snapshot = await _db
+           .collection('Groups')
+           .where('IsPublic', isEqualTo: true)
+           .get();
+       final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+       list.sort((a, b) {
+         final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         return dateB.compareTo(dateA);
+       });
+       return list;
+     } catch (e) {
+       print('❌ getPublicGroups error: $e');
+       throw 'Không thể tải danh sách nhóm: $e';
+     }
+   }
 
-  /// Lấy danh sách nhóm do một user tạo ra
-  Future<List<GroupModel>> getGroupsCreatedByUser(String userId) async {
-    try {
-      final snapshot = await _db
-          .collection('Groups')
-          .where('CreatorId', isEqualTo: userId)
-          .get();
-      final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
-      list.sort((a, b) {
-        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-        return dateB.compareTo(dateA);
-      });
-      return list;
-    } catch (e) {
-      throw 'Không thể tải danh sách nhóm do bạn tạo.';
-    }
-  }
+   /// Lấy danh sách nhóm do một user tạo ra
+   Future<List<GroupModel>> getGroupsCreatedByUser(String userId) async {
+     try {
+       final snapshot = await _db
+           .collection('Groups')
+           .where('CreatorId', isEqualTo: userId)
+           .get();
+       final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+       list.sort((a, b) {
+         final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         return dateB.compareTo(dateA);
+       });
+       return list;
+     } catch (e) {
+       print('❌ getGroupsCreatedByUser error: $e');
+       throw 'Không thể tải danh sách nhóm do bạn tạo: $e';
+     }
+   }
 
   /// Tham gia vào một nhóm
   Future<void> joinGroup(String groupId, String userId) async {
@@ -175,17 +178,46 @@ class GroupRepository extends GetxController {
     }
   }
 
-  /// Tạo sự kiện mới cho nhóm
-  Future<String> createGroupEvent(GroupEventModel event) async {
-    try {
-      final docRef = await _db
-          .collection('Groups')
-          .doc(event.groupId)
-          .collection('Events')
-          .add(event.toJson());
-      return docRef.id;
-    } catch (e) {
-      throw 'Không thể tạo sự kiện. Vui lòng thử lại!';
-    }
-  }
-}
+   /// Tạo sự kiện mới cho nhóm
+   Future<String> createGroupEvent(GroupEventModel event) async {
+     try {
+       final docRef = await _db
+           .collection('Groups')
+           .doc(event.groupId)
+           .collection('Events')
+           .add(event.toJson());
+       return docRef.id;
+     } catch (e) {
+       throw 'Không thể tạo sự kiện. Vui lòng thử lại!';
+     }
+   }
+
+   /// Lấy tất cả các nhóm
+   Future<List<GroupModel>> getAllGroups() async {
+     try {
+       final snapshot = await _db.collection('Groups').get();
+       final list = snapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
+       list.sort((a, b) {
+         final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+         return dateB.compareTo(dateA);
+       });
+       return list;
+     } catch (e) {
+       throw 'Không thể tải tất cả các nhóm.';
+     }
+   }
+
+   /// Lấy một nhóm theo ID
+   Future<GroupModel?> getGroupById(String groupId) async {
+     try {
+       final snapshot = await _db.collection('Groups').doc(groupId).get();
+       if (snapshot.exists) {
+         return GroupModel.fromSnapshot(snapshot as DocumentSnapshot<Map<String, dynamic>>);
+       }
+       return null;
+     } catch (e) {
+       throw 'Không thể tải thông tin nhóm: $e';
+     }
+   }
+ }

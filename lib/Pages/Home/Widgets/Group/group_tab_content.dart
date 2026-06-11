@@ -7,7 +7,18 @@ class GroupTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = GroupController.instance;
+    try {
+      final controller = GroupController.instance;
+
+      // Trigger fetch khi build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (controller.groups.isEmpty && !controller.isLoadingGroups.value) {
+          controller.fetchMyGroups();
+        }
+        if (controller.suggestedGroups.isEmpty && !controller.isLoadingSuggested.value) {
+          controller.fetchSuggestedGroups();
+        }
+      });
 
     return RefreshIndicator(
       onRefresh: () => Future.wait([
@@ -160,11 +171,17 @@ class GroupTabContent extends StatelessWidget {
                 );
               }),
 
-              const SizedBox(height: 100),
-            ],
-          ),
-        ),
-      ),
-    );
+               const SizedBox(height: 100),
+             ],
+           ),
+         ),
+       ),
+     );
+    } catch (e) {
+      print('❌ GroupTabContent build error: $e');
+      return Center(
+        child: Text('Lỗi tải nhóm: $e'),
+      );
+    }
   }
 }

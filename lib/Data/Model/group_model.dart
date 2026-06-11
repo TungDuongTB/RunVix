@@ -54,7 +54,19 @@ class GroupModel {
   }
 
   factory GroupModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final data = doc.data()!;
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Dữ liệu nhóm trống');
+    }
+
+    // Helper function để chuyển đổi giá trị thành string
+    String toStringValue(dynamic value) {
+      if (value == null) return '';
+      if (value is String) return value;
+      if (value is int || value is double) return value.toString();
+      return value.toString();
+    }
+
     return GroupModel(
       id: doc.id,
       name: data['Name'] ?? '',
@@ -64,11 +76,13 @@ class GroupModel {
       logoImageUrl: data['LogoImageUrl'] ?? '',
       isPublic: data['IsPublic'] ?? true,
       hasRequirements: data['HasRequirements'] ?? false,
-      minPace: data['MinPace'] ?? '',
-      minKm: data['MinKm'] ?? '',
-      minSessions: data['MinSessions'] ?? '',
-      creatorId: data['CreatorId'] ?? '',
-      memberIds: List<String>.from(data['MemberIds'] ?? []),
+      minPace: toStringValue(data['MinPace']),
+      minKm: toStringValue(data['MinKm']),
+      minSessions: toStringValue(data['MinSessions']),
+      creatorId: toStringValue(data['CreatorId']),
+      memberIds: List<String>.from(
+        (data['MemberIds'] ?? []).map((e) => e.toString())
+      ),
       createdAt: data['CreatedAt'] != null
           ? (data['CreatedAt'] as Timestamp).toDate()
           : null,

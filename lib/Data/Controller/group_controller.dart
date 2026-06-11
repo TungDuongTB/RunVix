@@ -22,11 +22,48 @@ class GroupController extends GetxController {
 
   Future<void> fetchMyGroups() async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    if (currentUser == null) {
+      debugPrint('❌ fetchMyGroups: User không được xác thực');
+      return;
+    }
     try {
       isLoadingGroups.value = true;
-      final result = await _groupRepo.getGroupsByUser(currentUser.uid);
+      debugPrint('🔄 fetchMyGroups: Đang tải nhóm cho user ${currentUser.uid}');
+
+      // Lấy nhóm mà user đã tham gia
+      final userGroups = await _groupRepo.getGroupsByUser(currentUser.uid);
+      debugPrint('✅ fetchMyGroups: Lấy được ${userGroups.length} nhóm user tham gia');
+
+      // Lấy nhóm mà user tạo ra
+      final createdGroups = await _groupRepo.getGroupsCreatedByUser(currentUser.uid);
+      debugPrint('✅ fetchMyGroups: Lấy được ${createdGroups.length} nhóm user tạo');
+
+      // Kết hợp cả hai list và loại bỏ duplicate dựa trên ID
+      final allMyGroups = [...userGroups, ...createdGroups];
+      final uniqueMap = <String, GroupModel>{};
+      for (final group in allMyGroups) {
+        if (group.id != null) {
+          uniqueMap[group.id!] = group;
+        }
+      }
+
+      final result = uniqueMap.values.toList();
+      result.sort((a, b) {
+        // Nhóm của user tạo luôn ở trên đầu
+        final isACreator = a.creatorId == currentUser.uid;
+        final isBCreator = b.creatorId == currentUser.uid;
+
+        if (isACreator && !isBCreator) return -1;
+        if (!isACreator && isBCreator) return 1;
+
+        // Nếu cùng loại, sắp xếp theo ngày tạo mới nhất
+        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+
       groups.assignAll(result);
+      debugPrint('✅ fetchMyGroups: Đã cập nhật ${result.length} nhóm');
     } catch (e) {
       debugPrint('❌ fetchMyGroups error: $e');
     } finally {
@@ -34,18 +71,29 @@ class GroupController extends GetxController {
     }
   }
 
-  /// Lấy danh sách nhóm đề xuất (công khai và user chưa tham gia)
+   /// Lấy danh sách nhóm đề xuất (tất cả nhóm công khai - trừ nhóm user đã tham gia/tạo)
   Future<void> fetchSuggestedGroups() async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
     try {
       isLoadingSuggested.value = true;
+      debugPrint('🔄 fetchSuggestedGroups: Đang tải các nhóm công khai');
+
       final publicGroups = await _groupRepo.getPublicGroups();
-      final result = publicGroups
-          .where((group) => !group.memberIds.contains(currentUser.uid))
-          .toList();
-          
-      suggestedGroups.assignAll(result);
+      debugPrint('✅ fetchSuggestedGroups: Lấy được ${publicGroups.length} nhóm công khai');
+
+      // Filter bỏ những nhóm mà user đã tham gia hoặc tạo
+      List<GroupModel> suggestedList = publicGroups;
+      if (currentUser != null) {
+        suggestedList = publicGroups
+            .where((group) =>
+                !group.memberIds.contains(currentUser.uid) &&
+                group.creatorId != currentUser.uid)
+            .toList();
+        debugPrint('✅ fetchSuggestedGroups: Filter được ${suggestedList.length} nhóm (loại bỏ nhóm user tham gia/tạo)');
+      }
+
+      suggestedGroups.assignAll(suggestedList);
+      debugPrint('✅ fetchSuggestedGroups: Đã cập nhật ${suggestedList.length} nhóm');
     } catch (e) {
       debugPrint('❌ fetchSuggestedGroups error: $e');
     } finally {

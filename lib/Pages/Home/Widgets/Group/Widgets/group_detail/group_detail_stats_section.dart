@@ -35,13 +35,13 @@ class GroupDetailStatsSection extends StatelessWidget {
         ),
         GroupDetailStatCard(
           label: 'Tổng quãng đường',
-          value: loadingStats ? '...' : stats.formattedDistance,
+          value: loadingStats ? '...' : stats.formattedTotalDistance,
           subtitle: 'Kilometers',
           valueColor: AppColors.buttonColor,
         ),
         GroupDetailStatCard(
           label: 'Tốc độ TB',
-          value: loadingStats ? '...' : stats.formattedPace,
+          value: loadingStats ? '...' : stats.formattedAveragePace,
           subtitle: 'min/km',
           valueColor: AppColors.secondaryContainer,
         ),

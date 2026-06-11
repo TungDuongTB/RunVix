@@ -11,6 +11,7 @@ class GroupCard extends StatelessWidget {
 
     final currentUser = FirebaseAuth.instance.currentUser;
     final isMember = currentUser != null && group.memberIds.contains(currentUser.uid);
+    final isCreator = currentUser != null && group.creatorId == currentUser.uid;
 
     return GestureDetector(
       onTap: () => Get.to(() => GroupDetailScreen(group: group)),
@@ -20,20 +21,53 @@ class GroupCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Cover Image Header
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: group.coverImageUrl.isNotEmpty
-                ? Image.network(
-                    group.coverImageUrl,
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => _buildDefaultCover(),
-                  )
-                : _buildDefaultCover(),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                child: group.coverImageUrl.isNotEmpty
+                    ? Image.network(
+                        group.coverImageUrl,
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => _buildDefaultCover(),
+                      )
+                    : _buildDefaultCover(),
+              ),
+              // Badge "Nhóm của tôi" cho nhóm user tạo
+              if (isCreator)
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.buttonColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Text(
+                      'Nhóm của tôi',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Hanken Grotesk',
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
 
           // Card Body
