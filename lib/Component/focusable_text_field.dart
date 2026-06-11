@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:runvix/export.dart';
-
 class FocusableTextField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
   final IconData icon;
   final int maxLines;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final ValueChanged<String>? onChanged;
 
   const FocusableTextField({
     super.key,
@@ -15,6 +18,9 @@ class FocusableTextField extends StatefulWidget {
     required this.hint,
     required this.icon,
     this.maxLines = 1,
+    this.keyboardType,
+    this.inputFormatters,
+    this.onChanged,
   });
 
   @override
@@ -71,6 +77,9 @@ class _FocusableTextFieldState extends State<FocusableTextField> {
             controller: widget.controller,
             focusNode: _focusNode,
             maxLines: widget.maxLines,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
+            onChanged: widget.onChanged,
             style: const TextStyle(fontSize: 14, color: Colors.black87),
             decoration: InputDecoration(
               hintText: widget.hint,

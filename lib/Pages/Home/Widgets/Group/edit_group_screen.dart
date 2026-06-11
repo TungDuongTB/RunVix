@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:runvix/export.dart';
 
 class EditGroupScreen extends StatefulWidget {
@@ -145,22 +146,28 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                       FocusableTextField(
                         controller: _paceController,
                         label: 'Yêu cầu Pace tối thiểu',
-                        hint: 'Ví dụ: Đã hoàn thành ít nhất 1 giải FM...',
+                        hint: 'Ví dụ: 6',
                         icon: Icons.speed_outlined,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       ),
                       const SizedBox(height: 16),
                       FocusableTextField(
                         controller: _minKmController,
                         label: 'SỐ KM TỐI THIỂU ĐÃ CHẠY',
-                        hint: 'Ví dụ: 100km/tháng',
+                        hint: 'Ví dụ: 100',
                         icon: Icons.directions_run_outlined,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       ),
                       const SizedBox(height: 16),
                       FocusableTextField(
                         controller: _minSessionsController,
                         label: 'SỐ BUỔI TỐI THIỂU',
-                        hint: 'Ví dụ: 3 buổi/tuần',
+                        hint: 'Ví dụ: 3',
                         icon: Icons.calendar_month_outlined,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       ),
                     ],
                     const SizedBox(height: 16),
@@ -259,6 +266,18 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                       snackPosition: SnackPosition.BOTTOM,
                     );
                     return;
+                  }
+                  if (_hasRequirements) {
+                    if (_paceController.text.trim().isEmpty ||
+                        _minKmController.text.trim().isEmpty ||
+                        _minSessionsController.text.trim().isEmpty) {
+                      Get.snackbar(
+                        'Thông báo',
+                        'Vui lòng nhập đầy đủ điều kiện tham gia',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                      return;
+                    }
                   }
                   controller.updateGroup(
                     group: widget.group,

@@ -8,6 +8,7 @@ import 'Widgets/group_detail/group_detail_posts_section.dart';
 import 'Widgets/group_detail/group_detail_requirements_section.dart';
 import 'Widgets/group_detail/group_detail_stats_section.dart';
 import 'Widgets/group_detail/group_detail_terms_section.dart';
+import 'Widgets/invite_friends_screen.dart';
 import 'edit_group_screen.dart';
 
 
@@ -198,6 +199,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              IconButton(
+                icon: const Icon(Icons.person_add_outlined, color: AppColors.buttonColor),
+                onPressed: () {
+                  Get.to(() => InviteFriendsScreen(group: group));
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.edit_outlined, color: AppColors.buttonColor),
                 onPressed: () {

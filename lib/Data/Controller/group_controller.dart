@@ -276,6 +276,31 @@ class GroupController extends GetxController {
     }
   }
 
+  /// Thêm bạn bè vào nhóm (bởi người tạo)
+  Future<bool> addMemberToGroup(GroupModel group, String userId) async {
+    if (group.id == null || group.id!.isEmpty) return false;
+
+    try {
+      isLoading.value = true;
+      await _groupRepo.joinGroup(group.id!, userId);
+      
+      await fetchMyGroups();
+      await fetchSuggestedGroups();
+      
+      return true;
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   Future<void> createGroup({
     required String name,

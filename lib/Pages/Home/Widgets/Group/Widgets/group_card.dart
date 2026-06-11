@@ -56,14 +56,23 @@ class GroupCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: const Text(
-                      'Nhóm của tôi',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Hanken Grotesk',
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (!group.isPublic) ...[
+                          const Icon(Icons.lock, color: Colors.red, size: 12),
+                          const SizedBox(width: 4),
+                        ],
+                        const Text(
+                          'Nhóm của tôi',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Hanken Grotesk',
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
