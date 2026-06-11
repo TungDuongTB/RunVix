@@ -255,13 +255,34 @@ class NotificationRepository extends GetxController {
         type: "group_invite",
         senderIds: [senderId],
         groupId: groupId,
-        title: groupName, // Using Title to store group name temporarily
+        title: groupName,
         isRead: false,
         createdAt: DateTime.now(),
       );
       await _db.collection("Notifications").add(newNotification.toJson());
     } catch (e) {
       print("Error triggering group invite notification: $e");
+    }
+  }
+
+  // Create Group Challenge Notification
+  Future<void> createGroupChallengeNotification(
+      String receiverId, String senderId, String groupId, String groupName, String challengeName) async {
+    if (receiverId == senderId) return;
+    try {
+      final newNotification = NotificationModel(
+        receiverId: receiverId,
+        type: "group_challenge",
+        senderIds: [senderId],
+        groupId: groupId,
+        title: groupName,
+        body: 'Nhóm $groupName vừa có một thử thách mới: $challengeName',
+        isRead: false,
+        createdAt: DateTime.now(),
+      );
+      await _db.collection("Notifications").add(newNotification.toJson());
+    } catch (e) {
+      print("Error creating group challenge notification: $e");
     }
   }
 

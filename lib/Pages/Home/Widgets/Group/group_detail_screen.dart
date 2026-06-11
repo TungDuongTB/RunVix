@@ -25,7 +25,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   late GroupModel _group;
   UserModel? _creator;
   bool _loadingCreator = true;
-  List<GroupEventModel> _events = [];
+  List<ChallengeModel> _events = [];
   bool _loadingEvents = true;
   GroupWorkoutStats _workoutStats = GroupWorkoutStats.empty();
   bool _loadingStats = true;
@@ -82,7 +82,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       return;
     }
     try {
-      final events = await GroupController.instance.fetchGroupEvents(group.id!);
+      final events = await ChallengeRepository.instance.getGroupChallenges(group.id!);
       if (mounted) setState(() => _events = events);
     } catch (_) {
       // ignore

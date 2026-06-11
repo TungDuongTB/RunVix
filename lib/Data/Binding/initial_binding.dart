@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import '../../export.dart';
 
 class InitialBinding extends Bindings {
@@ -11,7 +10,8 @@ class InitialBinding extends Bindings {
     Get.put(WorkoutRepository(), permanent: true);
     Get.put(NotificationRepository(), permanent: true);
     Get.put(GroupRepository(), permanent: true);
-    
+    Get.put(ChallengeRepository(), permanent: true);
+
     // Các Controller
     Get.put(UserController(), permanent: true);
     Get.put(PostController(), permanent: true);
@@ -20,7 +20,8 @@ class InitialBinding extends Bindings {
     Get.put(NavigationController(), permanent: true);
     Get.put(NotificationController(), permanent: true);
     Get.put(GroupController(), permanent: true);
-    
+    Get.put(ChallengeController(), permanent: true);
+
     // Strava - Khởi tạo ngay lập tức để tránh lỗi undefined trên Web
     Get.put(StravaRepository(), permanent: true);
     Get.put(StravaController(), permanent: true);

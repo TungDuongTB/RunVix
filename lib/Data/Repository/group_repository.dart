@@ -150,56 +150,16 @@ class GroupRepository extends GetxController {
     }
   }
 
-  /// Xóa nhóm và các sự kiện liên quan
+  /// Xóa nhóm
   Future<void> deleteGroup(String groupId) async {
     try {
-      final eventsSnapshot = await _db
-          .collection('Groups')
-          .doc(groupId)
-          .collection('Events')
-          .get();
-
-      final batch = _db.batch();
-      for (final doc in eventsSnapshot.docs) {
-        batch.delete(doc.reference);
-      }
-      batch.delete(_db.collection('Groups').doc(groupId));
-      await batch.commit();
+      await _db.collection('Groups').doc(groupId).delete();
     } catch (e) {
       throw 'Không thể xóa nhóm: $e';
     }
   }
 
-  /// Lấy danh sách sự kiện của nhóm
-  Future<List<GroupEventModel>> getGroupEvents(String groupId) async {
-    try {
-      final snapshot = await _db
-          .collection('Groups')
-          .doc(groupId)
-          .collection('Events')
-          .orderBy('EventDate')
-          .get();
-      return snapshot.docs
-          .map((doc) => GroupEventModel.fromSnapshot(doc, groupId))
-          .toList();
-    } catch (e) {
-      throw 'Không thể tải danh sách sự kiện.';
-    }
-  }
 
-   /// Tạo sự kiện mới cho nhóm
-   Future<String> createGroupEvent(GroupEventModel event) async {
-     try {
-       final docRef = await _db
-           .collection('Groups')
-           .doc(event.groupId)
-           .collection('Events')
-           .add(event.toJson());
-       return docRef.id;
-     } catch (e) {
-       throw 'Không thể tạo sự kiện. Vui lòng thử lại!';
-     }
-   }
 
    /// Lấy tất cả các nhóm
    Future<List<GroupModel>> getAllGroups() async {

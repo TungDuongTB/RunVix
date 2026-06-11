@@ -23,7 +23,6 @@ export './Data/Model/like_model.dart';
 export './Data/Model/report_model.dart';
 export './Data/Model/admin_stats_model.dart';
 export './Data/Model/group_model.dart';
-export './Data/Model/group_event_model.dart';
 export './Data/Model/group_workout_stats.dart';
 
 // Data - Repository
@@ -35,6 +34,7 @@ export './Data/Repository/calendar_repository.dart';
 export './Data/Repository/post_repository.dart';
 export './Data/Repository/strava_repository.dart';
 export './Data/Repository/admin_repository.dart';
+export './Data/Repository/challenge_repository.dart';
 
 // Data - Controller
 export './Data/Controller/user_controller.dart';
@@ -49,6 +49,7 @@ export './Data/Controller/strava_controller.dart';
 export './Data/Controller/report_controller.dart';
 export './Data/Controller/admin_controller.dart';
 export './Data/Controller/group_controller.dart';
+export './Data/Controller/challenge_controller.dart';
 
 // Data - Binding
 export './Data/Binding/initial_binding.dart';

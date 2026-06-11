@@ -11,11 +11,17 @@
   <component name="ChangeListManager">
     <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="add_friends">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/notification_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/notification_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Binding/initial_binding.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Model/notification_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/notification_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/challenge_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/challenge_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/group_event_model.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/group_repository.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/notification_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/invite_friends_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/invite_friends_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_events_section.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_events_section.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

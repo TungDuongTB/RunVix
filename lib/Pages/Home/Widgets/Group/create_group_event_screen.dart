@@ -62,11 +62,29 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
       return;
     }
 
-    GroupController.instance.createGroupEvent(
+    DateTime combinedStartDate = _selectedDate;
+    if (_timeController.text.isNotEmpty) {
+      try {
+        final timeString = _timeController.text; // Format: "05:00 AM"
+        final isPM = timeString.contains('PM');
+        final parts = timeString.split(RegExp(r'[: ]'));
+        int hour = int.parse(parts[0]);
+        final minute = int.parse(parts[1]);
+        if (isPM && hour != 12) hour += 12;
+        if (!isPM && hour == 12) hour = 0;
+        combinedStartDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, hour, minute);
+      } catch (_) {}
+    }
+
+    ChallengeController.instance.createChallengeFromGroup(
       group: widget.group,
       title: title,
-      eventDate: _selectedDate,
-      time: _timeController.text.trim(),
+      description: 'Sự kiện của nhóm ${widget.group.name}',
+      startDate: combinedStartDate,
+      endDate: combinedStartDate.add(const Duration(days: 30)), // Mặc định kéo dài 30 ngày
+      type: 'Running',
+      goalValue: 0,
+      goalUnit: 'km',
       imageFile: _coverImage,
     );
   }
@@ -199,7 +217,7 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
             ),
             const SizedBox(height: 32),
             Obx(() {
-              final loading = GroupController.instance.isLoading.value;
+              final loading = ChallengeController.instance.isLoading.value;
               return SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

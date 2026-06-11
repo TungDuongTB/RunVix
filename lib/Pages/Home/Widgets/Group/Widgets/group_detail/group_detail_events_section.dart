@@ -1,7 +1,7 @@
 import 'package:runvix/export.dart';
 
 class GroupDetailEventsSection extends StatelessWidget {
-  final List<GroupEventModel> events;
+  final List<ChallengeModel> events;
   final bool loading;
   final bool isCreator;
   final VoidCallback onAddEvent;
@@ -106,14 +106,14 @@ class GroupDetailEventsSection extends StatelessWidget {
 }
 
 class GroupDetailEventCard extends StatelessWidget {
-  final GroupEventModel event;
+  final ChallengeModel event;
 
   const GroupDetailEventCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
-    final day = event.eventDate.day.toString().padLeft(2, '0');
-    final month = 'Th${event.eventDate.month.toString().padLeft(2, '0')}';
+    final day = event.startDate.day.toString().padLeft(2, '0');
+    final month = 'Th${event.startDate.month.toString().padLeft(2, '0')}';
 
     return SizedBox(
       width: 280,
@@ -185,23 +185,21 @@ class GroupDetailEventCard extends StatelessWidget {
                       fontFamily: 'Hanken Grotesk',
                     ),
                   ),
-                  if (event.time.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(Icons.schedule, size: 14, color: AppColors.onSurfaceVariant),
-                        const SizedBox(width: 4),
-                        Text(
-                          event.time,
-                          style: const TextStyle(
-                            color: AppColors.onSurfaceVariant,
-                            fontSize: 13,
-                            fontFamily: 'Hanken Grotesk',
-                          ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.schedule, size: 14, color: AppColors.onSurfaceVariant),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${event.startDate.hour.toString().padLeft(2, '0')}:${event.startDate.minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                          color: AppColors.onSurfaceVariant,
+                          fontSize: 13,
+                          fontFamily: 'Hanken Grotesk',
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

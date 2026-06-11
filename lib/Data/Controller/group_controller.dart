@@ -170,71 +170,7 @@ class GroupController extends GetxController {
     }
   }
 
-  /// Lấy sự kiện của nhóm
-  Future<List<GroupEventModel>> fetchGroupEvents(String groupId) async {
-    return _groupRepo.getGroupEvents(groupId);
-  }
 
-  /// Tạo sự kiện cho nhóm
-  Future<void> createGroupEvent({
-    required GroupModel group,
-    required String title,
-    required DateTime eventDate,
-    required String time,
-    XFile? imageFile,
-  }) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      Get.snackbar('Lỗi', 'Vui lòng đăng nhập.',
-          snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-    if (group.id == null || group.id!.isEmpty) return;
-    if (group.creatorId != currentUser.uid) {
-      Get.snackbar('Lỗi', 'Chỉ người tạo nhóm mới có thể thêm sự kiện.',
-          snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    try {
-      isLoading.value = true;
-
-      String imageUrl = '';
-      if (imageFile != null) {
-        imageUrl = await _groupRepo.uploadImage(imageFile);
-      }
-
-      final event = GroupEventModel(
-        groupId: group.id!,
-        title: title,
-        eventDate: eventDate,
-        time: time,
-        imageUrl: imageUrl,
-        creatorId: currentUser.uid,
-        createdAt: DateTime.now(),
-      );
-
-      await _groupRepo.createGroupEvent(event);
-      Get.back();
-      Get.snackbar(
-        'Thành công 🎉',
-        'Đã tạo sự kiện "$title"',
-        backgroundColor: const Color(0xFFE8F5E9),
-        colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Lỗi',
-        e.toString(),
-        backgroundColor: const Color(0xFFFFEBEE),
-        colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
   /// Tham gia nhóm
   Future<bool> joinGroup(GroupModel group) async {
