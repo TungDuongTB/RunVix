@@ -122,9 +122,6 @@ class GroupCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    // Join Button
-                    _buildJoinButton(isMember),
                   ],
                 ),
                 if (group.description.isNotEmpty) ...[
@@ -180,73 +177,6 @@ class GroupCard extends StatelessWidget {
     );
   }
 
-  Widget _buildJoinButton(bool isMember) {
-    if (isMember) {
-      return Container(
-        decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: AppColors.primary.withOpacity(0.2),
-          ),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          child: Text(
-            'Đã tham gia',
-            style: TextStyle(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              fontFamily: 'Hanken Grotesk',
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFF4F46E5), // Purple
-            Color(0xFF06B6D4), // Blue/cyan
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4F46E5).withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            GroupController.instance.joinGroup(group);
-          },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            child: Text(
-              'Tham gia',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-                fontFamily: 'Hanken Grotesk',
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildMemberAvatars() {
     final avatarColors = [

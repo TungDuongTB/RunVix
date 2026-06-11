@@ -5,6 +5,8 @@ import 'package:runvix/export.dart';
 class GroupImageSelectors extends StatefulWidget {
   final XFile? coverImage;
   final XFile? logoImage;
+  final String? initialCoverUrl;
+  final String? initialLogoUrl;
   final VoidCallback onPickCover;
   final VoidCallback onPickLogo;
 
@@ -12,6 +14,8 @@ class GroupImageSelectors extends StatefulWidget {
     super.key,
     required this.coverImage,
     required this.logoImage,
+    this.initialCoverUrl,
+    this.initialLogoUrl,
     required this.onPickCover,
     required this.onPickLogo,
   });
@@ -105,9 +109,14 @@ class _GroupImageSelectorsState extends State<GroupImageSelectors> {
                       image: _coverProvider!,
                       fit: BoxFit.cover,
                     )
-                  : null,
+                  : (widget.coverImage == null && widget.initialCoverUrl != null && widget.initialCoverUrl!.isNotEmpty)
+                      ? DecorationImage(
+                          image: NetworkImage(widget.initialCoverUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
             ),
-            child: widget.coverImage == null
+            child: widget.coverImage == null && (widget.initialCoverUrl == null || widget.initialCoverUrl!.isEmpty)
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -165,9 +174,14 @@ class _GroupImageSelectorsState extends State<GroupImageSelectors> {
                         image: _logoProvider!,
                         fit: BoxFit.cover,
                       )
-                    : null,
+                    : (widget.logoImage == null && widget.initialLogoUrl != null && widget.initialLogoUrl!.isNotEmpty)
+                        ? DecorationImage(
+                            image: NetworkImage(widget.initialLogoUrl!),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
               ),
-              child: widget.logoImage == null
+              child: widget.logoImage == null && (widget.initialLogoUrl == null || widget.initialLogoUrl!.isEmpty)
                   ? Icon(Icons.camera_alt_outlined, color: Colors.grey.shade600, size: 24)
                   : _logoProvider == null
                       // Đang tải bytes

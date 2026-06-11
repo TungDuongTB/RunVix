@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:runvix/export.dart';
-import 'Widgets/group_detail/group_detail_bottom_bar.dart';
 import 'Widgets/group_detail/group_detail_dialogs.dart';
 import 'Widgets/group_detail/group_detail_events_section.dart';
 import 'Widgets/group_detail/group_detail_hero_section.dart';
@@ -9,6 +8,7 @@ import 'Widgets/group_detail/group_detail_posts_section.dart';
 import 'Widgets/group_detail/group_detail_requirements_section.dart';
 import 'Widgets/group_detail/group_detail_stats_section.dart';
 import 'Widgets/group_detail/group_detail_terms_section.dart';
+import 'edit_group_screen.dart';
 
 
 
@@ -162,11 +162,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   const SizedBox(height: 32),
                   const GroupDetailPostsSection(),
                   const SizedBox(height: 32),
-                  GroupDetailBottomBar(
-                    group: group,
-                    isCreator: _isCreator,
-                    isMember: _isMember,
-                  ),
                 ],
               ),
             ),
@@ -199,21 +194,21 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       ),
       centerTitle: true,
       actions: [
-        if (!_isMember)
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Center(
-              child: GroupDetailJoinButton(
-                group: group,
-                compact: true,
-                onJoin: _joinGroup,
+        if (_isCreator)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, color: AppColors.buttonColor),
+                onPressed: () {
+                  Get.to(() => EditGroupScreen(group: group));
+                },
               ),
-            ),
-          )
-        else if (_isCreator)
-          IconButton(
-            icon: const Icon(Icons.delete_outline, color: AppColors.danger),
-            onPressed: () => GroupDetailDialogs.confirmDeleteGroup(group),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: AppColors.danger),
+                onPressed: () => GroupDetailDialogs.confirmDeleteGroup(group),
+              ),
+            ],
           )
         else if (_isMember)
           IconButton(

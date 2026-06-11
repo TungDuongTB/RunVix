@@ -372,4 +372,90 @@ class GroupController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> updateGroup({
+    required GroupModel group,
+    required String name,
+    required String description,
+    required String location,
+    required bool isPublic,
+    required bool hasRequirements,
+    required String minPace,
+    required String minKm,
+    required String minSessions,
+    XFile? coverImageFile,
+    XFile? logoImageFile,
+  }) async {
+    try {
+      isLoading.value = true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+
+      if (group.id == null) return;
+
+      // Kiểm tra trùng tên nhóm trên Firebase nếu tên thay đổi
+      if (name.trim().toLowerCase() != group.name.trim().toLowerCase()) {
+        final isTaken = await _groupRepo.isGroupNameTaken(name);
+        if (isTaken) {
+          Get.snackbar(
+            'Tên nhóm đã tồn tại',
+            'Nhóm "$name" đã có người sử dụng. Vui lòng chọn tên khác.',
+            backgroundColor: const Color(0xFFFFF3E0),
+            colorText: const Color(0xFFE65100),
+            snackPosition: SnackPosition.BOTTOM,
+            icon: const Icon(Icons.group_off_outlined, color: Color(0xFFE65100)),
+            duration: const Duration(seconds: 4),
+          );
+          return;
+        }
+      }
+
+      String coverImageUrl = group.coverImageUrl;
+      if (coverImageFile != null) {
+        coverImageUrl = await _groupRepo.uploadImage(coverImageFile);
+      }
+
+      String logoImageUrl = group.logoImageUrl;
+      if (logoImageFile != null) {
+        logoImageUrl = await _groupRepo.uploadImage(logoImageFile);
+      }
+
+      final data = {
+        'Name': name,
+        'Description': description,
+        'Location': location,
+        'CoverImageUrl': coverImageUrl,
+        'LogoImageUrl': logoImageUrl,
+        'IsPublic': isPublic,
+        'HasRequirements': hasRequirements,
+        'MinPace': minPace,
+        'MinKm': minKm,
+        'MinSessions': minSessions,
+      };
+
+      await _groupRepo.updateGroup(group.id!, data);
+
+      await fetchMyGroups();
+
+      Get.back(); // Quay lại trang chi tiết hoặc danh sách
+      Get.snackbar(
+        'Thành công 🎉',
+        "Đã cập nhật nhóm '$name' thành công!",
+        backgroundColor: const Color(0xFFE8F5E9),
+        colorText: const Color(0xFF2E7D32),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

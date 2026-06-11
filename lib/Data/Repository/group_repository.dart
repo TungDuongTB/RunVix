@@ -32,6 +32,15 @@ class GroupRepository extends GetxController {
     }
   }
 
+  /// Cập nhật thông tin nhóm trên Firestore
+  Future<void> updateGroup(String groupId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('Groups').doc(groupId).update(data);
+    } catch (e) {
+      throw 'Đã xảy ra lỗi khi cập nhật nhóm. Vui lòng thử lại!';
+    }
+  }
+
   /// Upload ảnh lên Cloudinary và trả về secure URL
   Future<String> uploadImage(XFile image) async {
     try {
