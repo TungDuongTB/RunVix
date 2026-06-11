@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:runvix/export.dart';
 import 'Widgets/group_detail/group_detail_dialogs.dart';
 import 'Widgets/group_detail/group_detail_events_section.dart';
@@ -10,6 +12,7 @@ import 'Widgets/group_detail/group_detail_stats_section.dart';
 import 'Widgets/group_detail/group_detail_terms_section.dart';
 import 'Widgets/invite_friends_screen.dart';
 import 'edit_group_screen.dart';
+import 'edit_group_event_screen.dart';
 
 
 
@@ -29,6 +32,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   bool _loadingEvents = true;
   GroupWorkoutStats _workoutStats = GroupWorkoutStats.empty();
   bool _loadingStats = true;
+  StreamSubscription<DocumentSnapshot>? _groupSubscription;
 
   GroupModel get group => _group;
 
@@ -56,6 +60,35 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     _loadCreator();
     _loadEvents();
     _loadWorkoutStats();
+    _listenToGroupChanges();
+  }
+
+  void _listenToGroupChanges() {
+    if (group.id == null || group.id!.isEmpty) return;
+    _groupSubscription = FirebaseFirestore.instance
+        .collection('Groups')
+        .doc(group.id!)
+        .snapshots()
+        .listen((snapshot) {
+      if (!snapshot.exists) {
+        if (mounted) {
+          Get.back();
+          Get.snackbar(
+            "Thông báo", 
+            "Nhóm này đã bị giải tán.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: const Color(0xFFFFF3E0),
+            colorText: const Color(0xFFE65100),
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _groupSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadCreator() async {
@@ -138,6 +171,27 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     creatorName: _creatorName,
                     loadingCreator: _loadingCreator,
                   ),
+                  if (!_isMember && !_isCreator) ...[
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _joinGroup,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Tham gia nhóm',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Hanken Grotesk'),
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 32),
                   GroupDetailStatsSection(
                     group: group,
@@ -159,6 +213,11 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     loading: _loadingEvents,
                     isCreator: _isCreator,
                     onAddEvent: _openCreateEvent,
+                    onEventTapped: (challenge) {
+                      if (_isCreator || FirebaseAuth.instance.currentUser?.uid == challenge.creatorId) {
+                        Get.to(() => EditGroupEventScreen(group: group, challenge: challenge));
+                      }
+                    },
                   ),
                   const SizedBox(height: 32),
                   const GroupDetailPostsSection(),

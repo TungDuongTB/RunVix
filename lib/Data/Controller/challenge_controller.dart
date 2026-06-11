@@ -17,6 +17,31 @@ class ChallengeController extends GetxController {
     challenges.bindStream(_challengeRepo.streamChallenges());
   }
 
+  /// Danh sách các thử thách đề xuất (Mỗi nhóm khác 1 thử thách mới nhất)
+  List<ChallengeModel> get suggestedChallenges {
+    // Lấy các nhóm hiện tại của user để loại trừ
+    List<String> myGroupIds = [];
+    if (Get.isRegistered<GroupController>()) {
+      myGroupIds = GroupController.instance.groups.map((g) => g.id!).toList();
+    }
+
+    final grouped = <String, ChallengeModel>{};
+    for (var challenge in challenges) {
+      final gid = challenge.groupId;
+      if (gid != null && gid.isNotEmpty) {
+        // Chỉ lấy các thử thách của nhóm KHÁC nhóm của user
+        if (!myGroupIds.contains(gid)) {
+          // Do `challenges` đã được sort giảm dần theo StartDate (từ repo), 
+          // nên thử thách đầu tiên gặp của mỗi group chính là thử thách mới nhất.
+          if (!grouped.containsKey(gid)) {
+            grouped[gid] = challenge;
+          }
+        }
+      }
+    }
+    return grouped.values.toList();
+  }
+
   /// Hàm tạo thử thách từ Group và gửi thông báo cho các thành viên
   Future<void> createChallengeFromGroup({
     required GroupModel group,
@@ -47,6 +72,7 @@ class ChallengeController extends GetxController {
 
       final challenge = ChallengeModel(
         groupId: group.id,
+        creatorId: currentUser.uid,
         title: title,
         description: description,
         startDate: startDate,
@@ -77,6 +103,80 @@ class ChallengeController extends GetxController {
       Get.snackbar(
         'Thành công 🎉',
         'Đã tạo sự kiện/thử thách "$title"',
+        backgroundColor: const Color(0xFFE8F5E9),
+        colorText: const Color(0xFF2E7D32),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Cập nhật thử thách
+  Future<void> updateChallenge({
+    required ChallengeModel challenge,
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    XFile? imageFile,
+  }) async {
+    if (challenge.id == null) return;
+    try {
+      isLoading.value = true;
+      String imageUrl = challenge.imageUrl;
+      if (imageFile != null) {
+        imageUrl = await _groupRepo.uploadImage(imageFile);
+      }
+
+      final dataToUpdate = {
+        'Title': title,
+        'Description': description,
+        'StartDate': startDate,
+        'EndDate': endDate,
+        'ImageUrl': imageUrl,
+      };
+
+      await _challengeRepo.updateChallenge(challenge.id!, dataToUpdate);
+      
+      Get.back();
+      Get.snackbar(
+        'Thành công 🎉',
+        'Đã cập nhật sự kiện "$title"',
+        backgroundColor: const Color(0xFFE8F5E9),
+        colorText: const Color(0xFF2E7D32),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Xóa thử thách
+  Future<void> deleteChallenge(String challengeId) async {
+    try {
+      isLoading.value = true;
+      await _challengeRepo.deleteChallenge(challengeId);
+      Get.back(); // Quay lại sau khi xóa
+      Get.snackbar(
+        'Thành công',
+        'Đã xóa sự kiện.',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
         snackPosition: SnackPosition.BOTTOM,

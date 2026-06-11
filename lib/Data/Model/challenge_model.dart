@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ChallengeModel {
   final String? id;
   final String? groupId;
+  final String? creatorId;
   final String title;
   final String description;
   final DateTime startDate;
@@ -15,6 +16,7 @@ class ChallengeModel {
   ChallengeModel({
     this.id,
     this.groupId,
+    this.creatorId,
     required this.title,
     required this.description,
     required this.startDate,
@@ -28,6 +30,7 @@ class ChallengeModel {
   Map<String, dynamic> toJson() {
     return {
       "GroupId": groupId,
+      "CreatorId": creatorId,
       "Title": title,
       "Description": description,
       "StartDate": startDate,
@@ -44,6 +47,7 @@ class ChallengeModel {
     return ChallengeModel(
       id: document.id,
       groupId: data["GroupId"],
+      creatorId: data["CreatorId"],
       title: data["Title"] ?? "",
       description: data["Description"] ?? "",
       startDate: (data["StartDate"] as Timestamp).toDate(),

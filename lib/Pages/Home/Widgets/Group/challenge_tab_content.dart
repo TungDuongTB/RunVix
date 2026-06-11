@@ -44,57 +44,7 @@ class ChallengeTabContent extends StatelessWidget {
             }),
           ),
           const SizedBox(height: 24),
-          // Suggested Section
-          Container(
-            width: double.infinity,
-            color: Colors.grey[100],
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 18,
-                        backgroundImage: NetworkImage('https://res.cloudinary.com/dz1z232l7/image/upload/v1780222203/jyvkye3frhxij1cgeqy4.jpg'),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Đề xuất cho bạn',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          Text(
-                            'Dựa trên hoạt động của bạn',
-                            style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
 
-                ),
-                const SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      _buildSuggestedCard(
-                        'Thử thách 400 phút x Runna tháng 6',
-                        'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=400&auto=format&fit=crop',
-                      ),
-
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -197,25 +147,26 @@ class ChallengeTabContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.buttonColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
+          if (FirebaseAuth.instance.currentUser?.uid != challenge.creatorId)
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.buttonColor,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: const Text(
+                  'Tham gia',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
-              child: const Text(
-                'Tham gia',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
             ),
-          ),
         ],
       ),
     );
@@ -224,6 +175,7 @@ class ChallengeTabContent extends StatelessWidget {
   Widget _buildSuggestedCard(String title, String imageUrl) {
     return Container(
       width: 180,
+      margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -239,6 +191,12 @@ class ChallengeTabContent extends StatelessWidget {
               height: 120,
               width: 180,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 120,
+                width: 180,
+                color: Colors.grey[300],
+                child: const Icon(Icons.image, size: 40, color: Colors.grey),
+              ),
             ),
           ),
           Padding(

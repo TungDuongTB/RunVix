@@ -152,8 +152,32 @@ class GroupCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // _buildMemberAvatars(),
                     _buildWeeklyMileage(),
+                    if (!isMember && !isCreator)
+                      ElevatedButton(
+                        onPressed: () {
+                          // Prevent triggering the card's onTap
+                          Get.to(() => GroupDetailScreen(group: group));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonColor,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          minimumSize: const Size(0, 32),
+                        ),
+                        child: const Text(
+                          'Tham gia',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Hanken Grotesk',
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ],

@@ -5,6 +5,7 @@ class GroupDetailEventsSection extends StatelessWidget {
   final bool loading;
   final bool isCreator;
   final VoidCallback onAddEvent;
+  final Function(ChallengeModel) onEventTapped;
 
   const GroupDetailEventsSection({
     super.key,
@@ -12,6 +13,7 @@ class GroupDetailEventsSection extends StatelessWidget {
     required this.loading,
     required this.isCreator,
     required this.onAddEvent,
+    required this.onEventTapped,
   });
 
   @override
@@ -99,7 +101,10 @@ class GroupDetailEventsSection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: events.length,
         separatorBuilder: (_, __) => const SizedBox(width: 16),
-        itemBuilder: (context, index) => GroupDetailEventCard(event: events[index]),
+        itemBuilder: (context, index) => GroupDetailEventCard(
+          event: events[index],
+          onTap: () => onEventTapped(events[index]),
+        ),
       ),
     );
   }
@@ -107,8 +112,9 @@ class GroupDetailEventsSection extends StatelessWidget {
 
 class GroupDetailEventCard extends StatelessWidget {
   final ChallengeModel event;
+  final VoidCallback onTap;
 
-  const GroupDetailEventCard({super.key, required this.event});
+  const GroupDetailEventCard({super.key, required this.event, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +123,11 @@ class GroupDetailEventCard extends StatelessWidget {
 
     return SizedBox(
       width: 280,
-      child: GlassCard(
-        padding: EdgeInsets.zero,
-        child: Column(
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlassCard(
+          padding: EdgeInsets.zero,
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
@@ -206,6 +214,7 @@ class GroupDetailEventCard extends StatelessWidget {
           ],
         ),
       ),
+    )
     );
   }
 }

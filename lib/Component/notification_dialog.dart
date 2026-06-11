@@ -266,6 +266,11 @@ class NotificationDialog extends StatelessWidget {
             icon = Icons.info_outline;
             iconColor = Colors.blueGrey;
             break;
+          case "group_join":
+            text = "đã tham gia vào nhóm của bạn.";
+            icon = Icons.group;
+            iconColor = Colors.teal;
+            break;
         }
 
         final timeStr = item.createdAt != null

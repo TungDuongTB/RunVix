@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/rendering.dart';
 import 'package:runvix/export.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final navigationController = NavigationController.instance;
   final postController = Get.put(PostController());
   final ScrollController _scrollController = ScrollController();
+  bool _isBottomNavBarVisible = true;
 
   @override
   void initState() {
@@ -49,15 +51,41 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: IndexedStack(
-                  index: navigationController.selectedIndex.value,
-                  children: pagesWithScroll,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification notification) {
+                    if (notification is ScrollUpdateNotification) {
+                      if (notification.scrollDelta != null) {
+                        if (notification.scrollDelta! > 3.0) {
+                          // Vuốt lên (nội dung đi lên) -> Ẩn
+                          if (_isBottomNavBarVisible) {
+                            setState(() {
+                              _isBottomNavBarVisible = false;
+                            });
+                          }
+                        } else if (notification.scrollDelta! < -3.0) {
+                          // Vuốt xuống (nội dung đi xuống) -> Hiện
+                          if (!_isBottomNavBarVisible) {
+                            setState(() {
+                              _isBottomNavBarVisible = true;
+                            });
+                          }
+                        }
+                      }
+                    }
+                    return false;
+                  },
+                  child: IndexedStack(
+                    index: navigationController.selectedIndex.value,
+                    children: pagesWithScroll,
+                  ),
                 ),
               ),
-              Positioned(
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
                 left: 0,
                 right: 0,
-                bottom: 0,
+                bottom: _isBottomNavBarVisible ? 0 : -100,
                 child: _buildCustomBottomNavBar(),
               ),
             ],

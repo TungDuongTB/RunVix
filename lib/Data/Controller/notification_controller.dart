@@ -155,6 +155,31 @@ class NotificationController extends GetxController {
           Get.snackbar("Lỗi", "Không thể tải chi tiết bài viết: $e");
         }
       }
+    } else if (notification.type == "group_join") {
+      final groupId = notification.groupId;
+      if (groupId != null) {
+        try {
+          Get.dialog(
+            const Center(
+              child: CircularProgressIndicator(color: AppColors.buttonColor),
+            ),
+            barrierDismissible: false,
+          );
+
+          final groupRepo = Get.put(GroupRepository());
+          final group = await groupRepo.getGroupById(groupId);
+          Get.back(); // Dismiss loading dialog
+
+          if (group != null) {
+            Get.to(() => GroupDetailScreen(group: group));
+          } else {
+            Get.snackbar("Thông báo", "Nhóm này không tồn tại hoặc đã bị xóa.");
+          }
+        } catch (e) {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.snackbar("Lỗi", "Không thể tải chi tiết nhóm: $e");
+        }
+      }
     }
   }
 }

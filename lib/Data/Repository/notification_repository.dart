@@ -265,6 +265,49 @@ class NotificationRepository extends GetxController {
     }
   }
 
+  // Create Group Join Notification
+  Future<void> createGroupJoinNotification(
+      String receiverId, String senderId, String groupId, String groupName) async {
+    if (receiverId == senderId) return;
+    try {
+      final newNotification = NotificationModel(
+        receiverId: receiverId,
+        type: "group_join",
+        senderIds: [senderId],
+        groupId: groupId,
+        title: groupName,
+        isRead: false,
+        createdAt: DateTime.now(),
+      );
+      await _db.collection("Notifications").add(newNotification.toJson());
+    } catch (e) {
+      print("Error triggering group join notification: $e");
+    }
+  }
+
+  // Create Group Deleted Notification
+  Future<void> createGroupDeletedNotification(
+      List<String> receiverIds, String groupName) async {
+    try {
+      final batch = _db.batch();
+      for (var receiverId in receiverIds) {
+        final newNotification = NotificationModel(
+          receiverId: receiverId,
+          type: "system",
+          senderIds: [],
+          body: "Nhóm $groupName đã bị giải tán.",
+          isRead: false,
+          createdAt: DateTime.now(),
+        );
+        final docRef = _db.collection("Notifications").doc();
+        batch.set(docRef, newNotification.toJson());
+      }
+      await batch.commit();
+    } catch (e) {
+      print("Error triggering group deleted notification: $e");
+    }
+  }
+
   // Create Group Challenge Notification
   Future<void> createGroupChallengeNotification(
       String receiverId, String senderId, String groupId, String groupName, String challengeName) async {

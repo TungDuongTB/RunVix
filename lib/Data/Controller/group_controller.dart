@@ -146,6 +146,14 @@ class GroupController extends GetxController {
 
     try {
       isLoading.value = true;
+      
+      // Lọc ra các thành viên khác để gửi thông báo
+      final membersToNotify = group.memberIds.where((id) => id != currentUser.uid).toList();
+      if (membersToNotify.isNotEmpty) {
+        final notificationRepo = Get.put(NotificationRepository());
+        await notificationRepo.createGroupDeletedNotification(membersToNotify, group.name);
+      }
+
       await _groupRepo.deleteGroup(group.id!);
       await fetchMyGroups();
       await fetchSuggestedGroups();
@@ -189,6 +197,12 @@ class GroupController extends GetxController {
       
       await fetchMyGroups();
       await fetchSuggestedGroups();
+      
+      if (group.creatorId.isNotEmpty && group.creatorId != currentUser.uid) {
+        final notificationRepo = Get.put(NotificationRepository());
+        await notificationRepo.createGroupJoinNotification(
+            group.creatorId, currentUser.uid, group.id!, group.name);
+      }
       
       Get.snackbar(
         'Thành công 🎉',

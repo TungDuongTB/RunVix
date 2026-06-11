@@ -60,4 +60,22 @@ class ChallengeRepository extends GetxController {
       throw 'Không thể tải danh sách thử thách của nhóm.';
     }
   }
+
+  /// Cập nhật thử thách
+  Future<void> updateChallenge(String challengeId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('Challenges').doc(challengeId).update(data);
+    } catch (e) {
+      throw 'Đã xảy ra lỗi khi cập nhật thử thách.';
+    }
+  }
+
+  /// Xóa thử thách
+  Future<void> deleteChallenge(String challengeId) async {
+    try {
+      await _db.collection('Challenges').doc(challengeId).delete();
+    } catch (e) {
+      throw 'Đã xảy ra lỗi khi xóa thử thách.';
+    }
+  }
 }
