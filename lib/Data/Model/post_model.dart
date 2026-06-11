@@ -45,7 +45,9 @@ class PostModel {
       "Title": title,
       "Content": content,
       "ImageUrl": imageUrl,
-      "CreatedAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      "CreatedAt": createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
       "Distance": distance,
       "Duration": duration,
       "AveragePace": averagePace,
@@ -57,7 +59,11 @@ class PostModel {
     };
   }
 
-  factory PostModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document, {String? userName, String? userProfilePicture}) {
+  factory PostModel.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> document, {
+    String? userName,
+    String? userProfilePicture,
+  }) {
     final data = document.data() ?? {};
     return PostModel(
       id: document.id,
@@ -67,7 +73,9 @@ class PostModel {
       title: data["Title"] ?? "",
       content: data["Content"] ?? "",
       imageUrl: data["ImageUrl"] ?? "",
-      createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
+      createdAt: data["CreatedAt"] != null
+          ? (data["CreatedAt"] as Timestamp).toDate()
+          : null,
       distance: (data["Distance"] ?? 0.0).toDouble(),
       duration: data["Duration"] ?? 0,
       averagePace: (data["AveragePace"] ?? 0.0).toDouble(),

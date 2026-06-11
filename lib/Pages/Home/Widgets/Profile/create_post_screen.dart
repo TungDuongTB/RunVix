@@ -15,7 +15,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   XFile? _imageFile;
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) setState(() => _imageFile = pickedFile);
   }
 
@@ -23,7 +25,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Obx(() {
       final hasWorkoutImage = controller.workoutImageUrl.value.isNotEmpty;
-      
+
       return Stack(
         children: [
           Scaffold(
@@ -32,7 +34,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             body: Stack(
               children: [
                 _PostBackground(
-                  imageFile: _imageFile, 
+                  imageFile: _imageFile,
                   workoutImageUrl: controller.workoutImageUrl.value,
                 ),
                 SafeArea(
@@ -41,7 +43,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       const SizedBox(height: 20),
                       _buildHeader(),
                       const Spacer(),
-                      if (_imageFile == null && !hasWorkoutImage) _buildAddImageButton(),
+                      if (_imageFile == null && !hasWorkoutImage)
+                        _buildAddImageButton(),
                       const Spacer(),
                       _PostInputCard(
                         imageFile: _imageFile,
@@ -79,32 +82,61 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   Widget _buildPopupMenu() {
-    final hasImage = _imageFile != null || controller.workoutImageUrl.value.isNotEmpty;
+    final hasImage =
+        _imageFile != null || controller.workoutImageUrl.value.isNotEmpty;
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert, color: Colors.white, size: 28),
       onSelected: (value) {
-        if (value == 'change_image') _pickImage();
+        if (value == 'change_image')
+          _pickImage();
         else if (value == 'remove_image') {
           setState(() => _imageFile = null);
           controller.workoutImageUrl.value = "";
         }
       },
       itemBuilder: (context) => [
-        PopupMenuItem(value: 'change_image', child: _buildPopupItem(Icons.image_outlined, 'Thay đổi ảnh', Colors.blue)),
-        if (hasImage) PopupMenuItem(value: 'remove_image', child: _buildPopupItem(Icons.delete_outline, 'Xóa ảnh', Colors.red)),
+        PopupMenuItem(
+          value: 'change_image',
+          child: _buildPopupItem(
+            Icons.image_outlined,
+            'Thay đổi ảnh',
+            Colors.blue,
+          ),
+        ),
+        if (hasImage)
+          PopupMenuItem(
+            value: 'remove_image',
+            child: _buildPopupItem(Icons.delete_outline, 'Xóa ảnh', Colors.red),
+          ),
       ],
     );
   }
 
   Widget _buildPopupItem(IconData icon, String label, Color color) {
-    return Row(children: [Icon(icon, color: color), const SizedBox(width: 10), Text(label, style: TextStyle(color: color))]);
+    return Row(
+      children: [
+        Icon(icon, color: color),
+        const SizedBox(width: 10),
+        Text(label, style: TextStyle(color: color)),
+      ],
+    );
   }
 
   Widget _buildHeader() {
-    return const Column(children: [
-      SizedBox(height: 12),
-      Text('CHIA SẺ HOẠT ĐỘNG', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 2)),
-    ]);
+    return const Column(
+      children: [
+        SizedBox(height: 12),
+        Text(
+          'CHIA SẺ HOẠT ĐỘNG',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildAddImageButton() {
@@ -118,14 +150,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
           ),
-          child: const Icon(Icons.add_circle_outline, size: 70, color: Colors.white),
+          child: const Icon(
+            Icons.add_circle_outline,
+            size: 70,
+            color: Colors.white,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildLoadingOverlay() {
-    return Container(color: Colors.black.withOpacity(0.5), child: const Center(child: CircularProgressIndicator(color: Colors.white)));
+    return Container(
+      color: Colors.black.withOpacity(0.5),
+      child: const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      ),
+    );
   }
 }
 
@@ -161,7 +202,7 @@ class _PostBackground extends StatelessWidget {
                 colors: [
                   Colors.black.withOpacity(0.4),
                   Colors.transparent,
-                  Colors.black.withOpacity(0.8)
+                  Colors.black.withOpacity(0.8),
                 ],
               ),
             ),
@@ -180,11 +221,11 @@ class _PostInputCard extends StatelessWidget {
   final VoidCallback onPost;
 
   const _PostInputCard({
-    required this.imageFile, 
+    required this.imageFile,
     required this.workoutImageUrl,
-    required this.titleController, 
-    required this.contentController, 
-    required this.onPost
+    required this.titleController,
+    required this.contentController,
+    required this.onPost,
   });
 
   @override
@@ -213,11 +254,15 @@ class _PostInputCard extends StatelessWidget {
                     TextField(
                       controller: titleController,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                       decoration: const InputDecoration(
-                        hintText: 'Tiêu đề buổi chạy', 
-                        hintStyle: TextStyle(color: Colors.white60), 
-                        border: InputBorder.none
+                        hintText: 'Tiêu đề buổi chạy',
+                        hintStyle: TextStyle(color: Colors.white60),
+                        border: InputBorder.none,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -225,11 +270,15 @@ class _PostInputCard extends StatelessWidget {
                       controller: contentController,
                       textAlign: TextAlign.center,
                       maxLines: 3,
-                      style: const TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
                       decoration: const InputDecoration(
-                        hintText: 'Bạn cảm thấy thế nào về buổi chạy hôm nay?', 
-                        hintStyle: TextStyle(color: Colors.white38), 
-                        border: InputBorder.none
+                        hintText: 'Bạn cảm thấy thế nào về buổi chạy hôm nay?',
+                        hintStyle: TextStyle(color: Colors.white38),
+                        border: InputBorder.none,
                       ),
                     ),
                   ],
@@ -248,9 +297,18 @@ class _PostInputCard extends StatelessWidget {
                 color: AppColors.buttonColor,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 3),
-                boxShadow: [BoxShadow(color: AppColors.buttonColor.withOpacity(0.4), blurRadius: 10)],
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.buttonColor.withOpacity(0.4),
+                    blurRadius: 10,
+                  ),
+                ],
               ),
-              child: const Icon(Icons.send_rounded, color: Colors.white, size: 28),
+              child: const Icon(
+                Icons.send_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
           ),
         ),

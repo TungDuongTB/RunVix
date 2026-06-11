@@ -5,7 +5,7 @@ import 'package:intl/intl.dart' as intl;
 
 class PostCard extends StatelessWidget {
   final PostModel post;
-  
+
   const PostCard({super.key, required this.post});
 
   @override
@@ -13,7 +13,8 @@ class PostCard extends StatelessWidget {
     final postController = PostController.instance;
     final userController = UserController.instance;
 
-    final hasImage = post.imageUrl.isNotEmpty && post.imageUrl.startsWith('http');
+    final hasImage =
+        post.imageUrl.isNotEmpty && post.imageUrl.startsWith('http');
     final hasStats = post.distance != null && post.distance! > 0;
 
     return GlassCard(
@@ -62,14 +63,18 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.buttonColor.withOpacity(0.3), width: 1.5),
+              border: Border.all(
+                color: AppColors.buttonColor.withOpacity(0.3),
+                width: 1.5,
+              ),
             ),
             child: CircleAvatar(
               radius: 18,
               backgroundColor: Colors.grey.shade200,
-              backgroundImage: post.userProfilePicture.isNotEmpty 
-                  ? NetworkImage(post.userProfilePicture) 
-                  : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+              backgroundImage: post.userProfilePicture.isNotEmpty
+                  ? NetworkImage(post.userProfilePicture)
+                  : const AssetImage('assets/images/default_avatar.png')
+                        as ImageProvider,
               child: post.userProfilePicture.isEmpty
                   ? const Icon(Icons.person, color: Colors.grey, size: 20)
                   : null,
@@ -93,8 +98,14 @@ class PostCard extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  post.userName.isNotEmpty ? post.userName : "Người dùng RunVix",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87),
+                  post.userName.isNotEmpty
+                      ? post.userName
+                      : "Người dùng RunVix",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
@@ -102,17 +113,29 @@ class PostCard extends StatelessWidget {
                 children: [
                   if (post.createdAt != null) ...[
                     Text(
-                      intl.DateFormat('dd/MM/yyyy HH:mm').format(post.createdAt!),
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                      intl.DateFormat(
+                        'dd/MM/yyyy HH:mm',
+                      ).format(post.createdAt!),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 11,
+                      ),
                     ),
                     if (post.type != null && post.type!.isNotEmpty) ...[
                       Text(
                         " • ",
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 11,
+                        ),
                       ),
                       Text(
                         post.type == "Running" ? "Chạy bộ" : post.type!,
-                        style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ],
@@ -127,7 +150,7 @@ class PostCard extends StatelessWidget {
               icon: const Icon(Icons.more_vert, color: Colors.grey),
               onPressed: () => _showPostOptions(context),
             );
-          }
+          },
         ),
       ],
     );
@@ -167,7 +190,10 @@ class PostCard extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text('Xóa bài viết', style: TextStyle(color: Colors.red)),
+                title: const Text(
+                  'Xóa bài viết',
+                  style: TextStyle(color: Colors.red),
+                ),
                 onTap: () {
                   Get.back();
                   Get.defaultDialog(
@@ -188,7 +214,10 @@ class PostCard extends StatelessWidget {
             ] else ...[
               ListTile(
                 leading: const Icon(Icons.report, color: Colors.red),
-                title: const Text('Báo cáo bài viết', style: TextStyle(color: Colors.red)),
+                title: const Text(
+                  'Báo cáo bài viết',
+                  style: TextStyle(color: Colors.red),
+                ),
                 onTap: () {
                   Get.back();
                   _showReportPostDialog(context);
@@ -213,13 +242,19 @@ class PostCard extends StatelessWidget {
         children: [
           TextField(
             controller: titleController,
-            decoration: const InputDecoration(labelText: "Tiêu đề", border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+              labelText: "Tiêu đề",
+              border: OutlineInputBorder(),
+            ),
           ),
           const SizedBox(height: 10),
           TextField(
             controller: contentController,
             maxLines: 3,
-            decoration: const InputDecoration(labelText: "Nội dung", border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+              labelText: "Nội dung",
+              border: OutlineInputBorder(),
+            ),
           ),
         ],
       ),
@@ -251,7 +286,10 @@ class PostCard extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text("Vui lòng cho biết lý do bạn báo cáo bài viết này:", style: TextStyle(fontSize: 14)),
+          const Text(
+            "Vui lòng cho biết lý do bạn báo cáo bài viết này:",
+            style: TextStyle(fontSize: 14),
+          ),
           const SizedBox(height: 10),
           TextField(
             controller: reasonController,
@@ -275,8 +313,9 @@ class PostCard extends StatelessWidget {
         }
         final reportController = Get.put(ReportController());
         final currentUid = FirebaseAuth.instance.currentUser?.uid ?? "";
-        final userName = UserController.instance.user.value.fullName ?? "Người dùng";
-        
+        final userName =
+            UserController.instance.user.value.fullName ?? "Người dùng";
+
         final report = ReportModel(
           postId: post.id ?? "",
           reporterId: currentUid,
@@ -298,12 +337,20 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 6),
             child: Text(
               post.title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black87),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+                color: Colors.black87,
+              ),
             ),
           ),
         Text(
           post.content,
-          style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
+          style: const TextStyle(
+            fontSize: 15,
+            height: 1.5,
+            color: Colors.black87,
+          ),
         ),
       ],
     );
@@ -322,16 +369,31 @@ class PostCard extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withOpacity(0.15), width: 1.0),
+        border: Border.all(
+          color: AppColors.primary.withOpacity(0.15),
+          width: 1.0,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem("Quãng đường", "${post.distance?.toStringAsFixed(2)} km", Icons.speed),
+          _buildStatItem(
+            "Quãng đường",
+            "${post.distance?.toStringAsFixed(2)} km",
+            Icons.speed,
+          ),
           _buildVerticalDivider(),
-          _buildStatItem("Thời gian", _formatDuration(post.duration ?? 0), Icons.timer_outlined),
+          _buildStatItem(
+            "Thời gian",
+            _formatDuration(post.duration ?? 0),
+            Icons.timer_outlined,
+          ),
           _buildVerticalDivider(),
-          _buildStatItem("Nhịp độ", "${post.averagePace?.toStringAsFixed(2)} /km", Icons.insights),
+          _buildStatItem(
+            "Nhịp độ",
+            "${post.averagePace?.toStringAsFixed(2)} /km",
+            Icons.insights,
+          ),
         ],
       ),
     );
@@ -354,20 +416,25 @@ class PostCard extends StatelessWidget {
             Icon(icon, size: 14, color: AppColors.primary),
             const SizedBox(width: 4),
             Text(
-              label.toUpperCase(), 
-              style: TextStyle(fontSize: 9, color: Colors.grey.shade700, fontWeight: FontWeight.bold, letterSpacing: 0.5)
+              label.toUpperCase(),
+              style: TextStyle(
+                fontSize: 9,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
         Text(
-          value, 
+          value,
           style: const TextStyle(
-            fontSize: 16, 
-            fontWeight: FontWeight.w900, 
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
             fontStyle: FontStyle.italic,
-            color: AppColors.primary
-          )
+            color: AppColors.primary,
+          ),
         ),
       ],
     );
@@ -406,7 +473,10 @@ class PostCard extends StatelessWidget {
                   children: [
                     Icon(Icons.map_outlined, color: Colors.grey, size: 40),
                     SizedBox(height: 8),
-                    Text("Không thể hiển thị bản đồ quãng đường", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    Text(
+                      "Không thể hiển thị bản đồ quãng đường",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
                   ],
                 ),
               ),
@@ -414,7 +484,9 @@ class PostCard extends StatelessWidget {
                 if (loadingProgress == null) return child;
                 return Container(
                   color: Colors.grey.shade100,
-                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
                 );
               },
             ),
@@ -428,18 +500,33 @@ class PostCard extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withOpacity(0.25), width: 1.0),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.25),
+                          width: 1.0,
+                        ),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildOverlayStatItem("Quãng đường", "${post.distance?.toStringAsFixed(2)} km"),
-                          _buildOverlayStatItem("Thời gian", _formatDuration(post.duration ?? 0)),
-                          _buildOverlayStatItem("Nhịp độ", "${post.averagePace?.toStringAsFixed(2)} /km"),
+                          _buildOverlayStatItem(
+                            "Quãng đường",
+                            "${post.distance?.toStringAsFixed(2)} km",
+                          ),
+                          _buildOverlayStatItem(
+                            "Thời gian",
+                            _formatDuration(post.duration ?? 0),
+                          ),
+                          _buildOverlayStatItem(
+                            "Nhịp độ",
+                            "${post.averagePace?.toStringAsFixed(2)} /km",
+                          ),
                         ],
                       ),
                     ),
@@ -457,40 +544,47 @@ class PostCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          label.toUpperCase(), 
-          style: TextStyle(fontSize: 8, color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.bold)
+          label.toUpperCase(),
+          style: TextStyle(
+            fontSize: 8,
+            color: Colors.white.withOpacity(0.7),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 2),
         Text(
-          value, 
+          value,
           style: const TextStyle(
-            fontSize: 13, 
-            fontWeight: FontWeight.w900, 
+            fontSize: 13,
+            fontWeight: FontWeight.w900,
             fontStyle: FontStyle.italic,
-            color: AppColors.lightBlue
-          )
+            color: AppColors.lightBlue,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildActions(PostController postController, UserController userController) {
+  Widget _buildActions(
+    PostController postController,
+    UserController userController,
+  ) {
     final isLiked = post.isLiked;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextButton.icon(
           onPressed: () => postController.toggleLike(post),
           icon: Icon(
-            isLiked ? Icons.favorite : Icons.favorite_border, 
-            size: 20, 
-            color: isLiked ? AppColors.danger : Colors.grey.shade600
+            isLiked ? Icons.favorite : Icons.favorite_border,
+            size: 20,
+            color: isLiked ? AppColors.danger : Colors.grey.shade600,
           ),
           label: Text(
             "${post.likes} Thích",
             style: TextStyle(
-              color: isLiked ? AppColors.danger : Colors.grey.shade600, 
+              color: isLiked ? AppColors.danger : Colors.grey.shade600,
               fontSize: 13,
               fontWeight: isLiked ? FontWeight.bold : FontWeight.normal,
             ),
@@ -498,7 +592,11 @@ class PostCard extends StatelessWidget {
         ),
         TextButton.icon(
           onPressed: () => Get.to(() => CommentScreen(post: post)),
-          icon: Icon(Icons.chat_bubble_outline, size: 20, color: Colors.grey.shade600),
+          icon: Icon(
+            Icons.chat_bubble_outline,
+            size: 20,
+            color: Colors.grey.shade600,
+          ),
           label: Text(
             "${post.comments} Bình luận",
             style: TextStyle(color: Colors.grey.shade600, fontSize: 13),

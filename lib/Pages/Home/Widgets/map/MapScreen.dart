@@ -36,12 +36,7 @@ class MapScreen extends GetView<StravaController> {
               }),
             ),
 
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: MapTopSearch(),
-            ),
+            const Positioned(top: 0, left: 0, right: 0, child: MapTopSearch()),
 
             Positioned(
               right: 16,

@@ -34,7 +34,10 @@ class MapTopSearch extends StatelessWidget {
   Widget _buildIconCircle(IconData icon) {
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
       child: Icon(icon, color: AppColors.buttonColor),
     );
   }
@@ -42,7 +45,10 @@ class MapTopSearch extends StatelessWidget {
   Widget _buildSavedButton() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: const Row(
         children: [
           Icon(Icons.bookmark_border, size: 20),
@@ -61,12 +67,19 @@ class MapTopSearch extends StatelessWidget {
       child: Obx(() {
         final distance = controller.selectedDistance.value;
         final isDistanceSelected = distance > 0;
-        
+
         return Row(
           children: [
-            AppFilterChip(label: 'Lộ trình', isSelected: true, hasDropdown: true, onTap: () {}),
             AppFilterChip(
-              label: isDistanceSelected ? 'Độ dài: ${distance.round()} km+' : 'Độ dài',
+              label: 'Lộ trình',
+              isSelected: true,
+              hasDropdown: true,
+              onTap: () {},
+            ),
+            AppFilterChip(
+              label: isDistanceSelected
+                  ? 'Độ dài: ${distance.round()} km+'
+                  : 'Độ dài',
               isSelected: isDistanceSelected,
               hasDropdown: isDistanceSelected,
               onTap: () {
@@ -98,7 +111,11 @@ class _SearchInput extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: const TextField(

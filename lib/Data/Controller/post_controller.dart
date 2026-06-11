@@ -47,32 +47,33 @@ class PostController extends GetxController {
         .doc(postId)
         .snapshots()
         .listen((snapshot) {
-      if (snapshot.exists) {
-        final data = snapshot.data();
-        if (data != null) {
-          int index = allPosts.indexWhere((p) => p.id == postId);
-          if (index != -1) {
-            final oldPost = allPosts[index];
-            allPosts[index] = oldPost.copyWith(
-              likes: data["Likes"] ?? 0,
-              comments: data["Comments"] ?? 0,
-              title: data["Title"] ?? "",
-              content: data["Content"] ?? "",
-              imageUrl: data["ImageUrl"] ?? "",
-              isLocked: data["IsLocked"] ?? false,
-              // Keep oldPost user details and current isLiked status
-              userName: oldPost.userName,
-              userProfilePicture: oldPost.userProfilePicture,
-              isLiked: oldPost.isLiked, // Fix race condition: preserve local like status
-            );
+          if (snapshot.exists) {
+            final data = snapshot.data();
+            if (data != null) {
+              int index = allPosts.indexWhere((p) => p.id == postId);
+              if (index != -1) {
+                final oldPost = allPosts[index];
+                allPosts[index] = oldPost.copyWith(
+                  likes: data["Likes"] ?? 0,
+                  comments: data["Comments"] ?? 0,
+                  title: data["Title"] ?? "",
+                  content: data["Content"] ?? "",
+                  imageUrl: data["ImageUrl"] ?? "",
+                  isLocked: data["IsLocked"] ?? false,
+                  // Keep oldPost user details and current isLiked status
+                  userName: oldPost.userName,
+                  userProfilePicture: oldPost.userProfilePicture,
+                  isLiked: oldPost
+                      .isLiked, // Fix race condition: preserve local like status
+                );
+              }
+            }
+          } else {
+            // If post deleted on Firestore, remove it from local list
+            allPosts.removeWhere((p) => p.id == postId);
+            _unsubscribeFromPost(postId);
           }
-        }
-      } else {
-        // If post deleted on Firestore, remove it from local list
-        allPosts.removeWhere((p) => p.id == postId);
-        _unsubscribeFromPost(postId);
-      }
-    });
+        });
 
     _postSubscriptions[postId] = sub;
   }

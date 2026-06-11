@@ -6,7 +6,7 @@ class RecordController extends GetxController {
   final _workoutRepo = Get.find<WorkoutRepository>();
   final _postRepo = Get.find<PostRepository>();
   final _userController = UserController.instance;
-  
+
   // Input Controllers
   final title = TextEditingController();
   final description = TextEditingController();
@@ -18,7 +18,7 @@ class RecordController extends GetxController {
   var duration = 0.obs; // seconds
   var distance = 0.0.obs; // meters
   var pace = 0.0.obs; // min/km
-  
+
   // Map States
   GoogleMapController? mapController;
   var currentPosition = Rxn<Position>();
@@ -27,7 +27,7 @@ class RecordController extends GetxController {
   // Private members
   Timer? _timer;
   StreamSubscription<Position>? _positionStream;
-  
+
   // Computed polylines for the map
   Set<Polyline> get polylines => {
     Polyline(
@@ -61,6 +61,7 @@ class RecordController extends GetxController {
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
+
   void startRecording() async {
     // Reset inputs
     title.clear();
@@ -99,30 +100,31 @@ class RecordController extends GetxController {
       distanceFilter: 5, // Cập nhật mỗi 5 mét
     );
 
-    _positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
-      currentPosition.value = position; // Cập nhật vị trí hiện tại
+    _positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+          (Position position) {
+            currentPosition.value = position; // Cập nhật vị trí hiện tại
 
-      if (!isPaused.value) {
-        LatLng newPoint = LatLng(position.latitude, position.longitude);
-        
-        if (polylinePoints.isNotEmpty) {
-          double distanceBetween = Geolocator.distanceBetween(
-            polylinePoints.last.latitude,
-            polylinePoints.last.longitude,
-            position.latitude,
-            position.longitude,
-          );
-          distance.value += distanceBetween;
-        }
-        
-        polylinePoints.add(newPoint);
+            if (!isPaused.value) {
+              LatLng newPoint = LatLng(position.latitude, position.longitude);
 
-        // Tự động di chuyển camera theo người dùng
-        mapController?.animateCamera(
-          CameraUpdate.newLatLng(newPoint),
+              if (polylinePoints.isNotEmpty) {
+                double distanceBetween = Geolocator.distanceBetween(
+                  polylinePoints.last.latitude,
+                  polylinePoints.last.longitude,
+                  position.latitude,
+                  position.longitude,
+                );
+                distance.value += distanceBetween;
+              }
+
+              polylinePoints.add(newPoint);
+
+              // Tự động di chuyển camera theo người dùng
+              mapController?.animateCamera(CameraUpdate.newLatLng(newPoint));
+            }
+          },
         );
-      }
-    });
   }
 
   void _calculatePace() {
@@ -142,20 +144,28 @@ class RecordController extends GetxController {
   void stopRecording() async {
     _timer?.cancel();
     _positionStream?.cancel();
-    
-    if (distance.value >= 10) { // Lưu nếu chạy trên 10m
+
+    if (distance.value >= 10) {
+      // Lưu nếu chạy trên 10m
       final workout = WorkoutModel(
-        userId: _userController.user.value.id ?? FirebaseAuth.instance.currentUser?.uid ?? "",
+        userId:
+            _userController.user.value.id ??
+            FirebaseAuth.instance.currentUser?.uid ??
+            "",
         type: "Running",
         distance: distance.value,
         duration: duration.value,
         averagePace: pace.value,
         timestamp: DateTime.now(),
-        route: polylinePoints.map((p) => GeoPoint(p.latitude, p.longitude)).toList(),
-        title: title.text.trim().isNotEmpty ? title.text.trim() : "Hoạt động chạy bộ",
+        route: polylinePoints
+            .map((p) => GeoPoint(p.latitude, p.longitude))
+            .toList(),
+        title: title.text.trim().isNotEmpty
+            ? title.text.trim()
+            : "Hoạt động chạy bộ",
         description: description.text.trim(),
       );
-      
+
       // 1. Luôn lưu vào Workouts
       await _workoutRepo.saveWorkout(workout);
 
@@ -163,23 +173,28 @@ class RecordController extends GetxController {
       String staticMapUrl = "";
       if (polylinePoints.isNotEmpty) {
         const apiKey = "AIzaSyBjd9_rTIEGk3sS0rE-7RdKq9WyAkKX-EI";
-        
+
         List<LatLng> points = List.from(polylinePoints);
         if (points.length > 80) {
           int step = points.length ~/ 80;
           points = List.generate(80, (i) => points[i * step]);
-          if (!points.contains(polylinePoints.last)) points.add(polylinePoints.last);
+          if (!points.contains(polylinePoints.last))
+            points.add(polylinePoints.last);
         }
-        
+
         String pathParams = "color:0xff4b2cff|weight:5";
         for (var p in points) {
-          pathParams += "|${p.latitude.toStringAsFixed(6)},${p.longitude.toStringAsFixed(6)}";
+          pathParams +=
+              "|${p.latitude.toStringAsFixed(6)},${p.longitude.toStringAsFixed(6)}";
         }
-        
-        String markers = "&markers=color:green|label:S|${polylinePoints.first.latitude},${polylinePoints.first.longitude}";
-        markers += "&markers=color:red|label:F|${polylinePoints.last.latitude},${polylinePoints.last.longitude}";
 
-        staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?"
+        String markers =
+            "&markers=color:green|label:S|${polylinePoints.first.latitude},${polylinePoints.first.longitude}";
+        markers +=
+            "&markers=color:red|label:F|${polylinePoints.last.latitude},${polylinePoints.last.longitude}";
+
+        staticMapUrl =
+            "https://maps.googleapis.com/maps/api/staticmap?"
             "size=600x400"
             "&scale=2"
             "&maptype=roadmap"
@@ -196,7 +211,9 @@ class RecordController extends GetxController {
         postController.workoutDuration.value = duration.value;
         postController.workoutPace.value = pace.value;
         postController.workoutImageUrl.value = staticMapUrl;
-        postController.title.text = title.text.trim().isNotEmpty ? title.text.trim() : "Chạy bộ";
+        postController.title.text = title.text.trim().isNotEmpty
+            ? title.text.trim()
+            : "Chạy bộ";
         postController.content.text = description.text.trim();
 
         Get.to(() => const CreatePostScreen());
@@ -218,6 +235,7 @@ class RecordController extends GetxController {
     pace.value = 0.0;
     polylinePoints.clear();
   }
+
   @override
   void onClose() {
     _timer?.cancel();
