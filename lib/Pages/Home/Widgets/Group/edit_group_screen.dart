@@ -263,7 +263,7 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                     Get.snackbar(
                       'Thông báo',
                       'Vui lòng nhập tên nhóm',
-                      snackPosition: SnackPosition.BOTTOM,
+                      
                     );
                     return;
                   }
@@ -274,7 +274,7 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                       Get.snackbar(
                         'Thông báo',
                         'Vui lòng nhập đầy đủ điều kiện tham gia',
-                        snackPosition: SnackPosition.BOTTOM,
+                        
                       );
                       return;
                     }

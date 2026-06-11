@@ -56,7 +56,7 @@ class ChallengeController extends GetxController {
   }) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
-      Get.snackbar('Lỗi', 'Vui lòng đăng nhập.', snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Lỗi', 'Vui lòng đăng nhập.');
       return;
     }
     
@@ -105,7 +105,7 @@ class ChallengeController extends GetxController {
         'Đã tạo sự kiện/thử thách "$title"',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } catch (e) {
       Get.snackbar(
@@ -113,7 +113,7 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
@@ -153,7 +153,7 @@ class ChallengeController extends GetxController {
         'Đã cập nhật sự kiện "$title"',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } catch (e) {
       Get.snackbar(
@@ -161,7 +161,7 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
@@ -179,7 +179,7 @@ class ChallengeController extends GetxController {
         'Đã xóa sự kiện.',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } catch (e) {
       Get.snackbar(
@@ -187,7 +187,7 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;

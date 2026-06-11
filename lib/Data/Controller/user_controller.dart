@@ -186,7 +186,7 @@ class UserController extends GetxController {
       Get.snackbar(
         "Lỗi",
         "Không thể thực hiện thao tác: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     }
   }

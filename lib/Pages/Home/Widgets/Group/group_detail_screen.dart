@@ -76,7 +76,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           Get.snackbar(
             "Thông báo", 
             "Nhóm này đã bị giải tán.",
-            snackPosition: SnackPosition.BOTTOM,
+            
             backgroundColor: const Color(0xFFFFF3E0),
             colorText: const Color(0xFFE65100),
           );

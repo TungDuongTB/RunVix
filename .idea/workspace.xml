@@ -11,15 +11,16 @@
   <component name="ChangeListManager">
     <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="ban do tuyen duong">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/activity_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/activity_detail_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/add_manual_activity_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/add_manual_activity_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_progress_tab.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_progress_tab.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/RecordScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/record_stats_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Record/record_stats_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_floating_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/challenge_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/challenge_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/edit_group_event_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/edit_group_event_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/edit_group_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/edit_group_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

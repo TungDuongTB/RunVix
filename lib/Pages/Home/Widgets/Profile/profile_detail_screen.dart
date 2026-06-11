@@ -23,7 +23,6 @@ class ProfileDetailScreen extends StatelessWidget {
             onPressed: () => Get.snackbar(
               'Thông báo',
               'Chức năng đang được phát triển',
-              snackPosition: SnackPosition.BOTTOM,
             ),
           ),
           IconButton(
@@ -31,7 +30,7 @@ class ProfileDetailScreen extends StatelessWidget {
             onPressed: () => Get.snackbar(
               'Thông báo',
               'Chức năng đang được phát triển',
-              snackPosition: SnackPosition.BOTTOM,
+              
             ),
           ),
           IconButton(
@@ -140,7 +139,7 @@ class ProfileDetailScreen extends StatelessWidget {
                         onPressed: () => Get.snackbar(
                           'Thông báo',
                           'Chức năng đang được phát triển',
-                          snackPosition: SnackPosition.BOTTOM,
+                          
                         ),
                         icon: const Icon(Icons.qr_code_scanner, size: 18),
                         label: const Text(
@@ -441,7 +440,7 @@ class ProfileDetailScreen extends StatelessWidget {
       onTap: () => Get.snackbar(
         'Thông báo',
         'Chức năng đang được phát triển',
-        snackPosition: SnackPosition.BOTTOM,
+        
       ),
     );
   }

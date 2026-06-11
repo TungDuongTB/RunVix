@@ -70,7 +70,7 @@ class _EditGroupEventScreenState extends State<EditGroupEventScreen> {
     final title = _titleController.text.trim();
     if (title.isEmpty) {
       Get.snackbar('Thiếu thông tin', 'Vui lòng nhập tên sự kiện.',
-          snackPosition: SnackPosition.BOTTOM);
+          );
       return;
     }
 

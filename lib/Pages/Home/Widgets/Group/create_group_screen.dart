@@ -239,7 +239,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     Get.snackbar(
                       'Thông báo',
                       'Vui lòng nhập tên nhóm',
-                      snackPosition: SnackPosition.BOTTOM,
+                      
                     );
                     return;
                   }

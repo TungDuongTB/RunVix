@@ -12,7 +12,7 @@ class UserRepository extends GetxController {
       Get.snackbar(
         "Lỗi",
         "Không thể lưu thông tin: $error",
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     });
   }

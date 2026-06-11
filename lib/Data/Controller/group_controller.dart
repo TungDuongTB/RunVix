@@ -118,7 +118,7 @@ class GroupController extends GetxController {
         'Bạn đã rời khỏi nhóm "${group.name}"',
         backgroundColor: const Color(0xFFFFF3E0),
         colorText: const Color(0xFFE65100),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } catch (e) {
       Get.snackbar(
@@ -126,7 +126,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
@@ -140,7 +140,7 @@ class GroupController extends GetxController {
     if (group.id == null || group.id!.isEmpty) return;
     if (group.creatorId != currentUser.uid) {
       Get.snackbar('Lỗi', 'Chỉ người tạo nhóm mới có thể xóa.',
-          snackPosition: SnackPosition.BOTTOM);
+          );
       return;
     }
 
@@ -167,7 +167,7 @@ class GroupController extends GetxController {
         'Nhóm "${group.name}" đã được xóa',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } catch (e) {
       Get.snackbar(
@@ -175,7 +175,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
@@ -189,7 +189,7 @@ class GroupController extends GetxController {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       Get.snackbar('Lỗi', 'Vui lòng đăng nhập để tham gia nhóm.',
-          snackPosition: SnackPosition.BOTTOM);
+          );
       return false;
     }
     
@@ -213,7 +213,7 @@ class GroupController extends GetxController {
         'Bạn đã tham gia nhóm "${group.name}"',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
       return true;
     } catch (e) {
@@ -222,7 +222,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
       return false;
     } finally {
@@ -247,7 +247,7 @@ class GroupController extends GetxController {
         'Đã gửi lời mời tham gia nhóm.',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
       return true;
     } catch (e) {
@@ -256,7 +256,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
       return false;
     } finally {
@@ -283,7 +283,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
       return false;
     } finally {
@@ -310,7 +310,7 @@ class GroupController extends GetxController {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
         Get.snackbar('Lỗi', 'Vui lòng đăng nhập để tạo nhóm.',
-            snackPosition: SnackPosition.BOTTOM);
+            );
         return;
       }
 
@@ -322,7 +322,7 @@ class GroupController extends GetxController {
           'Nhóm "$name" đã có người sử dụng. Vui lòng chọn tên khác.',
           backgroundColor: const Color(0xFFFFF3E0),
           colorText: const Color(0xFFE65100),
-          snackPosition: SnackPosition.BOTTOM,
+          
           icon: const Icon(Icons.group_off_outlined, color: Color(0xFFE65100)),
           duration: const Duration(seconds: 4),
         );
@@ -371,7 +371,7 @@ class GroupController extends GetxController {
         "Đã tạo nhóm '$name' thành công!",
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
         duration: const Duration(seconds: 3),
       );
     } catch (e) {
@@ -380,7 +380,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
@@ -416,7 +416,7 @@ class GroupController extends GetxController {
             'Nhóm "$name" đã có người sử dụng. Vui lòng chọn tên khác.',
             backgroundColor: const Color(0xFFFFF3E0),
             colorText: const Color(0xFFE65100),
-            snackPosition: SnackPosition.BOTTOM,
+            
             icon: const Icon(Icons.group_off_outlined, color: Color(0xFFE65100)),
             duration: const Duration(seconds: 4),
           );
@@ -457,7 +457,7 @@ class GroupController extends GetxController {
         "Đã cập nhật nhóm '$name' thành công!",
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        snackPosition: SnackPosition.BOTTOM,
+        
         duration: const Duration(seconds: 3),
       );
     } catch (e) {
@@ -466,7 +466,7 @@ class GroupController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        snackPosition: SnackPosition.BOTTOM,
+        
       );
     } finally {
       isLoading.value = false;
