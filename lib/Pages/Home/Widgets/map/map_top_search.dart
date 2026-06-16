@@ -114,6 +114,8 @@ class _SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = StravaController.instance;
+
     return Container(
       height: 48,
       decoration: BoxDecoration(
@@ -128,7 +130,8 @@ class _SearchInput extends StatelessWidget {
         ],
       ),
       child: TextField(
-        onSubmitted: (value) => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+        controller: controller.searchController,
+        onSubmitted: (value) => controller.searchLocation(value),
         decoration: const InputDecoration(
           hintText: 'Tìm kiếm vị trí',
           prefixIcon: Icon(Icons.search),

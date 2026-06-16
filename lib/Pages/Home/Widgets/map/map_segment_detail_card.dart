@@ -40,7 +40,10 @@ class MapSegmentDetailCard extends StatelessWidget {
                     )),
               ),
               IconButton(
-                onPressed: () => controller.selectedSegment.value = null,
+                onPressed: () {
+                  controller.selectedSegment.value = null;
+                  NavigationController.instance.setBottomNavBarVisible(true);
+                },
                 icon: const Icon(Icons.close),
               ),
             ],

@@ -1,9 +1,14 @@
+import 'dart:math';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import '../Repository/strava_repository.dart';
+import 'navigation_controller.dart';
 
 class StravaController extends GetxController {
   static StravaController get instance => Get.find();
@@ -14,6 +19,7 @@ class StravaController extends GetxController {
   late GoogleMapController mapController;
   var currentPosition = Rxn<Position>();
   var isLoadingLocation = true.obs;
+  final searchController = TextEditingController();
   
   var segments = <dynamic>[].obs;
   var allSegments = <dynamic>[].obs; // Lưu trữ tất cả để lọc
@@ -34,6 +40,13 @@ class StravaController extends GetxController {
     
     // Lắng nghe thay đổi khoảng cách để lọc lại và focus
     ever(selectedDistance, (_) => applyFilters(shouldFocus: true));
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    NavigationController.instance.setBottomNavBarVisible(true);
+    super.onClose();
   }
 
   /// Lọc các đoạn đường dựa trên khoảng cách
@@ -135,6 +148,66 @@ class StravaController extends GetxController {
     }
   }
 
+  Future<void> searchLocation(String query) async {
+    if (query.trim().isEmpty) return;
+
+    try {
+      isLoadingLocation.value = true;
+
+      // Đọc Google Maps API Key từ dotenv
+      final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
+      if (apiKey.isEmpty) {
+        Get.snackbar("Lỗi", "Không tìm thấy Google Maps API Key trong cấu hình.");
+        return;
+      }
+
+      final encodedQuery = Uri.encodeComponent(query);
+      final url = 'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedQuery&key=$apiKey';
+
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == 'OK' && data['results'] != null && data['results'].isNotEmpty) {
+          final location = data['results'][0]['geometry']['location'];
+          final double lat = (location['lat'] as num).toDouble();
+          final double lng = (location['lng'] as num).toDouble();
+
+          // Cập nhật vị trí hiện tại
+          currentPosition.value = Position(
+            latitude: lat,
+            longitude: lng,
+            timestamp: DateTime.now(),
+            accuracy: 0.0,
+            altitude: 0.0,
+            altitudeAccuracy: 0.0,
+            heading: 0.0,
+            headingAccuracy: 0.0,
+            speed: 0.0,
+            speedAccuracy: 0.0,
+          );
+
+          // Di chuyển camera bản đồ đến vị trí tìm được
+          mapController.animateCamera(
+            CameraUpdate.newLatLngZoom(LatLng(lat, lng), 15.0),
+          );
+
+          // Nạp các cung đường mới xung quanh vị trí này
+          await fetchNearbySegments();
+        } else {
+          Get.snackbar("Thông báo", "Không tìm thấy vị trí yêu cầu.");
+        }
+      } else {
+        Get.snackbar("Lỗi", "Yêu cầu tìm kiếm thất bại.");
+      }
+    } catch (e) {
+      debugPrint("Lỗi tìm kiếm vị trí: $e");
+      Get.snackbar("Lỗi", "Đã xảy ra lỗi khi tìm kiếm vị trí.");
+    } finally {
+      isLoadingLocation.value = false;
+    }
+  }
+
   void onMapCreated(GoogleMapController googleMapController) {
     mapController = googleMapController;
     fetchSegmentsInView();
@@ -220,6 +293,49 @@ class StravaController extends GetxController {
     ]);
   }
 
+  int _nextMockSegmentId = 103;
+
+  void loadMoreSegments() {
+    final lat = currentPosition.value?.latitude ?? 21.0285;
+    final lng = currentPosition.value?.longitude ?? 105.8542;
+    final random = Random();
+
+    final List<Map<String, dynamic>> moreMock = [];
+    final List<String> segmentNames = [
+      'Công viên thành phố',
+      'Đường chạy hồ nước',
+      'Cung chạy ven sông',
+      'Đoạn chạy thử thách dốc',
+      'Đường chạy đô thị',
+      'Lộ trình ngắm cảnh hoàng hôn',
+      'Đường chạy bóng râm',
+      'Vòng chạy thể thao',
+    ];
+
+    for (int i = 0; i < 5; i++) {
+      final id = _nextMockSegmentId++;
+      final double latOffset = (random.nextDouble() - 0.5) * 0.03;
+      final double lngOffset = (random.nextDouble() - 0.5) * 0.03;
+      final double distance = 1000 + random.nextInt(9000).toDouble();
+      final double avgGrade = double.parse((random.nextDouble() * 3).toStringAsFixed(1));
+      final String name = '${segmentNames[random.nextInt(segmentNames.length)]} $id (Mock)';
+
+      moreMock.add({
+        'id': id,
+        'name': name,
+        'distance': distance,
+        'avg_grade': avgGrade,
+        'average_grade': avgGrade,
+        'points': 'u{~_Enwf_Sba@Yf@',
+        'start_latlng': [lat + latOffset, lng + lngOffset],
+        'end_latlng': [lat + latOffset + 0.003, lng + lngOffset + 0.003],
+      });
+    }
+
+    allSegments.addAll(moreMock);
+    applyFilters(shouldFocus: false);
+  }
+
   void _updatePolylinesFromSegments() {
     final newPolylines = <Polyline>{};
 
@@ -255,6 +371,23 @@ class StravaController extends GetxController {
       // Tìm segment trong list hiện tại (có thông tin cơ bản)
       final basicInfo = segments.firstWhere((s) => s['id'] == segmentId, orElse: () => null);
       selectedSegment.value = basicInfo;
+
+      if (basicInfo != null) {
+        final startLatLng = basicInfo['start_latlng'];
+        if (startLatLng != null && startLatLng is List && startLatLng.length == 2) {
+          try {
+            final lat = (startLatLng[0] as num).toDouble();
+            final lng = (startLatLng[1] as num).toDouble();
+            mapController.animateCamera(
+              CameraUpdate.newLatLngZoom(LatLng(lat, lng), 15.0),
+            );
+          } catch (e) {
+            debugPrint("Lỗi di chuyển camera đến cung đường: $e");
+          }
+        }
+      }
+
+      NavigationController.instance.setBottomNavBarVisible(false);
 
       // Lấy chi tiết và bảng xếp hạng
       final detail = await _stravaRepo.getSegmentDetails(segmentId);

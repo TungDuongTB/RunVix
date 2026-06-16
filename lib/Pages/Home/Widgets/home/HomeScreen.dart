@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final navigationController = NavigationController.instance;
   final postController = Get.put(PostController());
   final ScrollController _scrollController = ScrollController();
-  bool _isBottomNavBarVisible = true;
   Timer? _hideTimer;
 
   @override
@@ -29,20 +28,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool _onScroll(ScrollNotification notification) {
+    // Chỉ xử lý ẩn/hiện Bottom Nav theo cuộn nếu đang ở tab đầu tiên (Trang chủ)
+    if (navigationController.selectedIndex.value != 0) return false;
+
     if (notification is ScrollUpdateNotification && notification.scrollDelta != null) {
       // Đang vuốt -> chỉ ẩn/hiện theo hướng, KHÔNG set timer hiện lại ở đây
-      if (notification.scrollDelta! > 3.0 && _isBottomNavBarVisible) {
-        setState(() => _isBottomNavBarVisible = false);
-      } else if (notification.scrollDelta! < -3.0 && !_isBottomNavBarVisible) {
-        setState(() => _isBottomNavBarVisible = true);
+      if (notification.scrollDelta! > 3.0 && navigationController.isBottomNavBarVisible.value) {
+        navigationController.setBottomNavBarVisible(false);
+      } else if (notification.scrollDelta! < -3.0 && !navigationController.isBottomNavBarVisible.value) {
+        navigationController.setBottomNavBarVisible(true);
       }
       // Hủy timer cũ vì người dùng vẫn đang cuộn
       _hideTimer?.cancel();
     } else if (notification is ScrollEndNotification) {
-      // Dừng cuộn -> đợi 1s rồi hiện lại nếu đang ẩn
+      // Dừng cuộn -> đợi một lát rồi hiện lại nếu đang ẩn
       _hideTimer = Timer(const Duration(microseconds: 100), () {
-        if (mounted && !_isBottomNavBarVisible) {
-          setState(() => _isBottomNavBarVisible = true);
+        if (mounted && !navigationController.isBottomNavBarVisible.value) {
+          navigationController.setBottomNavBarVisible(true);
         }
       });
     }
@@ -87,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 curve: Curves.easeInOut,
                 left: 0,
                 right: 0,
-                bottom: _isBottomNavBarVisible ? 0 : -100,
+                bottom: navigationController.isBottomNavBarVisible.value ? 0 : -100,
                 child: _buildCustomBottomNavBar(),
               ),
             ],

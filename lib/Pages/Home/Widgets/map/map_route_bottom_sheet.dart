@@ -97,9 +97,10 @@ class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
 
   Widget _buildSeeMoreButton() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 8.0,bottom: 100),
       child: TextButton(
         onPressed: () {
+          controller.loadMoreSegments();
           // Khi nhấn xem thêm, mở rộng sheet lên mức tối đa
           _sheetController.animateTo(
             maxSize,
@@ -116,6 +117,7 @@ class _MapRouteBottomSheetState extends State<MapRouteBottomSheet> {
           ),
         ),
       ),
+
     );
   }
 

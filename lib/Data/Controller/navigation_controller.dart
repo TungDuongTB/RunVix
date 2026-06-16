@@ -5,6 +5,7 @@ class NavigationController extends GetxController {
 
   final selectedIndex = 0.obs;
   final profileTabIndex = 0.obs;
+  final isBottomNavBarVisible = true.obs;
 
   void changeIndex(int index) {
     selectedIndex.value = index;
@@ -13,5 +14,9 @@ class NavigationController extends GetxController {
   void changeProfileTab(int index) {
     profileTabIndex.value = index;
     selectedIndex.value = 4; // Tự động chuyển sang tab "Bạn"
+  }
+
+  void setBottomNavBarVisible(bool visible) {
+    isBottomNavBarVisible.value = visible;
   }
 }
