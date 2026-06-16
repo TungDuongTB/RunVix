@@ -208,6 +208,21 @@ class GroupDetailEventCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.people_outline, size: 14, color: AppColors.onSurfaceVariant),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${event.joinedUserIds.length} người tham gia',
+                        style: const TextStyle(
+                          color: AppColors.onSurfaceVariant,
+                          fontSize: 13,
+                          fontFamily: 'Hanken Grotesk',
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

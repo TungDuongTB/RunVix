@@ -96,4 +96,26 @@ class ChallengeRepository extends GetxController {
       print('Lỗi khi xóa sự kiện của nhóm: $e');
     }
   }
+
+  /// Tham gia vào một Challenge
+  Future<void> joinChallenge(String challengeId, String userId) async {
+    try {
+      await _db.collection('Challenges').doc(challengeId).update({
+        'JoinedUserIds': FieldValue.arrayUnion([userId])
+      });
+    } catch (e) {
+      throw 'Không thể tham gia sự kiện này. Vui lòng thử lại!';
+    }
+  }
+
+  /// Rời khỏi một Challenge
+  Future<void> leaveChallenge(String challengeId, String userId) async {
+    try {
+      await _db.collection('Challenges').doc(challengeId).update({
+        'JoinedUserIds': FieldValue.arrayRemove([userId])
+      });
+    } catch (e) {
+      throw 'Không thể hủy tham gia sự kiện này. Vui lòng thử lại!';
+    }
+  }
 }

@@ -11,12 +11,16 @@
   <component name="ChangeListManager">
     <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: maps">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/navigation_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/navigation_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/strava_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/HomeScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_bottom_sheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_route_bottom_sheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_segment_detail_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_segment_detail_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/calendar_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/calendar_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/challenge_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/challenge_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/group_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/challenge_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/challenge_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/challenge_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/challenge_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_dialogs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_dialogs.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_events_section.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_detail/group_detail_events_section.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/group_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/home_suggested_follows.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -10,22 +10,8 @@ class ChallengeTabContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
-          // Category Filters
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                _buildFilterChip(Icons.directions_run, 'Chạy bộ'),
-                _buildFilterChip(Icons.directions_bike, 'Đạp xe'),
-                _buildFilterChip(Icons.pool, 'Bơi lội'),
-                _buildFilterChip(Icons.directions_walk, 'Đi bộ'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Main Challenge List
+          const SizedBox(height: 50),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Obx(() {
@@ -46,25 +32,6 @@ class ChallengeTabContent extends StatelessWidget {
           const SizedBox(height: 24),
 
         ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(IconData icon, String label) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: OutlinedButton.icon(
-        onPressed: () {},
-        icon: Icon(icon, size: 18, color: Colors.black87),
-        label: Text(label, style: const TextStyle(color: Colors.black87, fontSize: 13)),
-        style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: BorderSide(color: Colors.grey.shade300),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-        ),
       ),
     );
   }
@@ -141,6 +108,17 @@ class ChallengeTabContent extends StatelessWidget {
                       '$start đến $end',
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
                     ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.people_outline, size: 16, color: Colors.grey),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${challenge.joinedUserIds.length} người đã tham gia',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -148,24 +126,33 @@ class ChallengeTabContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (FirebaseAuth.instance.currentUser?.uid != challenge.creatorId)
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonColor,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+            Builder(
+              builder: (context) {
+                final uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+                final isJoined = challenge.joinedUserIds.contains(uid);
+                return SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ChallengeController.instance.toggleJoinChallenge(challenge);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isJoined ? Colors.grey.shade300 : AppColors.buttonColor,
+                      foregroundColor: isJoined ? Colors.black87 : Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+
+                    child: Text(
+                      isJoined ? 'Đã tham gia' : 'Tham gia',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Tham gia',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
+                );
+              }
             ),
         ],
       ),

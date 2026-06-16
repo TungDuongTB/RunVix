@@ -73,13 +73,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       if (!snapshot.exists) {
         if (mounted) {
           Get.back();
-          Get.snackbar(
-            "Thông báo", 
-            "Nhóm này đã bị giải tán.",
-            
-            backgroundColor: const Color(0xFFFFF3E0),
-            colorText: const Color(0xFFE65100),
-          );
+          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+          if (group.creatorId != currentUid) {
+            Get.snackbar(
+              "Thông báo", 
+              "Nhóm này đã bị giải tán.",
+              backgroundColor: const Color(0xFFFFF3E0),
+              colorText: const Color(0xFFE65100),
+            );
+          }
         }
       }
     });
@@ -215,7 +217,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     onAddEvent: _openCreateEvent,
                     onEventTapped: (challenge) {
                       if (_isCreator || FirebaseAuth.instance.currentUser?.uid == challenge.creatorId) {
-                        Get.to(() => EditGroupEventScreen(group: group, challenge: challenge));
+                        Get.to(() => EditGroupEventScreen(group: group, challenge: challenge))?.then((_) => _loadEvents());
+                      } else {
+                        GroupDetailDialogs.showEventDetail(context, challenge).then((_) => _loadEvents());
                       }
                     },
                   ),

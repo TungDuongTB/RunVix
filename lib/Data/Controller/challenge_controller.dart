@@ -31,7 +31,7 @@ class ChallengeController extends GetxController {
       if (gid != null && gid.isNotEmpty) {
         // Chỉ lấy các thử thách của nhóm KHÁC nhóm của user
         if (!myGroupIds.contains(gid)) {
-          // Do `challenges` đã được sort giảm dần theo StartDate (từ repo), 
+          // Do `challenges` đã được sort giảm dần theo StartDate (từ repo),
           // nên thử thách đầu tiên gặp của mỗi group chính là thử thách mới nhất.
           if (!grouped.containsKey(gid)) {
             grouped[gid] = challenge;
@@ -59,7 +59,7 @@ class ChallengeController extends GetxController {
       Get.snackbar('Lỗi', 'Vui lòng đăng nhập.');
       return;
     }
-    
+
     if (group.id == null || group.id!.isEmpty) return;
 
     try {
@@ -86,9 +86,12 @@ class ChallengeController extends GetxController {
       final challengeId = await _challengeRepo.createChallenge(challenge);
 
       // Gửi thông báo đến tất cả thành viên của group
-      final memberIds = group.memberIds.where((id) => id != currentUser.uid).toList();
-      final NotificationRepository notificationRepo = NotificationRepository.instance;
-      
+      final memberIds = group.memberIds
+          .where((id) => id != currentUser.uid)
+          .toList();
+      final NotificationRepository notificationRepo =
+          NotificationRepository.instance;
+
       for (String memberId in memberIds) {
         await notificationRepo.createGroupChallengeNotification(
           memberId,
@@ -105,7 +108,6 @@ class ChallengeController extends GetxController {
         'Đã tạo sự kiện/thử thách "$title"',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        
       );
     } catch (e) {
       Get.snackbar(
@@ -113,7 +115,6 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        
       );
     } finally {
       isLoading.value = false;
@@ -146,14 +147,13 @@ class ChallengeController extends GetxController {
       };
 
       await _challengeRepo.updateChallenge(challenge.id!, dataToUpdate);
-      
+
       Get.back();
       Get.snackbar(
         'Thành công 🎉',
         'Đã cập nhật sự kiện "$title"',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        
       );
     } catch (e) {
       Get.snackbar(
@@ -161,7 +161,6 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        
       );
     } finally {
       isLoading.value = false;
@@ -179,7 +178,6 @@ class ChallengeController extends GetxController {
         'Đã xóa sự kiện.',
         backgroundColor: const Color(0xFFE8F5E9),
         colorText: const Color(0xFF2E7D32),
-        
       );
     } catch (e) {
       Get.snackbar(
@@ -187,7 +185,50 @@ class ChallengeController extends GetxController {
         e.toString(),
         backgroundColor: const Color(0xFFFFEBEE),
         colorText: const Color(0xFFC62828),
-        
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Tham gia hoặc hủy tham gia thử thách/sự kiện
+  Future<void> toggleJoinChallenge(ChallengeModel challenge) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      Get.snackbar('Lỗi', 'Vui lòng đăng nhập.');
+      return;
+    }
+
+    if (challenge.id == null || challenge.id!.isEmpty) return;
+
+    try {
+      isLoading.value = true;
+      final uid = currentUser.uid;
+      final isJoined = challenge.joinedUserIds.contains(uid);
+
+      if (isJoined) {
+        await _challengeRepo.leaveChallenge(challenge.id!, uid);
+        Get.snackbar(
+          'Thành công 🎉',
+          'Bạn đã hủy tham gia sự kiện "${challenge.title}"',
+          backgroundColor: const Color(0xFFE8F5E9),
+          colorText: const Color(0xFF2E7D32),
+        );
+      } else {
+        await _challengeRepo.joinChallenge(challenge.id!, uid);
+        Get.snackbar(
+          'Thành công 🎉',
+          'Bạn đã tham gia sự kiện "${challenge.title}"',
+          backgroundColor: const Color(0xFFE8F5E9),
+          colorText: const Color(0xFF2E7D32),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Lỗi',
+        e.toString(),
+        backgroundColor: const Color(0xFFFFEBEE),
+        colorText: const Color(0xFFC62828),
       );
     } finally {
       isLoading.value = false;

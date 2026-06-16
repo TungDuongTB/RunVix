@@ -12,6 +12,7 @@ class ChallengeModel {
   final double goalValue;
   final String goalUnit; // km, minutes, etc.
   final String imageUrl;
+  final List<String> joinedUserIds;
 
   ChallengeModel({
     this.id,
@@ -25,6 +26,7 @@ class ChallengeModel {
     required this.goalValue,
     required this.goalUnit,
     required this.imageUrl,
+    this.joinedUserIds = const [],
   });
 
   Map<String, dynamic> toJson() {
@@ -39,6 +41,7 @@ class ChallengeModel {
       "GoalValue": goalValue,
       "GoalUnit": goalUnit,
       "ImageUrl": imageUrl,
+      "JoinedUserIds": joinedUserIds,
     };
   }
 
@@ -56,6 +59,39 @@ class ChallengeModel {
       goalValue: (data["GoalValue"] ?? 0).toDouble(),
       goalUnit: data["GoalUnit"] ?? "km",
       imageUrl: data["ImageUrl"] ?? "",
+      joinedUserIds: List<String>.from(
+        (data["JoinedUserIds"] ?? []).map((e) => e.toString()),
+      ),
+    );
+  }
+
+  ChallengeModel copyWith({
+    String? id,
+    String? groupId,
+    String? creatorId,
+    String? title,
+    String? description,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? type,
+    double? goalValue,
+    String? goalUnit,
+    String? imageUrl,
+    List<String>? joinedUserIds,
+  }) {
+    return ChallengeModel(
+      id: id ?? this.id,
+      groupId: groupId ?? this.groupId,
+      creatorId: creatorId ?? this.creatorId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      type: type ?? this.type,
+      goalValue: goalValue ?? this.goalValue,
+      goalUnit: goalUnit ?? this.goalUnit,
+      imageUrl: imageUrl ?? this.imageUrl,
+      joinedUserIds: joinedUserIds ?? this.joinedUserIds,
     );
   }
 }
