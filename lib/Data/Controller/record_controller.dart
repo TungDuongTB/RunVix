@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:runvix/export.dart';
 
 class RecordController extends GetxController {
@@ -94,6 +96,28 @@ class RecordController extends GetxController {
     }
   }
 
+  LatLngBounds _boundsFromLatLngList(List<LatLng> list) {
+    double? minLat, maxLat, minLng, maxLng;
+    for (final latLng in list) {
+      if (minLat == null || latLng.latitude < minLat) {
+        minLat = latLng.latitude;
+      }
+      if (maxLat == null || latLng.latitude > maxLat) {
+        maxLat = latLng.latitude;
+      }
+      if (minLng == null || latLng.longitude < minLng) {
+        minLng = latLng.longitude;
+      }
+      if (maxLng == null || latLng.longitude > maxLng) {
+        maxLng = latLng.longitude;
+      }
+    }
+    return LatLngBounds(
+      southwest: LatLng(minLat ?? 0, minLng ?? 0),
+      northeast: LatLng(maxLat ?? 0, maxLng ?? 0),
+    );
+  }
+
   void startRecording() async {
     // Reset inputs
     title.clear();
@@ -134,7 +158,7 @@ class RecordController extends GetxController {
 
     _positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-          (Position position) {
+              (Position position) {
             currentPosition.value = position; // Cập nhật vị trí hiện tại
 
             if (!isPaused.value) {
@@ -181,7 +205,7 @@ class RecordController extends GetxController {
       // Lưu nếu chạy trên 10m
       final workout = WorkoutModel(
         userId:
-            _userController.user.value.id ??
+        _userController.user.value.id ??
             FirebaseAuth.instance.currentUser?.uid ??
             "",
         type: "Running",
@@ -201,38 +225,27 @@ class RecordController extends GetxController {
       // 1. Luôn lưu vào Workouts
       await _workoutRepo.saveWorkout(workout);
 
-      // 2. Chuẩn bị ảnh bản đồ tĩnh
-      String staticMapUrl = "";
-      if (polylinePoints.isNotEmpty) {
-        const apiKey = "AIzaSyBjd9_rTIEGk3sS0rE-7RdKq9WyAkKX-EI";
+      // 2. Chụp ảnh snapshot bản đồ
+      XFile? snapshotFile;
+      if (polylinePoints.isNotEmpty && mapController != null) {
+        try {
+          // Căn chỉnh camera hiển thị toàn bộ lộ trình
+          final bounds = _boundsFromLatLngList(polylinePoints);
+          await mapController!.moveCamera(CameraUpdate.newLatLngBounds(bounds, 50));
 
-        List<LatLng> points = List.from(polylinePoints);
-        if (points.length > 80) {
-          int step = points.length ~/ 80;
-          points = List.generate(80, (i) => points[i * step]);
-          if (!points.contains(polylinePoints.last))
-            points.add(polylinePoints.last);
+          // Chờ một chút để bản đồ load xong và vẽ polylines
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          final Uint8List? imageBytes = await mapController!.takeSnapshot();
+          if (imageBytes != null) {
+            final tempDir = Directory.systemTemp;
+            final file = File('${tempDir.path}/map_snapshot_${DateTime.now().millisecondsSinceEpoch}.png');
+            await file.writeAsBytes(imageBytes);
+            snapshotFile = XFile(file.path);
+          }
+        } catch (e) {
+          print("Lỗi khi chụp snapshot bản đồ: $e");
         }
-
-        String pathParams = "color:0xff4b2cff|weight:5";
-        for (var p in points) {
-          pathParams +=
-              "|${p.latitude.toStringAsFixed(6)},${p.longitude.toStringAsFixed(6)}";
-        }
-
-        String markers =
-            "&markers=color:green|label:S|${polylinePoints.first.latitude},${polylinePoints.first.longitude}";
-        markers +=
-            "&markers=color:red|label:F|${polylinePoints.last.latitude},${polylinePoints.last.longitude}";
-
-        staticMapUrl =
-            "https://maps.googleapis.com/maps/api/staticmap?"
-            "size=600x400"
-            "&scale=2"
-            "&maptype=roadmap"
-            "&path=$pathParams"
-            "$markers"
-            "&key=$apiKey";
       }
 
       // 3. Chuyển sang màn hình đăng bài thủ công nếu isPublic = true
@@ -242,7 +255,8 @@ class RecordController extends GetxController {
         postController.workoutDistance.value = distance.value / 1000;
         postController.workoutDuration.value = duration.value;
         postController.workoutPace.value = pace.value;
-        postController.workoutImageUrl.value = staticMapUrl;
+        postController.workoutImageUrl.value = "";
+        postController.workoutImageFile.value = snapshotFile;
         postController.title.text = title.text.trim().isNotEmpty
             ? title.text.trim()
             : "Chạy bộ";

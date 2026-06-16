@@ -13,8 +13,7 @@ class PostCard extends StatelessWidget {
     final postController = PostController.instance;
     final userController = UserController.instance;
 
-    final hasImage =
-        post.imageUrl.isNotEmpty && post.imageUrl.startsWith('http');
+    final hasImage = post.imageUrl.isNotEmpty && post.imageUrl.startsWith('http');
     final hasStats = post.distance != null && post.distance! > 0;
 
     return GlassCard(

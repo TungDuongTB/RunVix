@@ -245,7 +245,7 @@ class ProfileProgressTab extends StatelessWidget {
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: firstPoint,
-                    zoom: 200,
+                    zoom: 15,
                   ),
                   polylines: polylines,
                 ),

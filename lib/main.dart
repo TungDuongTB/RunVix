@@ -7,12 +7,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
-  
-  print("🚀 Khởi động ứng dụng RunVix...");
 
   try {
-    print("📱 Đang khởi tạo Firebase...");
-    // Tự động nhận diện Android, iOS hay Web để lấy cấu hình phù hợp
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

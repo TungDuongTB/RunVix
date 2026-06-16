@@ -14,15 +14,22 @@ class _FollowersListScreenState extends State<FollowersListScreen> {
   late final _userRepo = Get.put(UserRepository());
   final followerUsers = <UserModel>[].obs;
   final isLoadingFollowers = false.obs;
+  Worker? _followersWorker;
 
   @override
   void initState() {
     super.initState();
     _loadFollowerDetails();
     // Lắng nghe follower IDs real-time
-    ever(userController.followerIds, (_) {
+    _followersWorker = ever(userController.followerIds, (_) {
       _loadFollowerDetails();
     });
+  }
+
+  @override
+  void dispose() {
+    _followersWorker?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFollowerDetails() async {

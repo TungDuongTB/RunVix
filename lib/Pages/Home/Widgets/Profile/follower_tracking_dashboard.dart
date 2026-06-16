@@ -70,15 +70,22 @@ class _FollowersTabState extends State<_FollowersTab> {
   late final _userRepo = Get.put(UserRepository());
   final followerUsers = <UserModel>[].obs;
   final isLoading = false.obs;
+  Worker? _followersWorker;
 
   @override
   void initState() {
     super.initState();
     _loadFollowers();
     // Reload followers khi followerIds thay đổi
-    ever(userController.followerIds, (_) {
+    _followersWorker = ever(userController.followerIds, (_) {
       _loadFollowers();
     });
+  }
+
+  @override
+  void dispose() {
+    _followersWorker?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFollowers() async {
@@ -188,14 +195,21 @@ class _FollowingTabState extends State<_FollowingTab> {
   late final _userRepo = Get.put(UserRepository());
   final followingUsers = <UserModel>[].obs;
   final isLoading = false.obs;
+  Worker? _followingWorker;
 
   @override
   void initState() {
     super.initState();
     _loadFollowing();
-    ever(userController.followingIds, (_) {
+    _followingWorker = ever(userController.followingIds, (_) {
       _loadFollowing();
     });
+  }
+
+  @override
+  void dispose() {
+    _followingWorker?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFollowing() async {

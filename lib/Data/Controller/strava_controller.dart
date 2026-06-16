@@ -122,7 +122,11 @@ class StravaController extends GetxController {
 
       if (permission == LocationPermission.deniedForever) return;
 
-      Position position = await Geolocator.getCurrentPosition();
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
       currentPosition.value = position;
     } catch (e) {
       debugPrint("Lỗi khi lấy vị trí: $e");

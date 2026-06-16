@@ -14,6 +14,7 @@ class PostController extends GetxController {
   var workoutDuration = 0.obs;
   var workoutPace = 0.0.obs;
   var workoutImageUrl = "".obs;
+  var workoutImageFile = Rxn<XFile>();
 
   final isLoading = false.obs;
   final isLoadingMore = false.obs;
@@ -100,6 +101,7 @@ class PostController extends GetxController {
     workoutDuration.value = 0;
     workoutPace.value = 0.0;
     workoutImageUrl.value = "";
+    workoutImageFile.value = null;
     title.clear();
     content.clear();
   }
@@ -192,6 +194,7 @@ class PostController extends GetxController {
   Future<void> createPost(XFile? imageFile) async {
     try {
       isLoading.value = true;
+      final fileToUpload = imageFile ?? workoutImageFile.value;
 
       final post = PostModel(
         userId: userController.user.value.id ?? "",
@@ -204,7 +207,7 @@ class PostController extends GetxController {
         type: workoutDistance.value > 0 ? "Running" : null,
       );
 
-      await postRepo.createPost(post, imageFile);
+      await postRepo.createPost(post, fileToUpload);
       await fetchPosts();
       clearWorkoutData();
 

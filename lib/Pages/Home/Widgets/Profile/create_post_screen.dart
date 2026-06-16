@@ -25,6 +25,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Obx(() {
       final hasWorkoutImage = controller.workoutImageUrl.value.isNotEmpty;
+      final hasWorkoutImageFile = controller.workoutImageFile.value != null;
 
       return Stack(
         children: [
@@ -34,7 +35,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             body: Stack(
               children: [
                 _PostBackground(
-                  imageFile: _imageFile,
+                  imageFile: _imageFile ?? controller.workoutImageFile.value,
                   workoutImageUrl: controller.workoutImageUrl.value,
                 ),
                 SafeArea(
@@ -43,11 +44,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       const SizedBox(height: 20),
                       _buildHeader(),
                       const Spacer(),
-                      if (_imageFile == null && !hasWorkoutImage)
+                      if (_imageFile == null && !hasWorkoutImageFile && !hasWorkoutImage)
                         _buildAddImageButton(),
                       const Spacer(),
                       _PostInputCard(
-                        imageFile: _imageFile,
+                        imageFile: _imageFile ?? controller.workoutImageFile.value,
                         workoutImageUrl: controller.workoutImageUrl.value,
                         titleController: controller.title,
                         contentController: controller.content,
@@ -83,7 +84,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   Widget _buildPopupMenu() {
     final hasImage =
-        _imageFile != null || controller.workoutImageUrl.value.isNotEmpty;
+        _imageFile != null ||
+        controller.workoutImageFile.value != null ||
+        controller.workoutImageUrl.value.isNotEmpty;
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert, color: Colors.white, size: 28),
       onSelected: (value) {
@@ -92,6 +95,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         else if (value == 'remove_image') {
           setState(() => _imageFile = null);
           controller.workoutImageUrl.value = "";
+          controller.workoutImageFile.value = null;
         }
       },
       itemBuilder: (context) => [
@@ -184,7 +188,29 @@ class _PostBackground extends StatelessWidget {
           ? Image.network(imageFile!.path, fit: BoxFit.cover)
           : Image.file(File(imageFile!.path), fit: BoxFit.cover);
     } else if (workoutImageUrl.isNotEmpty) {
-      imageWidget = Image.network(workoutImageUrl, fit: BoxFit.cover);
+      imageWidget = Image.network(
+        workoutImageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade900,
+            child: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.map_outlined, size: 60, color: Colors.white54),
+                  SizedBox(height: 12),
+                  Text(
+                    'Không thể tải ảnh bản đồ tĩnh.\nVui lòng kiểm tra API Key / Kết nối.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
     }
 
     return Container(

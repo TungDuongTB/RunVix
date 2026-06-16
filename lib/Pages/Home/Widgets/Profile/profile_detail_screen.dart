@@ -59,34 +59,44 @@ class ProfileDetailScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 50,
+                      radius: 40,
                       backgroundImage: NetworkImage(
                         user.profilePicture.isNotEmpty
                             ? user.profilePicture
                             : 'https://picsum.photos/200',
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.fullName.isEmpty
-                              ? 'Người dùng RunVix'
-                              : user.fullName,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              user.fullName.isEmpty
+                                  ? 'Người dùng RunVix'
+                                  : user.fullName,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                        Text(
-                          user.address.isEmpty ? 'Trái Đất' : user.address,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              user.address.isEmpty ? 'Trái Đất' : user.address,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),

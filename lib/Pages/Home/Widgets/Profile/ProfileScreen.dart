@@ -13,6 +13,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   late TabController _tabController;
   final userController = UserController.instance;
   final navigationController = NavigationController.instance;
+  Worker? _profileTabWorker;
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
 
     // Lắng nghe thay đổi từ controller (khi chuyển từ trang chủ)
-    ever(navigationController.profileTabIndex, (index) {
+    _profileTabWorker = ever(navigationController.profileTabIndex, (index) {
       if (_tabController.index != index) {
         _tabController.animateTo(index);
       }
@@ -44,6 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void dispose() {
+    _profileTabWorker?.dispose();
     _tabController.dispose();
     super.dispose();
   }
