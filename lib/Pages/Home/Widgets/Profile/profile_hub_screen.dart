@@ -260,9 +260,8 @@ class _ProfileHubScreenState extends State<ProfileHubScreen> {
                   isFollowing: realTimeIsFollowing,
                   isFollower: realTimeIsFollower,
                   onFollowPressed: isCurrentUser ? null : _toggleFollow,
-                  onStatTap: () {
-                    // Handle stat tap
-                  },
+                  onFollowersTap: () => Get.to(() => FollowersListScreen(userId: targetUid)),
+                  onFollowingTap: () => Get.to(() => FollowingListScreen(userId: targetUid)),
                 );
               }),
 

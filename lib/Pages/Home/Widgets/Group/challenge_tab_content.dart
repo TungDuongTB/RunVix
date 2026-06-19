@@ -154,48 +154,7 @@ class ChallengeTabContent extends StatelessWidget {
                 );
               }
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuggestedCard(String title, String imageUrl) {
-    return Container(
-      width: 180,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              imageUrl,
-              height: 120,
-              width: 180,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 120,
-                width: 180,
-                color: Colors.grey[300],
-                child: const Icon(Icons.image, size: 40, color: Colors.grey),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-          ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 30),
         ],
       ),
     );

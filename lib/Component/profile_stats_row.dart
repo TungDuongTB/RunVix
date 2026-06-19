@@ -4,14 +4,18 @@ class ProfileStatsRow extends StatelessWidget {
   final int followers;
   final int following;
   final int likes;
-  final VoidCallback? onStatTap;
+  final VoidCallback? onFollowersTap;
+  final VoidCallback? onFollowingTap;
+  final VoidCallback? onLikesTap;
 
   const ProfileStatsRow({
     super.key,
     required this.followers,
     required this.following,
     required this.likes,
-    this.onStatTap,
+    this.onFollowersTap,
+    this.onFollowingTap,
+    this.onLikesTap,
   });
 
   @override
@@ -20,19 +24,19 @@ class ProfileStatsRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          Expanded(child: _buildStatItem('Followers', _formatCount(followers))),
+          Expanded(child: _buildStatItem('Followers', _formatCount(followers), onFollowersTap)),
           Container(
             width: 1,
             height: 32,
             color: const Color(0xFFE4BFB1).withOpacity(0.3),
           ),
-          Expanded(child: _buildStatItem('Following', _formatCount(following))),
+          Expanded(child: _buildStatItem('Following', _formatCount(following), onFollowingTap)),
           Container(
             width: 1,
             height: 32,
             color: const Color(0xFFE4BFB1).withOpacity(0.3),
           ),
-          Expanded(child: _buildStatItem('Likes', _formatCount(likes))),
+          Expanded(child: _buildStatItem('Likes', _formatCount(likes), onLikesTap)),
         ],
       ),
     );
@@ -45,9 +49,9 @@ class ProfileStatsRow extends StatelessWidget {
     return count.toString();
   }
 
-  Widget _buildStatItem(String label, String value) {
+  Widget _buildStatItem(String label, String value, VoidCallback? onTap) {
     return GestureDetector(
-      onTap: onStatTap,
+      onTap: onTap,
       child: Column(
         children: [
           Text(

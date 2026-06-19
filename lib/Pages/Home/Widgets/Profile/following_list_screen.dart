@@ -20,10 +20,14 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
   void initState() {
     super.initState();
     _loadFollowingDetails();
-    // Lắng nghe following IDs real-time
-    _followingWorker = ever(userController.followingIds, (_) {
-      _loadFollowingDetails();
-    });
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isCurrentUser = widget.userId == null || widget.userId == currentUid;
+    if (isCurrentUser) {
+      // Lắng nghe following IDs real-time cho user hiện tại
+      _followingWorker = ever(userController.followingIds, (_) {
+        _loadFollowingDetails();
+      });
+    }
   }
 
   @override
@@ -36,11 +40,24 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
     try {
       isLoadingFollowing.value = true;
       final List<UserModel> users = [];
+      final currentUid = FirebaseAuth.instance.currentUser?.uid;
+      final targetUid = widget.userId ?? currentUid;
 
-      for (var followingId in userController.followingIds) {
-        final user = await _userRepo.getUserDetails(followingId);
-        if (user.id!.isNotEmpty) {
-          users.add(user);
+      if (targetUid != null && targetUid.isNotEmpty) {
+        List<String> ids;
+        if (targetUid == currentUid) {
+          ids = userController.followingIds;
+        } else {
+          ids = await _userRepo.getFollowingIds(targetUid);
+        }
+
+        for (var followingId in ids) {
+          if (followingId.trim().isNotEmpty) {
+            final user = await _userRepo.getUserDetails(followingId);
+            if (user.id != null && user.id!.isNotEmpty) {
+              users.add(user);
+            }
+          }
         }
       }
 
@@ -63,14 +80,19 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
           onPressed: () => Get.back(),
         ),
-        title: Obx(() => Text(
-          'Đang theo dõi (${userController.followingIds.length})',
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        )),
+        title: Obx(() {
+          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+          final isCurrentUser = widget.userId == null || widget.userId == currentUid;
+          final count = isCurrentUser ? userController.followingIds.length : followingUsers.length;
+          return Text(
+            'Đang theo dõi ($count)',
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          );
+        }),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -80,7 +102,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           );
         }
 
-        if (userController.followingIds.isEmpty) {
+        if (followingUsers.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +110,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
                 Icon(Icons.person_add_outlined, size: 64, color: Colors.grey[300]),
                 const SizedBox(height: 16),
                 Text(
-                  'Bạn chưa theo dõi ai',
+                  'Không tìm thấy ai đang theo dõi',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
               ],

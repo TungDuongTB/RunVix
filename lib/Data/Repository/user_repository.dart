@@ -135,6 +135,7 @@ class UserRepository extends GetxController {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) => (doc.data()['ortherid'] ?? "") as String)
+              .where((id) => id.trim().isNotEmpty)
               .toList(),
         )
         .handleError((error) {
@@ -166,6 +167,7 @@ class UserRepository extends GetxController {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) => (doc.data()['uid'] ?? "") as String)
+              .where((id) => id.trim().isNotEmpty)
               .toList(),
         )
         .handleError((error) {

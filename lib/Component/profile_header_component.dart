@@ -13,7 +13,8 @@ class ProfileHeaderComponent extends StatelessWidget {
   final bool isFollowing;
   final bool isFollower;
   final VoidCallback? onFollowPressed;
-  final VoidCallback? onStatTap;
+  final VoidCallback? onFollowersTap;
+  final VoidCallback? onFollowingTap;
 
   const ProfileHeaderComponent({
     super.key,
@@ -29,7 +30,8 @@ class ProfileHeaderComponent extends StatelessWidget {
     this.isFollowing = false,
     this.isFollower = false,
     this.onFollowPressed,
-    this.onStatTap,
+    this.onFollowersTap,
+    this.onFollowingTap,
   });
 
   @override
@@ -50,7 +52,8 @@ class ProfileHeaderComponent extends StatelessWidget {
           followers: followers,
           following: following,
           likes: likes,
-          onStatTap: onStatTap,
+          onFollowersTap: onFollowersTap,
+          onFollowingTap: onFollowingTap,
         ),
 
         const SizedBox(height: 24),

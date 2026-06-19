@@ -26,7 +26,8 @@ class MapTopSearch extends StatelessWidget {
           const Expanded(child: _SearchInput()),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+            onTap: () =>
+                Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
             child: _buildSavedButton(),
           ),
         ],
@@ -77,7 +78,8 @@ class MapTopSearch extends StatelessWidget {
               label: 'Lộ trình',
               isSelected: true,
               hasDropdown: true,
-              onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+              onTap: () =>
+                  Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
             ),
             AppFilterChip(
               label: isDistanceSelected
@@ -96,11 +98,13 @@ class MapTopSearch extends StatelessWidget {
             ),
             AppFilterChip(
               label: 'Bề mặt',
-              onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+              onTap: () =>
+                  Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
             ),
             AppFilterChip(
               label: 'Khó khăn',
-              onTap: () => Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
+              onTap: () =>
+                  Get.snackbar("Thông báo", "Chức năng đang được phát triển"),
             ),
           ],
         );

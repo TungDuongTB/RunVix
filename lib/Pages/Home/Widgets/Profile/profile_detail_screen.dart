@@ -1,3 +1,4 @@
+import 'package:runvix/Pages/Home/Widgets/Profile/profile_statistics_screen.dart';
 import 'package:runvix/export.dart';
 
 class ProfileDetailScreen extends StatelessWidget {
@@ -30,16 +31,14 @@ class ProfileDetailScreen extends StatelessWidget {
             onPressed: () => Get.snackbar(
               'Thông báo',
               'Chức năng đang được phát triển',
-              
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.black),
-            onPressed: () => Get.to(() => SettingsScreen()),
+            icon: const Icon(Icons.logout_outlined, color: Colors.black),
+            onPressed: () => _showLogoutConfirmDialog(context),
           ),
         ],
       ),
-
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(
@@ -48,52 +47,35 @@ class ProfileDetailScreen extends StatelessWidget {
         }
 
         final user = controller.user.value;
-
         return SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header: Profile Info
+              // Profile Header
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: NetworkImage(
-                        user.profilePicture.isNotEmpty
-                            ? user.profilePicture
-                            : 'https://picsum.photos/200',
-                      ),
+                      backgroundImage: user.profilePicture.isNotEmpty
+                          ? NetworkImage(user.profilePicture)
+                          : const AssetImage('assets/Images/user.png') as ImageProvider,
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              user.fullName.isEmpty
-                                  ? 'Người dùng RunVix'
-                                  : user.fullName,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Text(
+                            user.fullName,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              user.address.isEmpty ? 'Trái Đất' : user.address,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
+                          Text(
+                            '@${user.username}',
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -102,11 +84,11 @@ class ProfileDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              // Followers Stats - Real-time
+              // Stats Row (Followers, Following)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Obx(
-                  () => Row(
+                      () => Row(
                     children: [
                       GestureDetector(
                         onTap: () => Get.to(() => const FollowingListScreen()),
@@ -130,18 +112,17 @@ class ProfileDetailScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Buttons: QR & Edit
+              // Action Buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.buttonColor,
-                          side: BorderSide(
-                            color: AppColors.buttonColor.withOpacity(0.5),
-                          ),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade100,
+                          foregroundColor: Colors.black87,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -149,7 +130,6 @@ class ProfileDetailScreen extends StatelessWidget {
                         onPressed: () => Get.snackbar(
                           'Thông báo',
                           'Chức năng đang được phát triển',
-                          
                         ),
                         icon: const Icon(Icons.qr_code_scanner, size: 18),
                         label: const Text(
@@ -170,8 +150,7 @@ class ProfileDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () =>
-                            Get.to(() => const EditProfileScreen()),
+                        onPressed: () => Get.to(() => const EditProfileScreen()),
                         icon: const Icon(Icons.edit_outlined, size: 18),
                         label: const Text(
                           'Chỉnh sửa',
@@ -183,58 +162,54 @@ class ProfileDetailScreen extends StatelessWidget {
                 ),
               ),
 
-              const Divider(
-                height: 40,
-                thickness: 1,
-                color: AppColors.dividerGrey,
-              ),
+              const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
 
-              // Stats Section: Tuần này
+              // Stats Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
-                        Icon(Icons.directions_run, size: 20),
-                        SizedBox(width: 8),
-                        Text(
-                          'Tuần này',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: const [
+                              Icon(Icons.directions_run, size: 20),
+                              SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  'Thống kê hoạt động',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        Obx(() {
+                          final current = profileController.selectedPeriod.value;
+                          return Row(
+                            children: [
+                              _buildPeriodButton('Tuần', 'week', current == 'week', profileController),
+                              const SizedBox(width: 4),
+                              _buildPeriodButton('Tháng', 'month', current == 'month', profileController),
+                              const SizedBox(width: 4),
+                              _buildPeriodButton('Năm', 'year', current == 'year', profileController),
+                            ],
+                          );
+                        }),
                       ],
                     ),
                     const SizedBox(height: 16),
                     Obx(() {
-                      if (profileController.isLoading.value) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.buttonColor,
-                          ),
-                        );
-                      }
-
-                      final distanceKm =
-                          (profileController.totalDistance.value / 1000)
-                              .toStringAsFixed(2);
-
-                      final totalDurationSecs =
-                          profileController.totalDuration.value;
+                      final distanceKm = (profileController.periodDistance.value / 1000).toStringAsFixed(2);
+                      final totalDurationSecs = profileController.periodDuration.value;
                       final hours = totalDurationSecs ~/ 3600;
                       final minutes = (totalDurationSecs % 3600) ~/ 60;
-                      String timeStr = '';
-                      if (hours > 0) {
-                        timeStr = '${hours}h ${minutes}m';
-                      } else {
-                        timeStr = '${minutes}m';
-                      }
-
-                      final count = profileController.workoutCount.value
-                          .toString();
+                      String timeStr = hours > 0 ? '${hours}h ${minutes}m' : '${minutes}m';
+                      final count = profileController.periodWorkoutCount.value.toString();
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -245,50 +220,47 @@ class ProfileDetailScreen extends StatelessWidget {
                         ],
                       );
                     }),
-                    const SizedBox(height: 20),
-                    _buildLineChartMockup(),
+                    const SizedBox(height: 24),
+                    _buildDynamicBarChart(profileController),
                   ],
                 ),
               ),
 
-              const Divider(
-                height: 40,
-                thickness: 1,
-                color: AppColors.dividerGrey,
-              ),
+              const Divider(height: 40, thickness: 1, color: AppColors.dividerGrey),
 
-              // List Options
               _buildListOption(Icons.grid_view, 'Hoạt động'),
-              _buildListOption(Icons.bar_chart, 'Số liệu thống kê'),
-              _buildListOption(Icons.route_outlined, 'Lộ trình'),
-              _buildListOption(Icons.location_on_outlined, 'Đoạn'),
-              _buildListOption(
-                Icons.emoji_events_outlined,
-                'Thành tích tốt nhất',
-                subtitle: 'Xem tất cả',
+              ListTile(
+                leading: const Icon(Icons.bar_chart, color: Colors.black87, size: 24),
+                title: const Text('Số liệu thống kê', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                onTap: () => Get.to(() => const ProfileStatisticsScreen()),
               ),
-              _buildListOption(Icons.article_outlined, 'Bài đăng'),
-              _buildListOption(Icons.directions_bike_outlined, 'Thiết bị'),
-
-              const Divider(
-                height: 40,
-                thickness: 8,
-                color: AppColors.dividerGrey,
+              ListTile(
+                leading: const Icon(Icons.email_outlined, color: Colors.black87, size: 24),
+                title: const Text('Thay đổi email', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                onTap: () => _showChangeEmailDialog(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.lock_outline, color: Colors.black87, size: 24),
+                title: const Text('Đổi mật khẩu', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ChangePasswordDialog(),
+                  );
+                },
               ),
 
-              // Section: Tủ trưng bày thành tích
+              const Divider(height: 40, thickness: 8, color: AppColors.dividerGrey),
+
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Tủ trưng bày thành tích',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const Text('Tủ trưng bày thành tích', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,9 +274,7 @@ class ProfileDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               _buildListOption(null, 'Tất cả cúp thành tích', isSmall: true),
-
               const SizedBox(height: 60),
             ],
           ),
@@ -318,10 +288,7 @@ class ProfileDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(
-          count,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        Text(count, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -331,127 +298,89 @@ class ProfileDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ],
     );
   }
 
-  Widget _buildLineChartMockup() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 120,
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                child: const Text(
-                  '0.00 km',
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                ),
-              ),
-              Positioned(
-                bottom: 20,
-                right: 0,
-                child: const Text(
-                  '0.00 km',
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                ),
-              ),
-              Positioned(
-                bottom: 20,
-                left: 0,
-                right: 0,
-                child: Container(height: 1, color: Colors.grey.shade300),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(
-                  12,
-                  (index) => Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: 1,
-                        height: 80,
-                        color: Colors.grey.shade100,
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: index == 11
-                              ? AppColors.buttonColor
-                              : Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.buttonColor,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ],
+  Widget _buildPeriodButton(String text, String period, bool isSelected, ProfileController controller) {
+    return GestureDetector(
+      onTap: () => controller.changePeriod(period),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.buttonColor : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(color: isSelected ? Colors.white : Colors.black87, fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDynamicBarChart(ProfileController controller) {
+    return Obx(() {
+      final data = controller.chartData;
+      final labels = controller.chartLabels;
+
+      if (data.isEmpty) {
+        return const SizedBox(height: 150, child: Center(child: Text('Không có dữ liệu thống kê', style: TextStyle(color: Colors.grey))));
+      }
+
+      double maxVal = data.reduce((a, b) => a > b ? a : b);
+      if (maxVal == 0) maxVal = 1.0;
+
+      return Container(
+        height: 180,
+        width: double.infinity,
+        padding: const EdgeInsets.only(top: 20),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: data.length * 50.0,
+                  child: CustomPaint(
+                    painter: LineChartPainter(data: data, maxVal: maxVal, color: AppColors.buttonColor),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: data.length * 50.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(labels.length, (index) {
+                      return SizedBox(width: 50, child: Center(child: Text(labels[index], style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.w500))));
+                    }),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Text('THÁNG 2', style: TextStyle(fontSize: 10, color: Colors.grey)),
-            Text('THÁNG 3', style: TextStyle(fontSize: 10, color: Colors.grey)),
-            Text('THÁNG 4', style: TextStyle(fontSize: 10, color: Colors.grey)),
-          ],
-        ),
-      ],
-    );
+      );
+    });
   }
 
-  Widget _buildListOption(
-    IconData? icon,
-    String title, {
-    String subtitle = '—',
-    bool isSmall = false,
-  }) {
+  Widget _buildListOption(IconData? icon, String title, {String subtitle = '—', bool isSmall = false}) {
     return ListTile(
       leading: icon != null
           ? Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
               child: Icon(icon, color: Colors.black87, size: 24),
             )
           : null,
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: isSmall ? 15 : 16,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(color: Colors.grey, fontSize: 13),
-      ),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        size: 16,
-        color: Colors.grey,
-      ),
-      onTap: () => Get.snackbar(
-        'Thông báo',
-        'Chức năng đang được phát triển',
-        
-      ),
+      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: isSmall ? 15 : 16)),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      onTap: () => Get.snackbar('Thông báo', 'Chức năng đang được phát triển'),
     );
   }
 
@@ -461,30 +390,126 @@ class ProfileDetailScreen extends StatelessWidget {
         Container(
           width: 65,
           height: 65,
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade200, width: 1),
-          ),
-          child: Center(
-            child: Icon(
-              Icons.lock_outline,
-              color: Colors.grey.shade400,
-              size: 20,
-            ),
-          ),
+          decoration: BoxDecoration(color: Colors.grey.shade50, shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade200, width: 1)),
+          child: Center(child: Icon(Icons.lock_outline, color: Colors.grey.shade400, size: 20)),
         ),
         const SizedBox(height: 12),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            height: 1.2,
-          ),
-        ),
+        Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, height: 1.2)),
       ],
     );
   }
+
+  void _showChangeEmailDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const ChangeEmailDialog(),
+    );
+  }
+
+
+
+  void _showLogoutConfirmDialog(BuildContext context) {
+    Get.defaultDialog(
+      title: 'Đăng xuất',
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      content: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Text('Bạn có chắc chắn muốn đăng xuất không?', style: TextStyle(fontSize: 15)),
+      ),
+      confirm: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+        onPressed: () async {
+          Get.back();
+          await AuthenticationRepository.instance.logout();
+          Get.snackbar(
+            'Thành công',
+            'Đăng xuất thành công!',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        },
+        child: const Text('Đăng xuất', style: TextStyle(color: Colors.white)),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(),
+        child: const Text('Hủy'),
+      ),
+      radius: 12,
+    );
+  }
+}
+
+class LineChartPainter extends CustomPainter {
+  final List<double> data;
+  final double maxVal;
+  final Color color;
+
+  LineChartPainter({required this.data, required this.maxVal, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (data.isEmpty) return;
+
+    final double stepX = size.width / (data.length > 1 ? data.length - 1 : 1);
+    final List<Offset> points = [];
+
+    for (int i = 0; i < data.length; i++) {
+      points.add(Offset(i * stepX, size.height - (data[i] / maxVal * size.height)));
+    }
+
+    final Path linePath = Path();
+    linePath.moveTo(points[0].dx, points[0].dy);
+
+    if (points.length > 1) {
+      for (int i = 0; i < points.length - 1; i++) {
+        final p0 = points[i];
+        final p1 = points[i + 1];
+        final controlPoint1 = Offset(p0.dx + (p1.dx - p0.dx) / 2, p0.dy);
+        final controlPoint2 = Offset(p0.dx + (p1.dx - p0.dx) / 2, p1.dy);
+        linePath.cubicTo(controlPoint1.dx, controlPoint1.dy, controlPoint2.dx, controlPoint2.dy, p1.dx, p1.dy);
+      }
+    }
+
+    final Path areaPath = Path.from(linePath);
+    areaPath.lineTo(points.last.dx, size.height);
+    areaPath.lineTo(points[0].dx, size.height);
+    areaPath.close();
+
+    final Paint areaPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [color.withOpacity(0.25), color.withOpacity(0.005)],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    canvas.drawPath(areaPath, areaPaint);
+
+    final Paint linePaint = Paint()
+      ..color = color
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    canvas.drawPath(linePath, linePaint);
+
+    final Paint dotPaint = Paint()..color = Colors.white;
+    final Paint dotOutlinePaint = Paint()..color = color..style = PaintingStyle.stroke..strokeWidth = 2.5;
+
+    for (int i = 0; i < points.length; i++) {
+      if (data[i] > 0) {
+        final TextPainter tp = TextPainter(
+          text: TextSpan(text: data[i].toStringAsFixed(1), style: TextStyle(color: color, fontSize: 8.5, fontWeight: FontWeight.bold)),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(points[i].dx - tp.width / 2, points[i].dy - 16));
+      }
+      canvas.drawCircle(points[i], 4, dotPaint);
+      canvas.drawCircle(points[i], 4, dotOutlinePaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

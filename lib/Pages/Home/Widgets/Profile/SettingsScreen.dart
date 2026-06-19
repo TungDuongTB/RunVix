@@ -41,7 +41,12 @@ class SettingsScreen extends StatelessWidget {
           
           _buildSettingItem(
             title: 'Đổi mật khẩu',
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const ChangePasswordDialog(),
+              );
+            },
           ),
 
           _buildSectionHeader('TÙY CHỌN'),

@@ -546,7 +546,7 @@ class PostCard extends StatelessWidget {
           label.toUpperCase(),
           style: TextStyle(
             fontSize: 8,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.lightBlueAccent,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -557,7 +557,7 @@ class PostCard extends StatelessWidget {
             fontSize: 13,
             fontWeight: FontWeight.w900,
             fontStyle: FontStyle.italic,
-            color: AppColors.lightBlue,
+            color: AppColors.buttonColor,
           ),
         ),
       ],
