@@ -225,6 +225,13 @@ class RecordController extends GetxController {
       // 1. Luôn lưu vào Workouts
       await _workoutRepo.saveWorkout(workout);
 
+      // Cập nhật streak & lịch tuần ngay sau khi lưu
+      try {
+        if (Get.isRegistered<CalendarController>()) {
+          CalendarController.instance.fetchCurrentWeekEvents();
+        }
+      } catch (_) {}
+
       // 2. Chụp ảnh snapshot bản đồ
       XFile? snapshotFile;
       if (polylinePoints.isNotEmpty && mapController != null) {

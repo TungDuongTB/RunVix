@@ -8,6 +8,7 @@ class CommentModel {
   final String userProfilePicture;
   final String comment;
   final DateTime? createdAt;
+  final bool isHidden;
 
   CommentModel({
     this.id,
@@ -17,6 +18,7 @@ class CommentModel {
     required this.userProfilePicture,
     required this.comment,
     this.createdAt,
+    this.isHidden = false,
   });
 
   toJson() {
@@ -26,11 +28,16 @@ class CommentModel {
       "UserName": userName,
       "UserProfilePicture": userProfilePicture,
       "Comment": comment,
-      "CreatedAt": createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      "IsHidden": isHidden,
+      "CreatedAt": createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 
-  factory CommentModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory CommentModel.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     final data = document.data()!;
     return CommentModel(
       id: document.id,
@@ -39,7 +46,10 @@ class CommentModel {
       userName: data["UserName"] ?? "",
       userProfilePicture: data["UserProfilePicture"] ?? "",
       comment: data["Comment"] ?? "",
-      createdAt: data["CreatedAt"] != null ? (data["CreatedAt"] as Timestamp).toDate() : null,
+      isHidden: data["IsHidden"] == true,
+      createdAt: data["CreatedAt"] != null
+          ? (data["CreatedAt"] as Timestamp).toDate()
+          : null,
     );
   }
 }

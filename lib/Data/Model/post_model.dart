@@ -18,6 +18,7 @@ class PostModel {
   final int reportCount;
   final bool isLocked;
   final bool isLiked;
+  final List<String> bannedUsers;
 
   PostModel({
     this.id,
@@ -37,6 +38,7 @@ class PostModel {
     this.reportCount = 0,
     this.isLocked = false,
     this.isLiked = false,
+    this.bannedUsers = const [],
   });
 
   toJson() {
@@ -56,6 +58,7 @@ class PostModel {
       "Comments": comments,
       "ReportCount": reportCount,
       "IsLocked": isLocked,
+      "BannedUsers": bannedUsers,
     };
   }
 
@@ -85,6 +88,7 @@ class PostModel {
       reportCount: (data["ReportCount"] ?? 0) as int,
       isLocked: data["IsLocked"] == true, // Ép kiểu về bool an toàn
       isLiked: false, // Sẽ được cập nhật lại trong Repository
+      bannedUsers: List<String>.from(data["BannedUsers"] ?? []),
     );
   }
 
@@ -106,6 +110,7 @@ class PostModel {
     bool? isLocked,
     int? reportCount,
     bool? isLiked,
+    List<String>? bannedUsers,
   }) {
     return PostModel(
       id: id ?? this.id,
@@ -125,6 +130,7 @@ class PostModel {
       reportCount: reportCount ?? this.reportCount,
       isLocked: isLocked ?? this.isLocked,
       isLiked: isLiked ?? this.isLiked,
+      bannedUsers: bannedUsers ?? this.bannedUsers,
     );
   }
 }

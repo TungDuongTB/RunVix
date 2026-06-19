@@ -30,7 +30,36 @@ class WorkoutRepository extends GetxController {
     }
   }
 
-  /// Tổng hợp quãng đường và pace trung bình từ workout của tất cả thành viên nhóm.
+  /// Tổng km của các thành viên nhóm trong tuần hiện tại (Thứ 2 - CN)
+  Future<double> getGroupWeeklyKm(List<String> memberIds) async {
+    if (memberIds.isEmpty) return 0.0;
+
+    final now = DateTime.now();
+    final startOfWeek = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - 1));
+    final endOfWeek = startOfWeek.add(const Duration(days: 7));
+
+    double totalMeters = 0;
+    try {
+      for (var i = 0; i < memberIds.length; i += 10) {
+        final chunk = memberIds.sublist(
+            i, i + 10 > memberIds.length ? memberIds.length : i + 10);
+        final snap = await _db
+            .collection('Workouts')
+            .where('UserId', whereIn: chunk)
+            .where('Timestamp',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
+            .where('Timestamp', isLessThan: Timestamp.fromDate(endOfWeek))
+            .get();
+        for (final doc in snap.docs) {
+          totalMeters += (doc.data()['Distance'] as num? ?? 0).toDouble();
+        }
+      }
+    } catch (_) {}
+    return totalMeters / 1000; // trả về km
+  }
+
+
   Future<GroupWorkoutStats> getGroupWorkoutStats(List<String> memberIds) async {
     if (memberIds.isEmpty) return GroupWorkoutStats.empty();
 

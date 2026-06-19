@@ -252,6 +252,13 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   Widget _buildCommentItem(CommentModel comment) {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    
+    // Nếu bình luận bị ẩn và người xem không phải chủ bài viết/tác giả bình luận thì không hiển thị
+    if (comment.isHidden && currentUid != widget.post.userId && currentUid != comment.userId) {
+      return const SizedBox.shrink();
+    }
+
     final isFocused = widget.focusCommentId != null && comment.id == widget.focusCommentId;
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
@@ -302,11 +309,23 @@ class _CommentScreenState extends State<CommentScreen> {
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                     ),
-                    Text(
-                      comment.createdAt != null
-                          ? "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}"
-                          : "",
-                      style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                    Row(
+                      children: [
+                        Text(
+                          comment.createdAt != null
+                              ? "${intl.DateFormat('dd/MM/yyyy HH:mm').format(comment.createdAt!)}"
+                              : "",
+                          style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                        ),
+                        if (currentUid == comment.userId || currentUid == widget.post.userId)
+                          GestureDetector(
+                            onTap: () => _showCommentOptions(context, comment),
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Icon(Icons.more_vert, size: 16, color: Colors.grey),
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
@@ -314,13 +333,29 @@ class _CommentScreenState extends State<CommentScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppColors.lightPurple, // Màu tím nhạt cho bubble
+                    color: comment.isHidden ? Colors.grey.shade200 : AppColors.lightPurple,
                     borderRadius: BorderRadius.circular(12),
                     border: isFocused ? Border.all(color: AppColors.buttonColor, width: 1.5) : null,
                   ),
-                  child: Text(
-                    comment.comment,
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (comment.isHidden)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            "[Bình luận này đã bị ẩn bởi chủ bài viết]",
+                            style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      Text(
+                        comment.comment,
+                        style: TextStyle(
+                          fontSize: 14, 
+                          color: comment.isHidden ? Colors.grey.shade600 : Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -331,7 +366,145 @@ class _CommentScreenState extends State<CommentScreen> {
     );
   }
 
+  void _showCommentOptions(BuildContext context, CommentModel comment) {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    Get.bottomSheet(
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Wrap(
+          children: [
+            if (currentUid == comment.userId) ...[
+              ListTile(
+                leading: const Icon(Icons.edit, color: Colors.blue),
+                title: const Text("Chỉnh sửa bình luận"),
+                onTap: () {
+                  Get.back();
+                  _showEditDialog(comment);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text("Xóa bình luận"),
+                onTap: () {
+                  Get.back();
+                  _showDeleteConfirm(comment);
+                },
+              ),
+            ],
+            if (currentUid == widget.post.userId) ...[
+              if (!comment.isHidden && comment.userId != widget.post.userId)
+                ListTile(
+                  leading: const Icon(Icons.visibility_off, color: Colors.orange),
+                  title: const Text("Ẩn bình luận"),
+                  onTap: () {
+                    Get.back();
+                    controller.hideComment(comment);
+                  },
+                ),
+              if (comment.isHidden && comment.userId != widget.post.userId)
+                ListTile(
+                  leading: const Icon(Icons.visibility, color: Colors.green),
+                  title: const Text("Gỡ ẩn bình luận"),
+                  onTap: () {
+                    Get.back();
+                    controller.unhideComment(comment);
+                  },
+                ),
+              if (comment.userId != widget.post.userId)
+                ListTile(
+                  leading: const Icon(Icons.block, color: Colors.red),
+                  title: const Text("Cấm người dùng bình luận"),
+                  onTap: () {
+                    Get.back();
+                    _showBanConfirm(comment);
+                  },
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditDialog(CommentModel comment) {
+    final editController = TextEditingController(text: comment.comment);
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Chỉnh sửa bình luận"),
+        content: TextField(
+          controller: editController,
+          decoration: const InputDecoration(hintText: "Nhập nội dung mới..."),
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Hủy")),
+          TextButton(
+            onPressed: () {
+              controller.editComment(comment, editController.text);
+              Get.back();
+            },
+            child: const Text("Lưu"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirm(CommentModel comment) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Xóa bình luận"),
+        content: const Text("Bạn có chắc muốn xóa bình luận này không?"),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Hủy")),
+          TextButton(
+            onPressed: () {
+              controller.deleteComment(comment);
+              Get.back();
+            },
+            child: const Text("Xóa", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBanConfirm(CommentModel comment) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Cấm người dùng"),
+        content: Text("Bạn có chắc muốn cấm ${comment.userName} bình luận trên bài viết này không?"),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Hủy")),
+          TextButton(
+            onPressed: () {
+              controller.banUser(comment.userId);
+              Get.back();
+            },
+            child: const Text("Cấm", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildInputArea(CommentController controller, UserController userController) {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    if (widget.post.bannedUsers.contains(currentUid)) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        color: Colors.grey.shade100,
+        child: const Text(
+          "Bạn đã bị chủ bài viết cấm bình luận.",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
     return Container(
       padding: EdgeInsets.only(
         left: 16, 

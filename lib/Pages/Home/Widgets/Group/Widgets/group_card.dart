@@ -8,7 +8,6 @@ class GroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final memberCount = group.memberIds.length;
-
     final currentUser = FirebaseAuth.instance.currentUser;
     final isMember = currentUser != null && group.memberIds.contains(currentUser.uid);
     final isCreator = currentUser != null && group.creatorId == currentUser.uid;
@@ -146,40 +145,37 @@ class GroupCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
-                const SizedBox(height: 14),
-                const Divider(height: 1, color: Colors.black12),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildWeeklyMileage(),
-                    if (!isMember && !isCreator)
-                      ElevatedButton(
-                        onPressed: () {
-                          // Prevent triggering the card's onTap
-                          Get.to(() => GroupDetailScreen(group: group));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.buttonColor,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: const Size(0, 32),
+                if (!isMember && !isCreator) ...[
+                  const SizedBox(height: 14),
+                  const Divider(height: 1, color: Colors.black12),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => GroupDetailScreen(group: group));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttonColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text(
-                          'Tham gia',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Hanken Grotesk',
-                          ),
+                        minimumSize: const Size(0, 32),
+                      ),
+                      child: const Text(
+                        'Tham gia',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Hanken Grotesk',
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -275,24 +271,6 @@ class GroupCard extends StatelessWidget {
     );
   }
 
-  Widget _buildWeeklyMileage() {
-    final seed = group.name.hashCode.abs();
-    final km = (seed % 3000) + 1500 + (group.memberIds.length * 150);
-    final formattedKm = km.toString().replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    );
-
-    return Text(
-      '$formattedKm km tuần này',
-      style: const TextStyle(
-        fontStyle: FontStyle.italic,
-        color: Colors.black54,
-        fontSize: 12,
-        fontFamily: 'Hanken Grotesk',
-      ),
-    );
-  }
 
   Widget _buildGroupLogo() {
     if (group.logoImageUrl.isNotEmpty) {

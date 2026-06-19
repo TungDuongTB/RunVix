@@ -20,20 +20,6 @@ class ProfileDetailScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.ios_share, color: Colors.black),
-            onPressed: () => Get.snackbar(
-              'Thông báo',
-              'Chức năng đang được phát triển',
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () => Get.snackbar(
-              'Thông báo',
-              'Chức năng đang được phát triển',
-            ),
-          ),
-          IconButton(
             icon: const Icon(Icons.logout_outlined, color: Colors.black),
             onPressed: () => _showLogoutConfirmDialog(context),
           ),

@@ -64,18 +64,15 @@ class ManualActivityController extends GetxController {
         imageUrl: imageUrl,
       );
 
-      // 1. Lưu vào bảng Workouts (Luôn lưu vào lịch sử cá nhân)
-      await workoutRepo.saveWorkout(workout);
-
-      // 2. Nếu người dùng chọn "Đăng", tạo một bản ghi ở bảng Posts
       if (isPublic.value) {
+        // Người dùng chọn "Đăng" → chỉ tạo Post, KHÔNG lưu vào Workouts/thống kê
         final post = PostModel(
           userId: userController.user.value.id ?? "",
           userName: userController.user.value.fullName ?? "",
           userProfilePicture: userController.user.value.profilePicture ?? "",
           title: title.text.trim(),
-          content: description.text.trim().isNotEmpty 
-              ? description.text.trim() 
+          content: description.text.trim().isNotEmpty
+              ? description.text.trim()
               : "Đã hoàn thành buổi ${selectedType.value.toLowerCase()} ${distance.value}km!",
           imageUrl: imageUrl,
           createdAt: DateTime.now(),
@@ -84,14 +81,15 @@ class ManualActivityController extends GetxController {
           averagePace: avgPace,
           type: selectedType.value,
         );
-        
-        // Gọi repo để tạo bài đăng
-        await postRepo.createPost(post, null); // Ảnh đã upload ở trên rồi nên truyền null
-        
-        // Cập nhật lại danh sách bài viết ở trang chủ
+
+        await postRepo.createPost(post, null);
+
         if (Get.isRegistered<PostController>()) {
           PostController.instance.fetchPosts();
         }
+      } else {
+        // Người dùng chọn "Lưu riêng" → chỉ lưu vào Workouts (tính thống kê)
+        await workoutRepo.saveWorkout(workout);
       }
       // Refresh calendar/streak
       try {

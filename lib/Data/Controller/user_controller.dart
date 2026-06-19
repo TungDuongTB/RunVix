@@ -227,12 +227,46 @@ class UserController extends GetxController {
       isLoading.value = true;
       await _userRepo.updateUserRecord(updatedUser);
       user.value = updatedUser;
+
+      // Đồng bộ userName & avatar trong tất cả comment của user
+      await _syncUserInfoInComments(
+        userId: updatedUser.id ?? "",
+        newName: updatedUser.fullName ?? "",
+        newAvatar: updatedUser.profilePicture ?? "",
+      );
+
       Get.back();
       Get.snackbar("Thành công", "Thông tin cá nhân đã được cập nhật");
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể cập nhật thông tin: $e");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _syncUserInfoInComments({
+    required String userId,
+    required String newName,
+    required String newAvatar,
+  }) async {
+    if (userId.isEmpty) return;
+    try {
+      final db = FirebaseFirestore.instance;
+      final snap = await db
+          .collection("Comments")
+          .where("UserId", isEqualTo: userId)
+          .get();
+
+      final batch = db.batch();
+      for (final doc in snap.docs) {
+        batch.update(doc.reference, {
+          "UserName": newName,
+          "UserProfilePicture": newAvatar,
+        });
+      }
+      await batch.commit();
+    } catch (e) {
+      debugPrint("⚠️ Không thể đồng bộ comment: $e");
     }
   }
 

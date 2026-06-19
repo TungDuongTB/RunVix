@@ -9,23 +9,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: maps">
-      <change afterPath="$PROJECT_DIR$/lib/Data/Utils/group_requirement_utils.dart" afterDir="false" />
+    <list default="true" id="1741f5f8-698e-47e3-8812-71e4f4b58df0" name="Changes" comment="fix: change_password">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/PostCardComponent.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/profile_header_component.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/profile_header_component.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Component/profile_stats_row.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Component/profile_stats_row.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/profile_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/user_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/challenge_tab_content.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/ProfileScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/SettingsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/SettingsScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/followers_list_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/following_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/comment_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/manual_activity_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/manual_activity_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/record_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Controller/user_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/comment_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/comment_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Model/post_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Data/Repository/workout_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Data/Repository/workout_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/Widgets/group_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Group/create_group_event_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_detail_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_hub_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/Profile/profile_hub_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/map/map_top_search.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/export.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/export.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/comment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Pages/Home/Widgets/home/comment_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -608,7 +604,23 @@
       <option name="project" value="LOCAL" />
       <updated>1781619504424</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="fix: 19_06">
+      <option name="closed" value="true" />
+      <created>1781882860918</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1781882860919</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fix: change_password">
+      <option name="closed" value="true" />
+      <created>1781882880197</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1781882880197</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -623,8 +635,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="search" />
-    <MESSAGE value="Quan_li_bai_viet" />
     <MESSAGE value="Bao_cao_bai_viet" />
     <MESSAGE value="Bao_cao_bai_viet__fix" />
     <MESSAGE value="fix giao dien" />
@@ -648,7 +658,9 @@
     <MESSAGE value="ban do tuyen duong" />
     <MESSAGE value="push_end" />
     <MESSAGE value="fix: maps" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: maps" />
+    <MESSAGE value="fix: 19_06" />
+    <MESSAGE value="fix: change_password" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: change_password" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

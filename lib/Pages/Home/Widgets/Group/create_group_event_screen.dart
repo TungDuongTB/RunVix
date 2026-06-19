@@ -15,6 +15,7 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
   final _titleController = TextEditingController();
   final _timeController = TextEditingController();
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
+  DateTime _selectedEndDate = DateTime.now().add(const Duration(days: 7));
   XFile? _coverImage;
   final _picker = ImagePicker();
 
@@ -32,7 +33,27 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+        // Nếu ngày kết thúc < ngày bắt đầu mới, tự điều chỉnh
+        if (_selectedEndDate.isBefore(_selectedDate)) {
+          _selectedEndDate = _selectedDate.add(const Duration(days: 1));
+        }
+      });
+    }
+  }
+
+  Future<void> _pickEndDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedEndDate.isAfter(_selectedDate)
+          ? _selectedEndDate
+          : _selectedDate.add(const Duration(days: 1)),
+      firstDate: _selectedDate.add(const Duration(days: 1)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) setState(() => _selectedEndDate = picked);
   }
 
   Future<void> _pickTime() async {
@@ -65,7 +86,7 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
     DateTime combinedStartDate = _selectedDate;
     if (_timeController.text.isNotEmpty) {
       try {
-        final timeString = _timeController.text; // Format: "05:00 AM"
+        final timeString = _timeController.text;
         final isPM = timeString.contains('PM');
         final parts = timeString.split(RegExp(r'[: ]'));
         int hour = int.parse(parts[0]);
@@ -81,7 +102,7 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
       title: title,
       description: 'Sự kiện của nhóm ${widget.group.name}',
       startDate: combinedStartDate,
-      endDate: combinedStartDate.add(const Duration(days: 30)), // Mặc định kéo dài 30 ngày
+      endDate: _selectedEndDate,
       type: 'Running',
       goalValue: 0,
       goalUnit: 'km',
@@ -163,9 +184,24 @@ class _CreateGroupEventScreenState extends State<CreateGroupEventScreen> {
                     child: AbsorbPointer(
                       child: FocusableTextField(
                         controller: _timeController,
-                        label: 'Thời gian',
+                        label: 'Thời gian bắt đầu',
                         hint: 'Ví dụ: 05:00 AM',
                         icon: Icons.schedule_outlined,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: _pickEndDate,
+                    child: AbsorbPointer(
+                      child: FocusableTextField(
+                        controller: TextEditingController(
+                          text:
+                              '${_selectedEndDate.day.toString().padLeft(2, '0')}/${_selectedEndDate.month.toString().padLeft(2, '0')}/${_selectedEndDate.year}',
+                        ),
+                        label: 'Ngày kết thúc',
+                        hint: 'Chọn ngày kết thúc',
+                        icon: Icons.event_available_outlined,
                       ),
                     ),
                   ),
